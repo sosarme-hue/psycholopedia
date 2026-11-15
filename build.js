@@ -16,6 +16,15 @@ const CURSOSL = Object.assign({}, require("./src/data/cursos1"), require("./src/
 const CURSO_EN = ["psychology-from-scratch", "how-we-learn-and-remember", "understanding-emotions", "personality-without-labels", "communication-and-relationships", "human-development", "reading-studies-without-getting-lost", "history-of-the-great-schools", "digital-psychology", "introduction-to-mental-health"];
 const INS = require("./src/data/instrumentos");
 const LIB = require("./src/data/libres");
+// Curiosidades ampliadas
+{ const CX = require("./src/data/cur"); const seen = new Set(P.CURIOSIDADES.map((c) => c.slug.es));
+  for (const c of CX) { if (seen.has(c.slug.es) || seen.has(c.slug.en)) throw new Error("curiosidad duplicada: " + c.slug.es); seen.add(c.slug.es); seen.add(c.slug.en); P.CURIOSIDADES.push(c); if (c.img) I.CURIOSIDADES[c.slug.es] = c.img; }
+  for (const c of P.CURIOSIDADES) if (c.s == null) c.s = P.SERIES.findIndex((x) => x.es === c.serie.es); }
+// Vida cotidiana ampliada
+{ const VX = require("./src/data/vida/index"); const seen = new Set(V.VIDA.flatMap((v) => [v.slug.es, v.slug.en]));
+  for (const v of VX) { if (seen.has(v.slug.es) || seen.has(v.slug.en)) throw new Error("vida duplicada: " + v.slug.es); seen.add(v.slug.es); seen.add(v.slug.en); V.VIDA.push(v); }
+  if (!V.FAMILIAS.some((f) => f.es === "Ciclo vital")) V.FAMILIAS.push({ es: "Ciclo vital", en: "Lifespan" });
+  for (const v of V.VIDA) { v.f = V.FAMILIAS.findIndex((f) => f.es === v.tema.es); if (v.f < 0) throw new Error("familia desconocida: " + v.tema.es); } }
 // Adaptaciones españolas validadas (referencia para uso clínico)
 const LIBVAL = {
   "PHQ-9": "Diez-Quevedo C, Rangil T, Sánchez-Planell L, Kroenke K, Spitzer RL. Validation and utility of the Patient Health Questionnaire in diagnosing mental disorders in 1003 general hospital Spanish inpatients. Psychosom Med. 2001;63(4):679-686.",
@@ -296,7 +305,7 @@ function home(lang) {
     <div>
       <span class="eyebrow">${es ? "El lado sorprendente" : "The surprising side"}</span><h2>${es ? "La curiosidad también enseña" : "Curiosity teaches too"}</h2>
       <p style="color:var(--mute)">${es ? "Historias, ilusiones y experimentos contados con contexto: qué ocurrió, qué sabemos y qué se ha discutido después." : "Stories, illusions and experiments told in context: what happened, what we know and what has been debated since."}</p>
-      ${P.CURIOSIDADES.map((c) => `<a class="card hz" style="margin-bottom:12px" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span><span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p></span></a>`).join("")}
+      ${P.CURIOSIDADES.slice(0, 3).map((c) => `<a class="card hz" style="margin-bottom:12px" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span><span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p></span></a>`).join("")}
     </div>
     <div>
       <span class="eyebrow">${es ? "Quiz de conocimientos" : "Knowledge quiz"}</span><h2>${es ? "¿Cuánto sabes de psicología?" : "How much do you know about psychology?"}</h2>
@@ -453,17 +462,17 @@ function rama(i, lang) {
 function vidaIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Vida cotidiana" : "Everyday life", es ? "La psicología está en tu vida" : "Psychology is in your life", es ? "Preguntas de todos los días respondidas con lo que sabe la investigación, y conectadas con sus bases académicas." : "Everyday questions answered with what research knows, and linked to their academic foundations.") + `
-<div class="wrap"><div class="grid">${V.VIDA.map((v) => `<a class="card" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${cimg(I.VIDA[v.slug.es])}<span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
-<h2 style="margin-top:50px">${es ? "Familias temáticas" : "Topic families"}</h2><p style="color:var(--mute)">${es ? "Iremos ampliando cada familia con nuevos artículos." : "We will keep adding articles to each family."}</p>
-<div class="filters">${V.FAMILIAS.map((f) => `<span class="pill" style="padding:6px 12px;font-size:14px">${f[lang]}</span>`).join("")}</div></div>`;
-  return page({ lang, rel: sec("vida", lang), alt: sec("vida", lang === "es" ? "en" : "es"), title: es ? "Psicología de la vida cotidiana" : "Psychology of everyday life", desc: es ? "Procrastinación, preocupaciones, discusiones de pareja, estudio, pantallas y adolescencia explicados con evidencia." : "Procrastination, worry, couple arguments, studying, screens and adolescence explained with evidence.", nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life"]], body });
+<div class="wrap"><p style="color:var(--mute)">${V.VIDA.length} ${es ? "artículos. Filtra por tema:" : "articles. Filter by topic:"}</p>
+<div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todos" : "All"}</button>${V.FAMILIAS.map((f, i) => [f, i, V.VIDA.filter((v) => v.f === i).length]).filter((x) => x[2]).map(([f, i, n]) => `<button data-g="f${i}">${f[lang]} (${n})</button>`).join("")}</div>
+<div class="grid">${V.VIDA.map((v) => `<a class="card" data-g="f${v.f}" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${cimg(I.VIDA[v.slug.es])}<span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div>`;
+  return page({ lang, rel: sec("vida", lang), alt: sec("vida", lang === "es" ? "en" : "es"), title: es ? "Psicología de la vida cotidiana" : "Psychology of everyday life", desc: es ? `${V.VIDA.length} preguntas de la vida diaria explicadas con evidencia: emociones, pareja, familia, sueño, trabajo, decisiones, pantallas y más.` : `${V.VIDA.length} everyday questions explained with evidence: emotions, couples, family, sleep, work, decisions, screens and more.`, nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life"]], body });
 }
 function vidaArt(v, lang) {
   const es = lang === "es";
   const body = phead(v.tema[lang], v.t[lang], v.d[lang]) + `
 <div class="wrap article"><article class="prose">${fig(I.VIDA[v.slug.es], lang)}${v[lang]}${refsHTML(lang, v.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${T[lang].conecta}</h4><ul>${v.conecta[lang].map((c) => { const a = E.AREAS.find((x) => x.t[lang] === c && (x.full || x.ficha)); return `<li>${a ? `<a href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${c}</a>` : c}</li>`; }).join("")}</ul></div>
-<div class="box"><h4>${es ? "Más preguntas cotidianas" : "More everyday questions"}</h4><ul>${V.VIDA.filter((x) => x !== v).slice(0, 4).map((x) => `<li><a href="{{L}}${vidaURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div></aside></div>`;
+<div class="box"><h4>${es ? "Más preguntas cotidianas" : "More everyday questions"}</h4><ul>${V.VIDA.filter((x) => x !== v && x.f === v.f).concat(V.VIDA.filter((x) => x !== v && x.f !== v.f)).slice(0, 4).map((x) => `<li><a href="{{L}}${vidaURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div></aside></div>`;
   return page({ lang, rel: vidaURL(v, lang), alt: vidaURL(v, lang === "es" ? "en" : "es"), title: v.t[lang], desc: v.d[lang], nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life", sec("vida", lang)], [v.tema[lang]]], body, kind: es ? "Vida cotidiana" : "Everyday life" });
 }
 
@@ -478,9 +487,10 @@ const STROOP = (lang) => {
 function curIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Anécdotas, curiosidades y experimentos" : "Anecdotes, curiosities and experiments", es ? "La curiosidad también enseña" : "Curiosity teaches too", es ? "Experimentos clásicos con su contexto, su ética y sus revisiones. Las anécdotas llevan fuentes; las de procedencia dudosa se señalan o se excluyen." : "Classic experiments with their context, ethics and later revisions. Anecdotes are sourced; doubtful ones are flagged or left out.") + `
-<div class="wrap"><div class="grid">${P.CURIOSIDADES.map((c) => `<a class="card" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
-<h2 style="margin-top:50px">${es ? "Series" : "Series"}</h2><div class="filters">${P.SERIES.map((s) => `<span class="pill" style="padding:6px 12px;font-size:14px">${s[lang]}</span>`).join("")}</div></div>`;
-  return page({ lang, rel: sec("curiosidades", lang), alt: sec("curiosidades", lang === "es" ? "en" : "es"), title: es ? "Curiosidades y experimentos de psicología" : "Psychology curiosities and experiments", desc: es ? "El efecto Stroop, el efecto Mozart y el experimento de Asch contados con contexto." : "The Stroop effect, the Mozart effect and Asch's experiment told in context.", nav: "explorar", crumbs: [[es ? "Curiosidades" : "Curiosities"]], body });
+<div class="wrap"><p style="color:var(--mute)">${P.CURIOSIDADES.length} ${es ? "curiosidades. Filtra por serie:" : "curiosities. Filter by series:"}</p>
+<div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todas" : "All"}</button>${P.SERIES.map((x, i) => `<button data-g="s${i}">${x[lang]} (${P.CURIOSIDADES.filter((c) => c.s === i).length})</button>`).join("")}</div>
+<div class="grid">${P.CURIOSIDADES.map((c) => `<a class="card" data-g="s${c.s}" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div>`;
+  return page({ lang, rel: sec("curiosidades", lang), alt: sec("curiosidades", lang === "es" ? "en" : "es"), title: es ? "Curiosidades y experimentos de psicología" : "Psychology curiosities and experiments", desc: es ? `${P.CURIOSIDADES.length} experimentos, anécdotas y mitos de la psicología contados con contexto y fuentes: Milgram, Stanford, Clever Hans, el placebo y muchos más.` : `${P.CURIOSIDADES.length} psychology experiments, anecdotes and myths told with context and sources: Milgram, Stanford, Clever Hans, placebo and many more.`, nav: "explorar", crumbs: [[es ? "Curiosidades" : "Curiosities"]], body });
 }
 function curArt(c, lang) {
   const es = lang === "es";
