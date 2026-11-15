@@ -94,7 +94,7 @@ module.exports = {
 
   aprendizaje: {
     titulo: A("Aprendizaje: cómo cambiamos con la experiencia", "Learning: how experience changes us"),
-    figs: ["Ivan Pavlov"],
+    figs: ["Iván Pávlov"],
     breve: A(`<p>Aprender es cambiar de forma relativamente duradera gracias a la experiencia. Aprendemos asociando cosas que ocurren juntas, viendo las consecuencias de lo que hacemos, observando a otros y practicando. No solo aprendemos conocimientos: también miedos, gustos, hábitos y habilidades.</p>`,
       `<p>Learning is a relatively lasting change brought about by experience. We learn by associating things that happen together, by seeing the consequences of what we do, by watching others and by practising. We learn not only knowledge but also fears, tastes, habits and skills.</p>`),
     desarrollada: A(`

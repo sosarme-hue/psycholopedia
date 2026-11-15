@@ -261,7 +261,7 @@ function home(lang) {
   <div class="shead"><div><span class="eyebrow">${es ? "Tres formas de entrar" : "Three ways in"}</span><h2>${es ? "Descubrir, comprender, participar" : "Discover, understand, take part"}</h2></div></div>
   <div class="doors">
     <div class="door"><span class="tag">${es ? "Descubrir" : "Discover"}</span><h3>${es ? "Historias e ideas" : "Stories and ideas"}</h3><ul><li><a href="{{L}}${S.historia[lang]}/">${es ? "Historia en 24 capítulos" : "History in 24 chapters"}</a></li><li><a href="{{L}}${S.figuras[lang]}/">${es ? "Grandes figuras" : "Key figures"}</a></li><li><a href="{{L}}${S.explorar[lang]}/#escuelas">${es ? "Escuelas y corrientes" : "Schools and movements"}</a></li><li><a href="{{L}}${S.curiosidades[lang]}/">${es ? "Experimentos y curiosidades" : "Experiments and curiosities"}</a></li></ul></div>
-    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? "Mapa de 16 áreas" : "Map of 16 areas"}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li></ul></div>
+    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li></ul></div>
     <div class="door"><span class="tag">${es ? "Participar" : "Take part"}</span><h3>${es ? "Jugar y aprender" : "Play and learn"}</h3><ul><li><a href="{{L}}${S.quiz[lang]}/">Quiz</a></li><li><a href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${es ? "Retos de razonamiento" : "Reasoning challenges"}</a></li><li><a href="{{L}}${S.tests[lang]}/">${es ? "Actividades de reflexión" : "Reflection activities"}</a></li><li><a href="{{L}}${S.aprender[lang]}/">${es ? "Cursos" : "Courses"}</a></li></ul></div>
   </div>
 </section>
@@ -393,7 +393,7 @@ function explorar(lang) {
   const es = lang === "es";
   const body = phead(es ? "Explorar la psicología" : "Explore psychology", es ? "El mapa de la psicología" : "The map of psychology", es ? "Áreas de conocimiento, ramas aplicadas, escuelas y grandes figuras. El catálogo es amplio; la navegación, sencilla." : "Areas of knowledge, applied branches, schools and key figures. A wide catalogue with simple navigation.") + `
 <div class="wrap">
-<section id="mapa"><div class="shead"><div><span class="eyebrow">${es ? "16 áreas" : "16 areas"}</span><h2>${es ? "Áreas de conocimiento" : "Areas of knowledge"}</h2></div><p>${es ? "Cada área tiene tres niveles de lectura: introducción breve, explicación desarrollada y ampliación con referencias." : "Each area has three reading levels: a short introduction, a fuller explanation and an extension with references."}</p></div>
+<section id="mapa"><div class="shead"><div><span class="eyebrow">${E.AREAS.length} ${es ? "áreas" : "areas"}</span><h2>${es ? "Áreas de conocimiento" : "Areas of knowledge"}</h2></div><p>${es ? "Cada área tiene tres niveles de lectura: introducción breve, explicación desarrollada y ampliación con referencias." : "Each area has three reading levels: a short introduction, a fuller explanation and an extension with references."}</p></div>
 <div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todas" : "All"}</button>${Object.entries(E.GRUPOS).map(([k, v]) => `<button data-g="${k}">${v[lang]}</button>`).join("")}</div>
 <div class="grid g4" id="areas">${E.AREAS.map((a) => a.full || a.ficha ? `<a class="card" data-g="${a.g}" href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p><span class="more">${es ? "Tres niveles de lectura" : "Three reading levels"} →</span></a>` : `<div class="card" data-g="${a.g}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p></div>`).join("")}</div></section>
 
@@ -407,7 +407,7 @@ function explorar(lang) {
 <div class="grid">${F.FIGURAS.filter((f) => f.slug).map((f) => `<a class="card" href="{{L}}figuras/${f.slug}/">${av(I.FIGURAS[f.nombre], f.nombre)}<span class="tag">${f.vida}</span><h3>${f.nombre}</h3><p>${F.FICHAS[f.slug].resumen[lang]}</p></a>`).join("")}</div>
 <p style="margin-top:16px"><a class="btn" href="{{L}}${S.figuras[lang]}/">${es ? "Directorio completo" : "Full directory"} →</a></p></section>
 </div>`;
-  return page({ lang, rel: sec("explorar", lang), alt: sec("explorar", lang === "es" ? "en" : "es"), title: es ? "Explorar la psicología" : "Explore psychology", desc: es ? "Mapa de la psicología: 16 áreas de conocimiento, 12 ramas aplicadas, escuelas y grandes figuras." : "Map of psychology: 16 areas of knowledge, 12 applied branches, schools and key figures.", nav: "explorar", crumbs: [[es ? "Explorar" : "Explore"]], body });
+  return page({ lang, rel: sec("explorar", lang), alt: sec("explorar", lang === "es" ? "en" : "es"), title: es ? "Explorar la psicología" : "Explore psychology", desc: es ? `Mapa de la psicología: ${E.AREAS.length} áreas de conocimiento, ${E.RAMAS.length} ramas aplicadas, ${E.ESCUELAS.length} escuelas y grandes figuras.` : `Map of psychology: ${E.AREAS.length} areas of knowledge, ${E.RAMAS.length} applied branches, ${E.ESCUELAS.length} schools and key figures.`, nav: "explorar", crumbs: [[es ? "Explorar" : "Explore"]], body });
 }
 function areaFicha(a, lang) {
   const es = lang === "es";
@@ -442,7 +442,7 @@ ${meta(lang)}</article>
 function escuela(s, lang) {
   const es = lang === "es";
   const body = phead(es ? "Escuelas y corrientes" : "Schools and movements", s.t[lang], s.d[lang]) + `
-<div class="wrap narrow prose">${fig(I.ESCUELAS[s.slug.es], lang, s.slug.es === "gestalt" || s.slug.es === "psicologia-cognitiva" ? "" : "portrait")}<table class="qtable"><tbody>${E.PREG.map((p, i) => `<tr><th scope="row">${p[lang]}</th><td>${s.tabla[lang][i]}</td></tr>`).join("")}</tbody></table>
+<div class="wrap narrow prose">${fig(I.ESCUELAS[s.slug.es], lang, /^p-|^darwin$/.test(I.ESCUELAS[s.slug.es] || "") ? "portrait" : "")}<table class="qtable"><tbody>${E.PREG.map((p, i) => `<tr><th scope="row">${p[lang]}</th><td>${s.tabla[lang][i]}</td></tr>`).join("")}</tbody></table>
 ${s.body ? s.body[lang] : ""}
 <div class="note">${es ? "La importancia histórica de una escuela y el respaldo científico actual de sus ideas son cosas distintas: aquí las explicamos por separado." : "A school's historical importance and the current scientific support for its ideas are different things: we explain them separately."}</div>
 ${refsHTML(lang, s.refs)}${meta(lang)}</div>`;
@@ -648,7 +648,7 @@ function enlace(code, lang) {
   if (k === "k") { const x = P.CURIOSIDADES.find((y) => y.slug.es === v); return [r(curURL(x, lang)), x.t[lang]]; }
   if (k === "h") return [r(capURL(+v, lang)), H.CAPS[+v][lang]];
   if (k === "c") { const n = P.CURSOS.findIndex((y) => y.slug.es === v); return [r(lecURL(n, 0, lang)), (es ? "Curso: " : "Course: ") + P.CURSOS[n].t[lang]]; }
-  const X = { mapa: [`${S.explorar[lang]}/#mapa`, es ? "Mapa de 16 áreas" : "Map of 16 areas"], ramas: [`${S.explorar[lang]}/#ramas`, es ? "Ramas aplicadas de la psicología" : "Applied branches of psychology"], escuelas: [`${S.explorar[lang]}/#escuelas`, es ? "Escuelas de psicología" : "Schools of psychology"], quiz: [`${S.quiz[lang]}/`, "Quiz"], tests: [`${S.tests[lang]}/`, es ? "Actividades de reflexión" : "Reflection activities"], personalidad: [`${S.personalidad[lang]}/`, es ? "Actividad: tu forma de ser" : "Activity: your personality"], pareja: [`${S.pareja[lang]}/`, es ? "Actividad: conversar en pareja" : "Activity: couple conversations"], salud: [`${S.salud[lang]}/`, es ? "Salud mental y terapias" : "Mental health and therapies"], consulta: [`${S.consulta[lang]}/`, es ? "Desde la consulta" : "From the surgery"] };
+  const X = { mapa: [`${S.explorar[lang]}/#mapa`, es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`], ramas: [`${S.explorar[lang]}/#ramas`, es ? "Ramas aplicadas de la psicología" : "Applied branches of psychology"], escuelas: [`${S.explorar[lang]}/#escuelas`, es ? "Escuelas de psicología" : "Schools of psychology"], quiz: [`${S.quiz[lang]}/`, "Quiz"], tests: [`${S.tests[lang]}/`, es ? "Actividades de reflexión" : "Reflection activities"], personalidad: [`${S.personalidad[lang]}/`, es ? "Actividad: tu forma de ser" : "Activity: your personality"], pareja: [`${S.pareja[lang]}/`, es ? "Actividad: conversar en pareja" : "Activity: couple conversations"], salud: [`${S.salud[lang]}/`, es ? "Salud mental y terapias" : "Mental health and therapies"], consulta: [`${S.consulta[lang]}/`, es ? "Desde la consulta" : "From the surgery"] };
   if (k === "x" && X[v]) return X[v];
   throw new Error("enlace desconocido: " + code);
 }
@@ -802,10 +802,10 @@ const fFecha = (f, lang) => new Date(f + "T12:00:00Z").toLocaleDateString(lang =
 const postCard = (p, lang) => `<a class="card" href="{{L}}${postURL(p, lang).slice(base(lang).length)}">${cimg(I.BLOG[p.slug.es])}<span class="tag">${p.cat[lang]} · <time datetime="${p.fecha}">${fFecha(p.fecha, lang)}</time></span><h3>${p.t[lang]}</h3><p>${p.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`;
 function blogIndex(lang) {
   const es = lang === "es";
-  const body = phead("Blog", es ? "Blog de Psycholopedia" : "Psycholopedia blog", es ? "Un artículo nuevo cada tres días: historias, experimentos, preguntas cotidianas y reflexiones desde la consulta." : "A new article every three days: stories, experiments, everyday questions and reflections from the surgery.") + `
+  const body = phead("Blog", es ? "Blog de Psycholopedia" : "Psycholopedia blog", es ? "Tres artículos nuevos cada tres días: historias, experimentos, preguntas cotidianas y reflexiones desde la consulta." : "Three new articles every three days: stories, experiments, everyday questions and reflections from the surgery.") + `
 <div class="wrap"><div class="grid">${POSTS.map((p) => postCard(p, lang)).join("")}</div>
 <p style="margin-top:24px;color:var(--mute)">${es ? "Suscríbete con tu lector de noticias:" : "Subscribe with your feed reader:"} <a href="{{L}}blog/feed.xml">RSS</a></p></div>`;
-  return page({ lang, rel: sec("blog", lang), alt: sec("blog", lang === "es" ? "en" : "es"), title: es ? "Blog de psicología" : "Psychology blog", desc: es ? "Blog de Psycholopedia: un artículo de psicología cada tres días." : "Psycholopedia blog: a psychology article every three days.", nav: "blog", crumbs: [["Blog"]], body });
+  return page({ lang, rel: sec("blog", lang), alt: sec("blog", lang === "es" ? "en" : "es"), title: es ? "Blog de psicología" : "Psychology blog", desc: es ? "Blog de Psycholopedia: tres artículos de psicología cada tres días." : "Psycholopedia blog: three psychology articles every three days.", nav: "blog", crumbs: [["Blog"]], body });
 }
 function post(p, lang) {
   const es = lang === "es"; const i = POSTS.indexOf(p); const newer = POSTS[i - 1]; const older = POSTS[i + 1];
@@ -814,12 +814,12 @@ function post(p, lang) {
 <p style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px">${older ? `<a href="{{L}}${postURL(older, lang).slice(base(lang).length)}">← ${older.t[lang]}</a>` : "<span></span>"}${newer ? `<a href="{{L}}${postURL(newer, lang).slice(base(lang).length)}">${newer.t[lang]} →</a>` : ""}</p>
 ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Últimas entradas" : "Latest posts"}</h4><ul>${POSTS.filter((x) => x !== p).slice(0, 5).map((x) => `<li><a href="{{L}}${postURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div>
-<div class="box"><h4>${es ? "Cada tres días" : "Every three days"}</h4><p style="margin:0">${es ? "Publicamos un artículo nuevo cada tres días." : "We publish a new article every three days."} <a href="{{L}}blog/feed.xml">RSS</a></p></div></aside></div>`;
+<div class="box"><h4>${es ? "Cada tres días" : "Every three days"}</h4><p style="margin:0">${es ? "Publicamos tres artículos nuevos cada tres días." : "We publish three new articles every three days."} <a href="{{L}}blog/feed.xml">RSS</a></p></div></aside></div>`;
   return page({ lang, rel: postURL(p, lang), alt: postURL(p, lang === "es" ? "en" : "es"), title: p.t[lang], desc: p.d[lang], nav: "blog", crumbs: [["Blog", sec("blog", lang)], [fFecha(p.fecha, lang)]], body, kind: "Blog" });
 }
 function feed(lang) {
   const x = (t) => esc(strip(t));
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Psycholopedia${lang === "en" ? " (English)" : ""}</title><link>${DOMAIN}/${sec("blog", lang)}</link><description>${x(lang === "es" ? "Un artículo de psicología cada tres días." : "A psychology article every three days.")}</description><language>${lang}</language>\n${POSTS.map((p) => `<item><title>${x(p.t[lang])}</title><link>${DOMAIN}/${postURL(p, lang)}</link><guid>${DOMAIN}/${postURL(p, lang)}</guid><pubDate>${new Date(p.fecha + "T08:00:00Z").toUTCString()}</pubDate><description>${x(p.d[lang])}</description></item>`).join("\n")}\n</channel></rss>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Psycholopedia${lang === "en" ? " (English)" : ""}</title><link>${DOMAIN}/${sec("blog", lang)}</link><description>${x(lang === "es" ? "Tres artículos de psicología cada tres días." : "Three psychology articles every three days.")}</description><language>${lang}</language>\n${POSTS.map((p) => `<item><title>${x(p.t[lang])}</title><link>${DOMAIN}/${postURL(p, lang)}</link><guid>${DOMAIN}/${postURL(p, lang)}</guid><pubDate>${new Date(p.fecha + "T08:00:00Z").toUTCString()}</pubDate><description>${x(p.d[lang])}</description></item>`).join("\n")}\n</channel></rss>\n`;
 }
 
 // ---------- construir ----------

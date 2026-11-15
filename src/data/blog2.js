@@ -2,7 +2,7 @@
 const A = (es, en) => ({ es, en });
 module.exports = [
 {
-  fecha: "2026-11-27", slug: A("cajal-y-las-mariposas-del-alma", "cajal-and-the-butterflies-of-the-soul"), cat: A("Historia", "History"),
+  fecha: "2026-11-18", slug: A("cajal-y-las-mariposas-del-alma", "cajal-and-the-butterflies-of-the-soul"), cat: A("Historia", "History"),
   t: A("Cajal y las «mariposas del alma»", "Cajal and the 'butterflies of the soul'"),
   d: A("Cómo un médico aragonés, dibujando al microscopio, demostró que el cerebro está hecho de células independientes.", "How a doctor from Aragon, drawing at the microscope, showed that the brain is made of separate cells."),
   es: `
@@ -30,7 +30,7 @@ module.exports = [
   refs: ["Ramón y Cajal, S. (1917). <em>Recuerdos de mi vida</em>. Madrid: Imprenta de Juan Pueyo.", "DeFelipe, J. (2010). <em>Cajal's butterflies of the soul: Science and art</em>. Nueva York: Oxford University Press."],
 },
 {
-  fecha: "2026-11-30", slug: A("las-fiestas-no-siempre-son-felices", "the-holidays-are-not-always-happy"), cat: A("Vida cotidiana", "Everyday life"),
+  fecha: "2026-11-18", slug: A("las-fiestas-no-siempre-son-felices", "the-holidays-are-not-always-happy"), cat: A("Vida cotidiana", "Everyday life"),
   t: A("Las fiestas no siempre son felices", "The holidays are not always happy"),
   d: A("La Navidad trae alegría a muchos, y nostalgia, estrés o soledad a otros. Qué hay de cierto en los tópicos y qué puede ayudar.", "The holidays bring joy to many, and nostalgia, stress or loneliness to others. What is true in the clichés and what can help."),
   es: `
@@ -72,7 +72,7 @@ module.exports = [
   refs: ["Woo, J.-M., Okusaga, O. y Postolache, T. T. (2012). Seasonality of suicidal behavior. <em>International Journal of Environmental Research and Public Health</em>, 9(2), 531–547.", "Holt-Lunstad, J., Smith, T. B. y Layton, J. B. (2010). Social relationships and mortality risk: a meta-analytic review. <em>PLoS Medicine</em>, 7(7), e1000316."],
 },
 {
-  fecha: "2026-12-03", slug: A("la-psicologia-se-puso-a-prueba", "psychology-put-itself-to-the-test"), cat: A("Ciencia", "Science"),
+  fecha: "2026-11-21", slug: A("la-psicologia-se-puso-a-prueba", "psychology-put-itself-to-the-test"), cat: A("Ciencia", "Science"),
   t: A("Cuando la psicología se puso a prueba a sí misma", "When psychology put itself to the test"),
   d: A("En 2015, cientos de investigadores repitieron cien estudios publicados. El resultado sacudió la disciplina y la ha hecho más rigurosa.", "In 2015, hundreds of researchers repeated a hundred published studies. The result shook the discipline and has made it more rigorous."),
   es: `
@@ -108,7 +108,7 @@ module.exports = [
   refs: ["Open Science Collaboration (2015). Estimating the reproducibility of psychological science. <em>Science</em>, 349(6251), aac4716.", "Nosek, B. A. et al. (2018). The preregistration revolution. <em>Proceedings of the National Academy of Sciences</em>, 115(11), 2600–2606."],
 },
 {
-  fecha: "2026-12-06", slug: A("neuromitos-en-el-aula", "neuromyths-in-the-classroom"), cat: A("Mitos", "Myths"),
+  fecha: "2026-11-21", slug: A("neuromitos-en-el-aula", "neuromyths-in-the-classroom"), cat: A("Mitos", "Myths"),
   t: A("Neuromitos en el aula", "Neuromyths in the classroom"),
   d: A("Estilos de aprendizaje, cerebro izquierdo y derecho, el 10 % del cerebro… Muchos docentes creen en ideas que la investigación no respalda.", "Learning styles, left and right brain, the 10% of the brain… Many teachers believe ideas that research does not support."),
   es: `
@@ -142,7 +142,7 @@ module.exports = [
   refs: ["Dekker, S., Lee, N. C., Howard-Jones, P. y Jolles, J. (2012). Neuromyths in education: prevalence and predictors of misconceptions among teachers. <em>Frontiers in Psychology</em>, 3, 429.", "Pashler, H., McDaniel, M., Rohrer, D. y Bjork, R. (2008). Learning styles: concepts and evidence. <em>Psychological Science in the Public Interest</em>, 9(3), 105–119.", "Dunlosky, J. et al. (2013). Improving students' learning with effective learning techniques. <em>Psychological Science in the Public Interest</em>, 14(1), 4–58."],
 },
 {
-  fecha: "2026-12-09", slug: A("lo-que-sabemos-de-la-gratitud", "what-we-know-about-gratitude"), cat: A("Vida cotidiana", "Everyday life"),
+  fecha: "2026-11-21", slug: A("lo-que-sabemos-de-la-gratitud", "what-we-know-about-gratitude"), cat: A("Vida cotidiana", "Everyday life"),
   t: A("Lo que sabemos (y lo que no) sobre la gratitud", "What we know (and don't) about gratitude"),
   d: A("Anotar lo que agradecemos se ha puesto de moda. Los estudios muestran efectos reales, pero más modestos de lo que prometen algunos libros.", "Writing down what we are grateful for has become fashionable. Studies show real effects, but more modest than some books promise."),
   es: `
@@ -180,7 +180,7 @@ module.exports = [
   refs: ["Emmons, R. A. y McCullough, M. E. (2003). Counting blessings versus burdens: an experimental investigation of gratitude and subjective well-being in daily life. <em>Journal of Personality and Social Psychology</em>, 84(2), 377–389.", "Dickens, L. R. (2017). Using gratitude to promote positive change: a series of meta-analyses investigating the effectiveness of gratitude interventions. <em>Basic and Applied Social Psychology</em>, 39(4), 193–208."],
 },
 {
-  fecha: "2026-12-12", slug: A("asi-nacio-el-primer-test-de-inteligencia", "how-the-first-intelligence-test-was-born"), cat: A("Historia", "History"),
+  fecha: "2026-11-24", slug: A("asi-nacio-el-primer-test-de-inteligencia", "how-the-first-intelligence-test-was-born"), cat: A("Historia", "History"),
   t: A("Así nació el primer test de inteligencia", "How the first intelligence test was born"),
   d: A("Alfred Binet lo creó para ayudar a los niños que se quedaban atrás en la escuela. Pronto se usó para fines que él no habría aprobado.", "Alfred Binet created it to help children who were falling behind at school. It was soon used for purposes he would not have approved of."),
   es: `

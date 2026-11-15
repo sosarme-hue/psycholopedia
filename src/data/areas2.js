@@ -98,7 +98,7 @@ module.exports = {
 
   psicobiologia: {
     titulo: A("Psicobiología: el cuerpo detrás de la mente", "Biological psychology: the body behind the mind"),
-    figs: ["Ivan Pavlov"],
+    figs: ["Iván Pávlov"],
     breve: A(`<p>Todo lo que pensamos, sentimos y hacemos tiene una base biológica: neuronas que se comunican, hormonas que circulan por la sangre y genes que influyen en cómo se construye el cerebro. La psicobiología estudia esas bases. No reduce la mente a la biología: muestra cómo biología, experiencia y entorno se influyen continuamente.</p>`,
       `<p>Everything we think, feel and do has a biological basis: neurons that communicate, hormones circulating in the blood and genes that influence how the brain is built. Biological psychology studies those bases. It does not reduce the mind to biology: it shows how biology, experience and environment constantly influence one another.</p>`),
     desarrollada: A(`

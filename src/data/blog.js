@@ -1,4 +1,4 @@
-// Blog: una entrada cada tres días. El generador solo publica las entradas con fecha <= hoy,
+// Blog: tres entradas cada tres días. El generador solo publica las entradas con fecha <= hoy,
 // así que se pueden dejar entradas escritas por adelantado.
 const A = (es, en) => ({ es, en });
 
@@ -18,7 +18,7 @@ const BLOG = [
 <li><strong>Participar</strong>: quiz, retos de razonamiento, actividades de reflexión y cursos.</li>
 </ul>
 <p>Intentaremos hacerlo con tres reglas: citar las fuentes, separar lo que es históricamente importante de lo que hoy tiene respaldo científico, y no convertir a nadie en una etiqueta.</p>
-<p>Este blog se actualiza cada tres días con un artículo breve: una historia, un experimento, una pregunta de la vida diaria o una reflexión desde la consulta. Bienvenidos.</p>`,
+<p>Este blog se actualiza cada tres días con tres artículos breves: historias, experimentos, preguntas de la vida diaria o reflexiones desde la consulta. Bienvenidos.</p>`,
     en: `
 <p>In primary care, many questions are not strictly medical: why can't I sleep since my mother died, why has my teenage son stopped telling me anything, why do I leave everything until the last minute. Behind each one lie decades of psychological research that seldom reach the public clearly.</p>
 <p>Psycholopedia aims to fill that gap. It has three ways in:</p>
@@ -28,11 +28,11 @@ const BLOG = [
 <li><strong>Take part</strong>: quizzes, reasoning challenges, reflection activities and courses.</li>
 </ul>
 <p>We will try to follow three rules: cite our sources, keep what is historically important apart from what has scientific support today, and never turn anyone into a label.</p>
-<p>This blog is updated every three days with a short article: a story, an experiment, an everyday question or a reflection from the surgery. Welcome.</p>`,
+<p>This blog is updated every three days with three short articles: stories, experiments, everyday questions or reflections from the surgery. Welcome.</p>`,
     refs: [],
   },
   {
-    fecha: "2026-11-18",
+    fecha: "2026-11-15",
     slug: A("dias-mas-cortos-luz-sueno-y-animo", "shorter-days-light-sleep-and-mood"),
     cat: A("Vida cotidiana", "Everyday life"),
     t: A("Días más cortos: la luz, el sueño y el ánimo en otoño", "Shorter days: light, sleep and mood in autumn"),
@@ -66,7 +66,7 @@ const BLOG = [
     refs: ["Rosenthal, N. E. et al. (1984). Seasonal affective disorder. <em>Archives of General Psychiatry</em>, 41(1), 72–80.", "Pjrek, E. et al. (2020). The efficacy of light therapy in the treatment of seasonal affective disorder: a meta-analysis of randomized controlled trials. <em>Psychotherapy and Psychosomatics</em>, 89(1), 17–24."],
   },
   {
-    fecha: "2026-11-21",
+    fecha: "2026-11-15",
     slug: A("ebbinghaus-y-la-curva-del-olvido", "ebbinghaus-and-the-forgetting-curve"),
     cat: A("Historia", "History"),
     t: A("Ebbinghaus, el hombre que se puso a prueba a sí mismo", "Ebbinghaus, the man who tested himself"),
@@ -90,7 +90,7 @@ const BLOG = [
     refs: ["Ebbinghaus, H. (1885). <em>Über das Gedächtnis</em>. Leipzig: Duncker & Humblot.", "Murre, J. M. J. y Dros, J. (2015). Replication and analysis of Ebbinghaus' forgetting curve. <em>PLoS ONE</em>, 10(7), e0120644."],
   },
   {
-    fecha: "2026-11-24",
+    fecha: "2026-11-18",
     slug: A("soledad-no-deseada", "unwanted-loneliness"),
     cat: A("Desde la consulta", "From the surgery"),
     t: A("La soledad no deseada también es un asunto de salud", "Unwanted loneliness is a health matter too"),
@@ -125,5 +125,5 @@ const BLOG = [
   },
 ];
 
-BLOG.push(...require("./blog2"));
+BLOG.push(...require("./blog2"), ...require("./blog3"));
 module.exports = { BLOG };
