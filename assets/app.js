@@ -33,7 +33,7 @@
   // buscador de la portada
   var q = $("#q"), res = $("#results");
   if (q && res) {
-    var root = $('link[rel="stylesheet"][href$="assets/site.css"]').getAttribute("href").replace(/assets\/site\.css$/, "");
+    var root = $('link[rel="stylesheet"][href*="assets/site.css"]').getAttribute("href").replace(/assets\/site\.css.*$/, "");
     var siteRoot = root;
     var idx = null, pre = location.protocol === "file:" || /index\.html$/.test(location.pathname) ? "index.html" : "";
     var norm = function (s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); };
@@ -110,6 +110,32 @@
       }).join("");
       var r = $("#pers-res");
       r.innerHTML = "<h2>" + (lang === "es" ? "Tu reflexión" : "Your reflection") + "</h2>" + out + '<p class="note">' + (lang === "es" ? "Estas barras solo resumen tus respuestas a diez frases. No son una medida validada ni un diagnóstico, y pueden cambiar según el momento y el contexto." : "These bars only summarise your answers to ten sentences. They are not a validated measure or a diagnosis, and they may change with time and context.") + "</p>";
+      r.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+
+  // tests de libre uso: puntuación en el navegador
+  var lt = $("#ltest");
+  if (lt) {
+    var D = JSON.parse(lt.getAttribute("data-test"));
+    lt.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var r = $("#ltest-res"), raw = 0, miss = [], alert = false, fsets = $$("fieldset.lq", lt);
+      D.items.forEach(function (it, i) {
+        var c = $('input[name="i' + i + '"]:checked', lt);
+        fsets[i].classList.toggle("miss", !c);
+        if (!c) { miss.push(i); return; }
+        raw += +c.value;
+        if (D.alerta.indexOf(i) >= 0 && +c.value > 0) alert = true;
+      });
+      if (miss.length) { r.innerHTML = '<p class="note warn">' + D.tx.falta + "</p>"; fsets[miss[0]].scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      var sc = raw * D.mult, band = "";
+      D.bandas.forEach(function (b) { if (sc >= b[0] && sc <= b[1]) band = b[2]; });
+      var adv = D.consejo != null && (D.bajo ? sc < D.consejo : sc >= D.consejo);
+      r.innerHTML = (alert ? '<div class="note crisis">' + D.tx.alerta + "</div>" : "") +
+        '<div class="box lres"><h4>' + D.tx.res + '</h4><p class="lsc"><b>' + sc + "</b> " + D.tx.pts + " " + D.max + '</p><div class="quiz" style="padding:0;border:0;background:none"><div class="bar"><i style="width:' + Math.round(sc / D.max * 100) + '%"></i></div></div><p style="margin:0;font-size:17px"><b>' + band + "</b></p>" +
+        (adv ? '<p style="margin:8px 0 0">' + D.tx.consejo + "</p>" : "") + '<p style="margin:8px 0 0;color:var(--mute)">' + D.tx.orient + "</p></div>";
       r.scrollIntoView({ behavior: "smooth" });
     });
   }
