@@ -170,11 +170,11 @@ const ESCUELAS = [
 { const { CUERPOS, NUEVAS } = require("./escuelas3"); for (const e of ESCUELAS) if (CUERPOS[e.slug.es]) Object.assign(e, CUERPOS[e.slug.es]); ESCUELAS.push(...NUEVAS); }
 { const X = Object.assign({}, require("./areas1"), require("./areas2"), require("./areas3")); for (const a of AREAS) if (X[a.slug.es]) Object.assign(a, X[a.slug.es], { ficha: true }); }
 for (const a of require("./areas4")) AREAS.push(Object.assign(a, { ficha: true }));
-{ const M = Object.assign({}, require("./areas5"), require("./areas6"), require("./areas7"));
+for (const f of ["./areas5", "./areas6", "./areas7", "./areas8", "./areas9", "./areas10"]) { const M = require(f);
   for (const a of AREAS) { const m = M[a.slug.es]; if (!m) continue; const t = a.full ? MEMORIA : a;
     for (const l of ["es", "en"]) { t.desarrollada[l] += m.mas2[l]; t.ampliacion[l] += m.mas3[l]; }
     t.refs = [...(t.refs || []), ...(m.refs || [])]; } }
-{ const M = require("./escuelas4"); for (const e of ESCUELAS) { const m = M[e.slug.es]; if (!m) continue;
+for (const f of ["./escuelas4", "./escuelas5", "./escuelas6"]) { const M = require(f); for (const e of ESCUELAS) { const m = M[e.slug.es]; if (!m) continue;
     for (const l of ["es", "en"]) e.body[l] += m.mas[l]; e.refs = [...(e.refs || []), ...(m.refs || [])]; } }
 const RAMASD = [...require("./ramas1"), ...require("./ramas2")];
 module.exports = { AREAS, GRUPOS, MEMORIA, RAMAS, RAMASD, PREG, ESCUELAS };

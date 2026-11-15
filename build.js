@@ -417,7 +417,7 @@ function areaFicha(a, lang) {
 <div class="wrap article"><article class="prose levels">${fig(I.AREAS[a.slug.es], lang)}
 <span class="eyebrow">${es ? "Nivel 1 · Introducción breve" : "Level 1 · Short introduction"}</span>${a.breve[lang]}
 <details open><summary>${es ? "Nivel 2 · Explicación desarrollada" : "Level 2 · Fuller explanation"}</summary>${a.desarrollada[lang]}</details>
-<details><summary>${es ? "Nivel 3 · Ampliación con referencias" : "Level 3 · Going further, with references"}</summary>${a.ampliacion[lang]}${refsHTML(lang, a.refs)}</details>
+<details open><summary>${es ? "Nivel 3 · Ampliación con referencias" : "Level 3 · Going further, with references"}</summary>${a.ampliacion[lang]}${refsHTML(lang, a.refs)}</details>
 ${meta(lang)}</article>
 <aside class="aside">${figs.length ? `<div class="box"><h4>${es ? "Figuras relacionadas" : "Related figures"}</h4><ul>${figs.map((f) => `<li><a href="{{L}}${es ? "figuras" : "people"}/${f.slug}/">${f.nombre}</a></li>`).join("")}</ul></div>` : ""}
 <div class="box"><h4>${es ? "Otras áreas de este bloque" : "Other areas in this group"}</h4><ul>${otras.map((x) => `<li><a href="{{L}}${areaURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div>
@@ -430,7 +430,7 @@ function areaMemoria(lang) {
 <div class="wrap article"><article class="prose levels">${fig("curva-olvido", lang)}
 <span class="eyebrow">${es ? "Nivel 1 · Introducción breve" : "Level 1 · Short introduction"}</span>${M.breve[lang]}
 <details open><summary>${es ? "Nivel 2 · Explicación desarrollada" : "Level 2 · Fuller explanation"}</summary>${M.desarrollada[lang]}</details>
-<details><summary>${es ? "Nivel 3 · Ampliación con referencias" : "Level 3 · Going further, with references"}</summary>${M.ampliacion[lang]}${refsHTML(lang, M.refs)}</details>
+<details open><summary>${es ? "Nivel 3 · Ampliación con referencias" : "Level 3 · Going further, with references"}</summary>${M.ampliacion[lang]}${refsHTML(lang, M.refs)}</details>
 ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${T[lang].relacionado}</h4><ul>
 <li><a href="{{L}}figuras/elizabeth-loftus/">Elizabeth Loftus</a></li><li><a href="{{L}}figuras/mary-whiton-calkins/">Mary Whiton Calkins</a></li>
