@@ -349,6 +349,13 @@
   "user": "curranrob",
   "slug": "grascale-photo-of-people-standing-on-ground-sUXXO3xPBYo"
  },
+ "lab-antiguo": {
+  "u": 1,
+  "ph": "photo-1763066472871-a49d025f9f64",
+  "by": "Philippe Bontemps",
+  "user": "philippeb",
+  "slug": "antique-microscope-and-wooden-box-on-a-table-CzrgXZEhg_M"
+ },
  "clark-1909": {
   "by": "",
   "lic": "PD",
@@ -360,12 +367,6 @@
   "lic": "PD",
   "page": "https://commons.wikimedia.org/wiki/File:Freud_at_Clark_University_in_1909.jpg",
   "file": "Freud at Clark University in 1909.jpg"
- },
- "descartes": {
-  "by": "Según Frans Hals",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg",
-  "file": "Frans Hals - Portret van René Descartes.jpg"
  },
  "eniac": {
   "by": "",
@@ -457,137 +458,17 @@
   "page": "https://commons.wikimedia.org/wiki/File:Asch_conformity_experiment.png",
   "file": "Asch conformity experiment.png"
  },
- "darwin": {
-  "by": "Julia Margaret Cameron",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Charles_Darwin_by_Julia_Margaret_Cameron%2C_c._1868.jpg",
-  "file": "Charles Darwin by Julia Margaret Cameron, c. 1868.jpg"
- },
- "p-wundt": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Wilhelm_Wundt.jpg",
-  "file": "Wilhelm Wundt.jpg"
- },
- "p-calkins": {
-  "by": "Notman Photography, Boston",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Mary_Whiton_Calkins_face%2C_undated.jpg",
-  "file": "Mary Whiton Calkins face, undated.jpg"
- },
- "p-washburn": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Margaret_Floy_Washburn.jpg",
-  "file": "Margaret Floy Washburn.jpg"
- },
  "p-pavlov": {
   "by": "",
   "lic": "PD",
   "page": "https://commons.wikimedia.org/wiki/File:Ivan_Pavlov_NLM3.jpg",
   "file": "Ivan Pavlov NLM3.jpg"
  },
- "p-watson": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:John_Broadus_Watson.JPG",
-  "file": "John Broadus Watson.JPG"
- },
- "p-skinner": {
-  "by": "Silly rabbit",
-  "lic": "CC BY 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:B.F._Skinner_at_Harvard_circa_1950_%28cropped%29.jpg",
-  "file": "B.F. Skinner at Harvard circa 1950 (cropped).jpg"
- },
- "p-wertheimer": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Max_Werheimer_%281880-1943%29.jpg",
-  "file": "Max Werheimer (1880-1943).jpg"
- },
- "p-kohler": {
-  "by": "Historical Library, Swarthmore College",
-  "lic": "CC BY-SA 2.5",
-  "page": "https://commons.wikimedia.org/wiki/File:Wolfgang_K%C3%B6hler.jpg",
-  "file": "Wolfgang Köhler.jpg"
- },
- "p-piaget": {
-  "by": "Michiganensian",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Jean_Piaget_in_Ann_Arbor.png",
-  "file": "Jean Piaget in Ann Arbor.png"
- },
- "p-vygotski": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Lev-Semyonovich-Vygotsky-1896-1934.jpg",
-  "file": "Lev-Semyonovich-Vygotsky-1896-1934.jpg"
- },
- "p-bartlett": {
-  "by": "Bassano Ltd",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Frederic_Bartlett_in_1948.jpg",
-  "file": "Frederic Bartlett in 1948.jpg"
- },
- "p-rogers": {
-  "by": "Didius",
-  "lic": "CC BY 2.5",
-  "page": "https://commons.wikimedia.org/wiki/File:Carl_Ransom_Rogers.jpg",
-  "file": "Carl Ransom Rogers.jpg"
- },
- "p-maslow": {
-  "by": "William Carter",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Photo_of_Abraham_Harold_Maslow_by_William_Carter_%28cropped%29.jpg",
-  "file": "Photo of Abraham Harold Maslow by William Carter (cropped).jpg"
- },
- "p-bandura": {
-  "by": "",
-  "lic": "CC BY-SA 4.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Albert_Bandura_Psychologist.jpg",
-  "file": "Albert Bandura Psychologist.jpg"
- },
  "p-luria": {
   "by": "",
   "lic": "PD",
   "page": "https://commons.wikimedia.org/wiki/File:Alexander_Luria.jpg",
   "file": "Alexander Luria.jpg"
- },
- "p-milner": {
-  "by": "Eva Blue",
-  "lic": "CC BY 2.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Brenda_Milner.jpg",
-  "file": "Brenda Milner.jpg"
- },
- "p-loftus": {
-  "by": "BDEngler",
-  "lic": "CC BY-SA 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Elizabeth_Loftus-TAM_9-July_2011.JPG",
-  "file": "Elizabeth Loftus-TAM 9-July 2011.JPG"
- },
- "p-kahneman": {
-  "by": "nrkbeta",
-  "lic": "CC BY-SA 2.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Daniel_Kahneman_%283283955327%29_%28cropped%29.jpg",
-  "file": "Daniel Kahneman (3283955327) (cropped).jpg"
- },
- "p-ebbinghaus": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Ebbinghaus2.jpg",
-  "file": "Ebbinghaus2.jpg"
- },
- "p-fechner": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Gustav_Fechner.jpg",
-  "file": "Gustav Fechner.jpg"
- },
- "p-titchener": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Edward_Bradford_Titchener.jpg",
-  "file": "Edward Bradford Titchener.jpg"
  },
  "wundt-grupo": {
   "by": "",
