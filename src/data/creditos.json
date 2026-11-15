@@ -356,6 +356,27 @@
   "user": "philippeb",
   "slug": "antique-microscope-and-wooden-box-on-a-table-CzrgXZEhg_M"
  },
+ "f-ainsworth": {
+  "u": 1,
+  "ph": "photo-1504888060547-83cbe78ccfe0",
+  "by": "Andrae Ricketts",
+  "user": "drezart",
+  "slug": "grayscale-photo-of-woman-carrying-baby-Q9_zv0LN4jU"
+ },
+ "f-tversky": {
+  "u": 1,
+  "ph": "photo-1791909867713-aa7ec3149960",
+  "by": "clement proust",
+  "user": "clementproust",
+  "slug": "white-dice-on-wooden-surface-PrGmINuyd9Q"
+ },
+ "f-neisser": {
+  "u": 1,
+  "ph": "photo-1453828423292-392a660a502f",
+  "by": "Roman Kraft",
+  "user": "iamromankraft",
+  "slug": "old-photos-in-brown-wooden-chest-7sPg5OLfExc"
+ },
  "clark-1909": {
   "by": "",
   "lic": "PD",
@@ -457,18 +478,6 @@
   "lic": "CC BY-SA 3.0",
   "page": "https://commons.wikimedia.org/wiki/File:Asch_conformity_experiment.png",
   "file": "Asch conformity experiment.png"
- },
- "p-pavlov": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Ivan_Pavlov_NLM3.jpg",
-  "file": "Ivan Pavlov NLM3.jpg"
- },
- "p-luria": {
-  "by": "",
-  "lic": "PD",
-  "page": "https://commons.wikimedia.org/wiki/File:Alexander_Luria.jpg",
-  "file": "Alexander Luria.jpg"
  },
  "wundt-grupo": {
   "by": "",

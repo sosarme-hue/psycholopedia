@@ -166,4 +166,7 @@ const ESCUELAS = [
   { slug: A("perspectivas-evolucionistas", "evolutionary-perspectives"), t: A("Perspectivas evolucionistas", "Evolutionary perspectives"), d: A("Qué funciones pudieron tener los procesos psicológicos en la evolución.", "What functions psychological processes may have had in evolution.") },
 ];
 
-module.exports = { AREAS, GRUPOS, MEMORIA, RAMAS, PREG, ESCUELAS };
+{ const X = require("./escuelas2"); for (const e of ESCUELAS) if (X[e.slug.es]) Object.assign(e, X[e.slug.es]); }
+{ const X = Object.assign({}, require("./areas1"), require("./areas2"), require("./areas3")); for (const a of AREAS) if (X[a.slug.es]) Object.assign(a, X[a.slug.es], { ficha: true }); }
+const RAMASD = [...require("./ramas1"), ...require("./ramas2")];
+module.exports = { AREAS, GRUPOS, MEMORIA, RAMAS, RAMASD, PREG, ESCUELAS };
