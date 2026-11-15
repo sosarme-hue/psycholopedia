@@ -294,4 +294,11 @@ const ESCRITOS = {
   },
 };
 
+// Capítulos escritos en archivos aparte, uno por bloque (src/data/historia/bN.js).
+for (const f of ["b1", "b2", "b3", "b4", "b5", "b6"]) {
+  let m = {};
+  try { m = require("./historia/" + f); } catch (e) { if (e.code !== "MODULE_NOT_FOUND") throw e; }
+  for (const [n, c] of Object.entries(m)) { SLUGS[n] = c.slug; ESCRITOS[n] = c; }
+}
+
 module.exports = { BLOQUES, CAPS, SLUGS, ESCRITOS };

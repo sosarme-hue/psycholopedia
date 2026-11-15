@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const H = require("./src/data/historia");
+const FP = require("./src/data/filopedia");
 const F = require("./src/data/figuras");
 const E = require("./src/data/explorar");
 const V = require("./src/data/vida");
@@ -119,7 +120,7 @@ ${fill(body)}
   <div class="cols">
     <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda}</div></div>
     <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
-    <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a></div>
+    <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
   <p style="margin:22px 0 0">${lang === "es" ? `Creada por Alejandro Rosàs, médico de familia con más de 38 años de experiencia en atención primaria, especialista en Medicina Preventiva y Salud Pública (col. 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">Quién está detrás</a>` : `Created by Alejandro Rosàs, a family doctor with more than 38 years in primary care and a specialist in Preventive Medicine and Public Health (licence 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">About</a>`}</p><p style="margin:6px 0 0">© 2026 ${SITE} · ${t.tagline}</p>
@@ -139,12 +140,16 @@ const phead = (eyebrow, h1, lead) => `<header class="phead wrap"><span class="ey
 // ---------- Imágenes ----------
 let CRED = {}; try { CRED = JSON.parse(fs.readFileSync(path.join(__dirname, "src/data/creditos.json"), "utf8")); } catch (e) { CRED = {}; }
 const UTM = "?utm_source=psycholopedia&utm_medium=referral";
-const HAS = (k) => { const m = I.IMG[k]; return !!m && (m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
+const HASL = (k) => { const m = I.IMG[k]; return !!m && (m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
+// Retratos servidos desde Filopedia (mismo propietario): solo en la web real, la vista previa no puede cargarlos.
+const FILOIMG = (k) => { const m = I.IMG[k]; return !!m && !!m.f && !HASL(k) && !PREVIEW; };
+const HAS = (k) => HASL(k) || FILOIMG(k);
 // Sustituye en los mapas de uso las imágenes que faltan por su respaldo de Unsplash.
 { const fb = (k, tag) => (HAS(k) ? k : I.FALLBACK[k + "@" + tag] || I.FALLBACK[k] || k);
   for (const [m, tag] of [[I.AREAS, "area"], [I.ESCUELAS, "esc"], [I.CURIOSIDADES, "cur"]]) for (const s in m) m[s] = fb(m[s], tag); }
 function isrc(k, w = 900) {
   const m = I.IMG[k]; if (!m) return "";
+  if (FILOIMG(k)) return `https://filopedia.com/img/r/${m.f}.jpg`;
   if (m.c) return `{{R}}assets/img/${m.c}`;
   const c = CRED[k] || {};
   return PREVIEW ? `{{R}}assets/img/u/${k}.jpg` : `https://images.unsplash.com/${c.ph}?auto=format&fit=crop&w=${w}&q=70`;
@@ -154,8 +159,9 @@ const cimg = (k, cls = "") => (k && HAS(k) ? `<span class="cimg${CONTAIN.has(k) 
 const ini = (n) => n.split(/\s+/).map((w) => w[0]).filter((ch) => /[A-ZÁÉÍÓÚÜ]/.test(ch)).slice(0, 2).join("");
 const av = (k, n) => (k && HAS(k) ? `<img class="av" src="${isrc(k, 200)}" alt="" loading="lazy" decoding="async">` : `<span class="av ini" aria-hidden="true">${ini(n)}</span>`);
 function credit(k, lang) {
-  const c = CRED[k]; if (!c) return "";
   const es = lang === "es";
+  if (FILOIMG(k)) return `${es ? "Retrato" : "Portrait"}: Wikimedia Commons, ${es ? "vía" : "via"} <a href="https://filopedia.com/${es ? "" : "en/"}a/${I.IMG[k].fs}.html" rel="noopener">Filopedia</a>`;
+  const c = CRED[k]; if (!c) return "";
   if (c.u) return `${es ? "Foto" : "Photo"}: <a href="https://unsplash.com/@${c.user}${UTM}" rel="noopener">${c.by}</a> / <a href="https://unsplash.com/photos/${c.slug}${UTM}" rel="noopener">Unsplash</a>`;
   const lic = { PD: es ? "Dominio público" : "Public domain", NKR: es ? "Sin restricciones de copyright conocidas" : "No known copyright restrictions" }[c.lic] || c.lic || (es ? "Dominio público" : "Public domain");
   return `${c.by ? c.by + " · " : ""}<a href="${c.page}" rel="noopener">${lic} · Wikimedia Commons</a>`;
@@ -289,7 +295,7 @@ function historiaIndex(lang) {
     es ? "Una narración en 24 capítulos. Cada uno responde a lo mismo: qué se intentaba comprender, con qué métodos, quién participó, qué aportó y qué se revisó después." : "A narrative in 24 chapters. Each one answers the same questions: what people were trying to understand, with what methods, who took part, what it contributed and what was revised later.") + banner(I.SECCIONES.historia, lang) + `
 <div class="wrap narrow"><div class="note">${es ? "Incluimos expresamente a mujeres investigadoras, contextos no occidentales y la relación con la historia social. Las fechas célebres sirven de orientación, no como una sucesión de descubrimientos aislados." : "We deliberately include women researchers, non-Western contexts and links with social history. Famous dates serve as signposts, not as a chain of isolated discoveries."}</div>
 <p>${es ? `Ya puedes leer ${capEscritos.length} capítulos; los demás están en preparación.` : `${capEscritos.length} chapters are ready to read; the rest are in preparation.`}</p>
-<div class="blocks">${H.BLOQUES.map((b, bi) => `<section class="block">${HAS(I.ERAS[bi]) ? `<span class="bimg"><img src="${isrc(I.ERAS[bi], 1200)}" alt="${esc(I.IMG[I.ERAS[bi]].alt[lang])}" loading="lazy" decoding="async"></span>` : ""}<span class="eyebrow">${es ? "Bloque" : "Part"} ${bi + 1}</span><h2>${b[lang]}</h2>${b.caps.map((n) => {
+<div class="blocks">${H.BLOQUES.map((b, bi) => `<section class="block">${HASL(I.ERAS[bi]) ? `<span class="bimg"><img src="${isrc(I.ERAS[bi], 1200)}" alt="${esc(I.IMG[I.ERAS[bi]].alt[lang])}" loading="lazy" decoding="async"></span>` : ""}<span class="eyebrow">${es ? "Bloque" : "Part"} ${bi + 1}</span><h2>${b[lang]}</h2>${b.caps.map((n) => {
     const w = H.ESCRITOS[n];
     return w ? `<a class="chap" href="{{L}}${capURL(n, lang).slice(base(lang).length)}"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3><p>${w.desc[lang]}</p></div><span class="pill">${w.fechas}</span></a>` : `<div class="chap"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3></div>${pill(lang)}</div>`;
   }).join("")}</section>`).join("")}</div></div>`;
@@ -303,7 +309,7 @@ function capitulo(n, lang) {
 <div class="wrap article"><article class="prose">${fig(I.CAPS[n], lang, n === 9 ? "portrait" : "")}${w.body[lang]}${refsHTML(lang, w.refs)}
 <p style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px">${prev ? `<a href="{{L}}${capURL(prev, lang).slice(base(lang).length)}">← ${prev}. ${H.CAPS[prev][lang]}</a>` : "<span></span>"}${next ? `<a href="{{L}}${capURL(next, lang).slice(base(lang).length)}">${next}. ${H.CAPS[next][lang]} →</a>` : ""}</p>
 ${meta(lang)}</article>
-<aside class="aside"><div class="box"><h4>${es ? "Protagonistas" : "Key people"}</h4><ul>${w.personas.map((p) => { const f = F.FIGURAS.find((x) => x.nombre === p && x.slug); return `<li>${f ? `<a href="{{L}}figuras/${f.slug}/">${p}</a>` : p}</li>`; }).join("")}</ul></div>
+<aside class="aside"><div class="box"><h4>${es ? "Protagonistas" : "Key people"}</h4><ul>${w.personas.map((p) => { const f = F.FIGURAS.find((x) => x.nombre === p && x.slug); const fu = FP.filoURL(p, lang); return `<li>${f ? `<a href="{{L}}figuras/${f.slug}/">${p}</a>` : fu ? `<a href="${fu}" rel="noopener" title="Filopedia">${p} ↗</a>` : p}</li>`; }).join("")}</ul></div>
 <div class="box"><h4>${es ? "Conceptos" : "Concepts"}</h4><ul>${w.conceptos[lang].map((c) => `<li>${c}</li>`).join("")}</ul></div>
 <div class="box"><h4>${es ? "Las cinco preguntas" : "The five questions"}</h4><ol style="margin:0;padding-left:18px">${(es ? ["¿Qué se intentaba comprender?", "¿Con qué métodos?", "¿Quién participó?", "¿Qué aportó?", "¿Qué se revisó después?"] : ["What were people trying to understand?", "With what methods?", "Who took part?", "What did it contribute?", "What was revised later?"]).map((x) => `<li>${x}</li>`).join("")}</ol></div></aside></div>`;
   return page({ lang, rel: capURL(n, lang), alt: capURL(n, lang === "es" ? "en" : "es"), title: H.CAPS[n][lang], desc: w.desc[lang], nav: "historia", crumbs: [[es ? "Historia" : "History", sec("historia", lang)], [`${es ? "Cap." : "Ch."} ${n}`]], body, kind: es ? "Historia" : "History" });
@@ -319,9 +325,10 @@ function figurasIndex(lang) {
 <select id="fig-area" aria-label="${es ? "Área" : "Area"}"><option value="*">${es ? "Todas las áreas" : "All areas"}</option>${areas.map((a) => `<option>${a}</option>`).join("")}</select></div>
 <div class="grid g4" id="figs">${F.FIGURAS.map((f) => {
     const inner = `${av(I.FIGURAS[f.nombre], f.nombre)}<span class="tag">${F.EPOCAS[f.epoca][lang]} · ${f.pais[lang]}</span><h3>${f.nombre}</h3><p>${f.vida}<br>${f.area[lang]} · ${f.escuela[lang]}</p>`;
-    return f.slug ? `<a class="card" data-e="${f.epoca}" data-a="${esc(f.area[lang])}" href="{{L}}figuras/${f.slug}/">${inner}<span class="more">${es ? "Leer ficha" : "Read profile"} →</span></a>` : `<div class="card soon" data-e="${f.epoca}" data-a="${esc(f.area[lang])}">${inner}<p style="margin-top:10px">${pill(lang)}</p></div>`;
+    return f.slug ? `<a class="card" data-e="${f.epoca}" data-a="${esc(f.area[lang])}" href="{{L}}figuras/${f.slug}/">${inner}<span class="more">${es ? "Leer ficha" : "Read profile"} →</span></a>` : (FP.filoURL(f.nombre, lang) ? `<a class="card" data-e="${f.epoca}" data-a="${esc(f.area[lang])}" href="${FP.filoURL(f.nombre, lang)}" rel="noopener">${inner}<span class="more">${es ? "Biografía en Filopedia" : "Biography on Filopedia"} ↗</span></a>` : `<div class="card soon" data-e="${f.epoca}" data-a="${esc(f.area[lang])}">${inner}<p style="margin-top:10px">${pill(lang)}</p></div>`);
   }).join("")}</div>
-<p style="margin-top:24px;color:var(--mute)">${es ? "Cada ficha incluye biografía y contexto, preguntas investigadas, aportaciones, colaboraciones y discrepancias, anécdotas documentadas, críticas y referencias." : "Each profile includes biography and context, research questions, contributions, collaborations and disagreements, documented anecdotes, criticism and references."}</p></div>`;
+<div class="note" style="margin-top:24px">${es ? `¿Buscas a alguien más? En <a href="${FP.filoPsico(lang)}" rel="noopener">Filopedia</a>, nuestra enciclopedia hermana, hay biografías de más de 390 psicólogos y psicoanalistas.` : `Looking for someone else? <a href="${FP.filoPsico(lang)}" rel="noopener">Filopedia</a>, our sister encyclopedia, has biographies of more than 390 psychologists and psychoanalysts.`}</div>
+<p style="margin-top:16px;color:var(--mute)">${es ? "Cada ficha incluye biografía y contexto, preguntas investigadas, aportaciones, colaboraciones y discrepancias, anécdotas documentadas, críticas y referencias." : "Each profile includes biography and context, research questions, contributions, collaborations and disagreements, documented anecdotes, criticism and references."}</p></div>`;
   return page({ lang, rel: sec("figuras", lang), alt: sec("figuras", lang === "es" ? "en" : "es"), title: es ? "Grandes figuras de la psicología" : "Key figures in psychology", desc: es ? "Biografías de Wundt, James, Calkins, Washburn, Piaget, Loftus y otras grandes figuras de la psicología." : "Biographies of Wundt, James, Calkins, Washburn, Piaget, Loftus and other key figures in psychology.", nav: "explorar", crumbs: [[es ? "Explorar" : "Explore", sec("explorar", lang)], [es ? "Grandes figuras" : "Key figures"]], body });
 }
 function ficha(slug, lang) {
@@ -332,6 +339,7 @@ function ficha(slug, lang) {
 <aside class="aside"><div class="box"><h4>${es ? "Ficha" : "Profile"}</h4><dl class="facts"><dt>${es ? "Vida" : "Life"}</dt><dd>${f.vida}</dd><dt>${es ? "País" : "Country"}</dt><dd>${f.pais[lang]}</dd><dt>${es ? "Área" : "Area"}</dt><dd>${f.area[lang]}</dd><dt>${es ? "Enfoque" : "Approach"}</dt><dd>${f.escuela[lang]}</dd></dl></div>
 <div class="box"><h4>${es ? "Obras principales" : "Main works"}</h4><ul>${d.obras.map((o) => `<li><em>${o}</em></li>`).join("")}</ul></div>
 <div class="box"><h4>${es ? "Conceptos relacionados" : "Related concepts"}</h4><ul>${d.conceptos[lang].map((c) => `<li>${c}</li>`).join("")}</ul></div>
+${FP.filoURL(f.nombre, lang) ? `<div class="box"><h4>Filopedia</h4><p style="margin:0"><a href="${FP.filoURL(f.nombre, lang)}" rel="noopener">${es ? "Biografía ampliada, influencias y curiosidades" : "Extended biography, influences and curiosities"} ↗</a></p></div>` : ""}
 ${caps.length ? `<div class="box"><h4>${T[lang].relacionado}</h4><ul>${caps.map((n) => `<li><a href="{{L}}${capURL(n, lang).slice(base(lang).length)}">${H.CAPS[n][lang]}</a></li>`).join("")}</ul></div>` : ""}</aside></div>`;
   return page({ lang, rel: figURL(slug, lang), alt: figURL(slug, lang === "es" ? "en" : "es"), title: f.nombre, desc: strip(d.resumen[lang]), nav: "explorar", crumbs: [[es ? "Grandes figuras" : "Key figures", sec("figuras", lang)], [f.nombre]], body, kind: es ? "Biografía" : "Biography" });
 }
@@ -610,7 +618,7 @@ function legal(lang) {
 }
 function creditos(lang) {
   const es = lang === "es";
-  const rows = Object.keys(I.IMG).filter((k) => CRED[k] && HAS(k)).map((k) => `<tr><td><img class="cthumb" src="${isrc(k, 200)}" alt="" loading="lazy"></td><td>${I.IMG[k].alt[lang]}</td><td>${credit(k, lang)}</td></tr>`).join("");
+  const rows = Object.keys(I.IMG).filter((k) => (CRED[k] || FILOIMG(k)) && HAS(k)).map((k) => `<tr><td><img class="cthumb" src="${isrc(k, 200)}" alt="" loading="lazy"></td><td>${I.IMG[k].alt[lang]}</td><td>${credit(k, lang)}</td></tr>`).join("");
   const body = phead(es ? "Proyecto" : "Project", es ? "Créditos de imágenes" : "Image credits", es ? "Las fotografías históricas proceden de Wikimedia Commons y las actuales, de Unsplash. Aquí figuran su autoría y su licencia." : "Historical photographs come from Wikimedia Commons and present-day ones from Unsplash. Their authorship and licences are listed here.") + `
 <div class="wrap narrow prose">
 <p>${es ? "Las imágenes de dominio público o con licencia Creative Commons se reproducen respetando sus condiciones; las licencias CC BY y CC BY-SA exigen citar la autoría, que se indica junto a cada imagen y en esta lista. Las fotografías de Unsplash se usan con la <a href=\"https://unsplash.com/license\" rel=\"noopener\">licencia de Unsplash</a>." : "Public-domain and Creative Commons images are reproduced in line with their terms; CC BY and CC BY-SA licences require attribution, given next to each image and in this list. Unsplash photographs are used under the <a href=\"https://unsplash.com/license\" rel=\"noopener\">Unsplash licence</a>."}</p>
