@@ -82,6 +82,7 @@ const IMG = {
   "r-rehabilitacion": { u: 1, alt: A("Una fisioterapeuta acompaña un ejercicio de rehabilitación", "A physiotherapist guiding a rehabilitation exercise") },
   "r-cultural": { u: 1, alt: A("Personas con trajes tradicionales en una celebración", "People in traditional dress at a celebration") },
   "r-arte": { u: 1, alt: A("Una violinista tocando, en blanco y negro", "A violinist playing, in black and white") },
+  "hall-wm": { x: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/G._Stanley_Hall.jpg/500px-G._Stanley_Hall.jpg", xp: "https://commons.wikimedia.org/wiki/File:G._Stanley_Hall.jpg", alt: A("G. Stanley Hall, que fundó en 1883 el primer laboratorio de psicología de Estados Unidos", "G. Stanley Hall, who founded the first psychology laboratory in the United States in 1883") },
   "lab-antiguo": { u: 1, alt: A("Un microscopio antiguo junto a su caja de madera", "An antique microscope beside its wooden box") },
   "e-sistemicos": { u: 1, alt: A("Una familia camina junta por la orilla al atardecer", "A family walking together along the shore at sunset") },
   "e-contextuales": { u: 1, alt: A("Una persona sentada en calma frente a las montañas", "A person sitting calmly facing the mountains") },
@@ -106,7 +107,7 @@ const IMG = {
 
 // Dónde se usa cada una
 const ERAS = ["descartes", "p-fechner", "wundt-grupo", "clark-conferencia-1909", "eniac", "neuro"];
-const CAPS = { 9: "p-fechner", 10: "lab-antiguo", 15: "rubin", 19: "eniac" };
+const CAPS = { 9: "p-fechner", 10: "hall-wm", 15: "rubin", 19: "eniac" };
 const AREAS = { percepcion: "kanizsa", atencion: "stroop", aprendizaje: "perro-pavlov", memoria: "curva-olvido", pensamiento: "pensador", lenguaje: "lenguaje", motivacion: "motivacion", emocion: "duchenne", personalidad: "personalidad", "inteligencia-y-creatividad": "binet-test", psicobiologia: "cajal-purkinje", neuropsicologia: "phineas-gage", desarrollo: "desarrollo", "psicologia-social": "social", "metodos-y-estadistica": "galton", "psicometria-y-evaluacion": "rorschach" };
 const ESCUELAS = { estructuralismo: "p-titchener", funcionalismo: "p-james", psicoanalisis: "p-freud", conductismo: "p-watson", gestalt: "rubin", humanismo: "p-maslow", "psicologia-cognitiva": "eniac", "enfoques-socioculturales": "p-vygotski", "perspectivas-evolucionistas": "darwin", "enfoques-sistemicos": "e-sistemicos", "enfoques-contextuales": "e-contextuales" };
 const RAMAS = ["r-clinica","r-educativa","r-trabajo","r-juridica","r-comunitaria","r-deporte","r-ambiental","r-consumo","r-tecnologia","r-rehabilitacion","r-cultural","r-arte"];

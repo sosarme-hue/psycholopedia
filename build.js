@@ -140,7 +140,7 @@ const phead = (eyebrow, h1, lead) => `<header class="phead wrap"><span class="ey
 // ---------- Imágenes ----------
 let CRED = {}; try { CRED = JSON.parse(fs.readFileSync(path.join(__dirname, "src/data/creditos.json"), "utf8")); } catch (e) { CRED = {}; }
 const UTM = "?utm_source=psycholopedia&utm_medium=referral";
-const HASL = (k) => { const m = I.IMG[k]; return !!m && (m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
+const HASL = (k) => { const m = I.IMG[k]; return !!m && (m.x ? true : m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
 // Retratos servidos desde Filopedia (mismo propietario): solo en la web real, la vista previa no puede cargarlos.
 const FILOIMG = (k) => { const m = I.IMG[k]; return !!m && !!m.f && !HASL(k) && !PREVIEW; };
 const HAS = (k) => HASL(k) || FILOIMG(k);
@@ -150,6 +150,7 @@ const HAS = (k) => HASL(k) || FILOIMG(k);
 function isrc(k, w = 900) {
   const m = I.IMG[k]; if (!m) return "";
   if (FILOIMG(k)) return `https://filopedia.com/img/r/${m.f}.jpg`;
+  if (m.x) return m.x;
   if (m.c) return `{{R}}assets/img/${m.c}`;
   const c = CRED[k] || {};
   return PREVIEW ? `{{R}}assets/img/u/${k}.jpg` : `https://images.unsplash.com/${c.ph}?auto=format&fit=crop&w=${w}&q=70`;
@@ -160,6 +161,7 @@ const ini = (n) => n.split(/\s+/).map((w) => w[0]).filter((ch) => /[A-ZÁÉÍÓ�
 const av = (k, n) => (k && HAS(k) ? `<img class="av" src="${isrc(k, 200)}" alt="" loading="lazy" decoding="async">` : `<span class="av ini" aria-hidden="true">${ini(n)}</span>`);
 function credit(k, lang) {
   const es = lang === "es";
+  if (I.IMG[k] && I.IMG[k].x) return `${es ? "Imagen" : "Image"}: <a href="${I.IMG[k].xp}" rel="noopener">Wikimedia Commons</a>, ${es ? "dominio público" : "public domain"}`;
   if (FILOIMG(k)) return `${es ? "Retrato" : "Portrait"}: Wikimedia Commons, ${es ? "vía" : "via"} <a href="https://filopedia.com/${es ? "" : "en/"}a/${I.IMG[k].fs}.html" rel="noopener">Filopedia</a>`;
   const c = CRED[k]; if (!c) return "";
   if (c.u) return `${es ? "Foto" : "Photo"}: <a href="https://unsplash.com/@${c.user}${UTM}" rel="noopener">${c.by}</a> / <a href="https://unsplash.com/photos/${c.slug}${UTM}" rel="noopener">Unsplash</a>`;
@@ -306,7 +308,7 @@ function capitulo(n, lang) {
   const idx = capEscritos.indexOf(n); const prev = capEscritos[idx - 1]; const next = capEscritos[idx + 1];
   const bloque = H.BLOQUES.find((b) => b.caps.includes(n));
   const body = phead(`${es ? "Capítulo" : "Chapter"} ${n} · ${bloque[lang]} · ${w.fechas}`, H.CAPS[n][lang], w.desc[lang]) + `
-<div class="wrap article"><article class="prose">${fig(I.CAPS[n], lang, n === 9 ? "portrait" : "")}${w.body[lang]}${refsHTML(lang, w.refs)}
+<div class="wrap article"><article class="prose">${fig(I.CAPS[n], lang, n === 9 || n === 10 ? "portrait" : "")}${w.body[lang]}${refsHTML(lang, w.refs)}
 <p style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px">${prev ? `<a href="{{L}}${capURL(prev, lang).slice(base(lang).length)}">← ${prev}. ${H.CAPS[prev][lang]}</a>` : "<span></span>"}${next ? `<a href="{{L}}${capURL(next, lang).slice(base(lang).length)}">${next}. ${H.CAPS[next][lang]} →</a>` : ""}</p>
 ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Protagonistas" : "Key people"}</h4><ul>${w.personas.map((p) => { const f = F.FIGURAS.find((x) => x.nombre === p && x.slug); const fu = FP.filoURL(p, lang); return `<li>${f ? `<a href="{{L}}figuras/${f.slug}/">${p}</a>` : fu ? `<a href="${fu}" rel="noopener" title="Filopedia">${p} ↗</a>` : p}</li>`; }).join("")}</ul></div>
