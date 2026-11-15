@@ -194,7 +194,8 @@ a.chap:hover h3{color:var(--accent)}
 @media (max-width:900px){
   .hero{grid-template-columns:1fr;gap:18px;padding-top:18px}
   .arch{border-radius:12px}
-  .arch img{height:230px;object-position:center 28%}
+  .arch img{height:auto;aspect-ratio:1280/1021;object-position:center 28%}
+  .arch figcaption{position:static;background:var(--card);border-radius:0 0 12px 12px;padding:10px 14px}
   .grid,.grid.g4,.doors{grid-template-columns:repeat(2,minmax(0,1fr))}
   .article{grid-template-columns:1fr;gap:20px}
   .aside{position:static}
