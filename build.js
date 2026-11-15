@@ -38,7 +38,7 @@ const CONSULTA = require("./src/data/consulta");
 const SALUD = [...require("./src/data/salud1"), ...require("./src/data/salud2")];
 { const ks = Object.keys(CURSOSL); const order = ["psicologia-desde-cero", ...ks.filter((k) => k !== "psicologia-desde-cero")];
   P.CURSOS.forEach((c, i) => { const k = order[i]; c.slug = { es: k, en: CURSO_EN[i] }; c.lecciones = i === 0 ? [{ ...P.LECCION1, mas: ["h:10", "x:ramas", "k:el-efecto-mozart"] }, ...CURSOSL[k]] : CURSOSL[k]; }); }
-const SALUD_REVISADO = false; // pasa a true cuando Alex confirme su revisión médica
+const SALUD_REVISADO = true; // pasa a true cuando Alex confirme su revisión médica
 
 const PREVIEW = !!process.env.PREVIEW;
 const OUT = path.join(__dirname, PREVIEW ? "preview" : "dist");
