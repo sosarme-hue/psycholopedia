@@ -43,8 +43,8 @@
       if (v.length < 2) { res.hidden = true; return; }
       load(function () {
         var words = v.split(/\s+/);
-        var hits = idx.filter(function (p) { var h = norm(p.t + " " + p.d + " " + (p.k || "")); return words.every(function (w) { return h.indexOf(w) >= 0; }); }).slice(0, 8);
-        res.innerHTML = hits.length ? hits.map(function (p) { return '<a href="' + siteRoot + p.u + pre + '">' + p.t + "<small>" + (p.k ? p.k + " · " : "") + p.d + "</small></a>"; }).join("") : '<a aria-disabled="true">' + TX.none + "</a>";
+        var hits = idx.map(function (p) { var t = norm(p.t), h = norm(p.t + " " + p.d + " " + (p.k || "") + " " + (p.n || "")); if (!words.every(function (w) { return h.indexOf(w) >= 0; })) return null; var sc = 0; words.forEach(function (w) { if (t.indexOf(w) >= 0) sc += 3; else if (norm(p.d).indexOf(w) >= 0) sc += 2; else sc += 1; }); return { p: p, s: sc }; }).filter(Boolean).sort(function (a, b) { return b.s - a.s; }).slice(0, 10).map(function (x) { return x.p; });
+        res.innerHTML = hits.length ? hits.map(function (p) { return '<a href="' + (/^https?:/.test(p.u) ? p.u + '" rel="noopener' : siteRoot + p.u + pre) + '">' + p.t + "<small>" + (p.k ? p.k + " · " : "") + p.d + "</small></a>"; }).join("") : '<a aria-disabled="true">' + TX.none + "</a>";
         res.hidden = false;
       });
     };

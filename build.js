@@ -114,7 +114,7 @@ function page({ lang, rel, alt, title, desc, nav = "", crumbs = [], body, script
   const t = T[lang];
   const other = t.otroLang;
   const fill = (s) => s.replace(/\{\{R\}\}/g, R).replace(/\{\{L\}\}figuras\//g, L + S.figuras[lang] + "/").replace(/\{\{L\}\}quiz\//g, L + S.quiz[lang] + "/").replace(/\{\{L\}\}/g, L);
-  if (index) PAGES.push({ lang, rel, title, desc, kind });
+  if (index) { const tx = strip(body.replace(/<(script|style)[\s\S]*?<\/\1>/g, " ")); const hs = (body.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g) || []).map(strip); const nm = [...new Set(tx.match(/[A-ZÁÉÍÓÚÑÜ][a-záéíóúñüöäçàèìòù'-]{3,}|[A-Z]{2,}[\w-]*\d*/g) || [])]; PAGES.push({ lang, rel, title, desc, kind, n: [...new Set([...hs, ...nm])].join(" ") }); }
   const crumbHTML = crumbs.length ? `<nav class="crumbs wrap" aria-label="breadcrumb"><a href="${L}">${t.inicio}</a>${crumbs.map(([n, u]) => ` › ${u ? `<a href="${R}${u}">${n}</a>` : n}`).join("")}</nav>` : "";
   const full = title === SITE ? `${SITE} · ${t.tagline}` : `${title} · ${SITE}`;
   return `<!doctype html>
@@ -862,7 +862,7 @@ for (const lang of LANGS) {
 
 // Buscador: índice por idioma (ruta relativa a la raíz del sitio)
 for (const lang of LANGS) {
-  const idx = PAGES.filter((p) => p.lang === lang && p.kind !== "home").map((p) => ({ t: p.title, d: strip(p.desc).slice(0, 140), u: p.rel, k: p.kind }));
+  const idx = PAGES.filter((p) => p.lang === lang && p.kind !== "home").map((p) => ({ t: p.title, d: strip(p.desc).slice(0, 140), u: p.rel, k: p.kind, n: p.n })).concat(require("./src/data/filo-psicologos.json").filter((f) => !F.FIGURAS.some((x) => x.slug && x.nombre === f.n)).map((f) => ({ t: f.n, d: (lang === "es" ? "Biografía en Filopedia" : "Biography on Filopedia") + (f.y ? " · " + f.y : ""), u: `https://filopedia.com/${lang === "en" ? "en/" : ""}a/${f.s}.html`, k: "Filopedia" })));
   fs.writeFileSync(path.join(OUT, `assets/search-${lang}.json`), JSON.stringify(idx));
 }
 // sitemap y robots
@@ -870,5 +870,5 @@ fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="U
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 // 404
 fs.writeFileSync(path.join(OUT, "404.html"), page({ lang: "es", rel: "", alt: null, title: "Página no encontrada", desc: "Página no encontrada", index: false, body: `<div class="wrap narrow" style="padding:80px 20px"><h1>Página no encontrada</h1><p>Page not found.</p><p><a class="btn primary" href="/">Psycholopedia</a> <a class="btn" href="/en/">English</a></p></div>` }).replace(/(href|src)="\.\/assets/g, '$1="/assets'));
-fs.writeFileSync(path.join(OUT, ".htaccess"), `ErrorDocument 404 /404.html\nAddDefaultCharset UTF-8\n<IfModule mod_rewrite.c>\nRewriteEngine On\n# psicolopedia.com (y www) -> psycholopedia.com, 301 permanente\nRewriteCond %{HTTP_HOST} ^(www\\.)?psicolopedia\\.com$ [NC]\nRewriteRule ^ https://psycholopedia.com%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTPS} off\nRewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]\nRewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]\n</IfModule>\n<IfModule mod_expires.c>\nExpiresActive On\nExpiresByType text/css "access plus 7 days"\nExpiresByType application/javascript "access plus 7 days"\nExpiresByType image/jpeg "access plus 30 days"\n</IfModule>\n`);
+fs.writeFileSync(path.join(OUT, ".htaccess"), `ErrorDocument 404 /404.html\nAddDefaultCharset UTF-8\n<IfModule mod_rewrite.c>\nRewriteEngine On\n# psicolopedia.com (y www) -> psycholopedia.com, 301 permanente\nRewriteCond %{HTTP_HOST} ^(www\\.)?psicolopedia\\.com$ [NC]\nRewriteRule ^ https://psycholopedia.com%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTPS} off\nRewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]\nRewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]\n</IfModule>\n<IfModule mod_expires.c>\nExpiresActive On\nExpiresByType text/css "access plus 7 days"\nExpiresByType application/javascript "access plus 7 days"\nExpiresByType image/jpeg "access plus 30 days"\nExpiresByType text/html "access plus 0 seconds"\n</IfModule>\n<IfModule mod_headers.c>\n<FilesMatch "\\.html$">\nHeader set Cache-Control "no-cache, must-revalidate"\n</FilesMatch>\n</IfModule>\n`);
 console.log(`${PAGES.length} páginas indexadas · salida: ${path.relative(__dirname, OUT)}/`);
