@@ -9,6 +9,7 @@ const FP = require("./src/data/filopedia");
 const F = require("./src/data/figuras");
 const E = require("./src/data/explorar");
 const V = require("./src/data/vida");
+const MO = require("./src/data/momentos");
 const P = require("./src/data/participar");
 const B = require("./src/data/blog");
 const I = require("./src/data/imagenes");
@@ -23,6 +24,11 @@ const LIB = require("./src/data/libres");
 // Vida cotidiana ampliada
 { const VX = require("./src/data/vida/index"); const seen = new Set(V.VIDA.flatMap((v) => [v.slug.es, v.slug.en]));
   for (const v of VX) { if (seen.has(v.slug.es) || seen.has(v.slug.en)) throw new Error("vida duplicada: " + v.slug.es); seen.add(v.slug.es); seen.add(v.slug.en); V.VIDA.push(v); }
+{ const MV = Object.assign({}, ...["mas1", "mas2", "mas3", "mas4"].map((f) => require("./src/data/vida/" + f)));
+  for (const v of V.VIDA) { const m = MV[v.slug.es]; if (!m) continue;
+    for (const l of ["es", "en"]) { const k = v[l].lastIndexOf("<h2>"); v[l] = k >= 0 ? v[l].slice(0, k) + m.mas[l] + v[l].slice(k) : v[l] + m.mas[l]; }
+    v.refs = (v.refs || []).concat(m.refs || []); delete MV[v.slug.es]; }
+  if (Object.keys(MV).length) throw new Error("ampliación vida sin artículo: " + Object.keys(MV).join(", ")); }
   if (!V.FAMILIAS.some((f) => f.es === "Ciclo vital")) V.FAMILIAS.push({ es: "Ciclo vital", en: "Lifespan" });
   for (const v of V.VIDA) { v.f = V.FAMILIAS.findIndex((f) => f.es === v.tema.es); if (v.f < 0) throw new Error("familia desconocida: " + v.tema.es); } }
 // Adaptaciones españolas validadas (referencia para uso clínico)
@@ -66,7 +72,7 @@ const S = {
   quiz: { es: "quiz", en: "quiz" }, aprender: { es: "aprender", en: "learn" }, salud: { es: "salud-mental", en: "mental-health" },
   consulta: { es: "desde-la-consulta", en: "from-the-surgery" }, autor: { es: "quien-esta-detras", en: "about" },
   enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, privacidad: { es: "privacidad", en: "privacy" },
-  blog: { es: "blog", en: "blog" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
+  blog: { es: "blog", en: "blog" }, momentos: { es: "momentos-dificiles", en: "hard-times" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
   areas: { es: "explorar/areas", en: "explore/areas" }, escuelas: { es: "explorar/escuelas", en: "explore/schools" }, ramas: { es: "explorar/ramas", en: "explore/branches" },
   razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" }, instrumentos: { es: "tests/instrumentos", en: "tests/instruments" }, libres: { es: "tests/de-libre-uso", en: "tests/free-to-use" },
 };
@@ -157,7 +163,7 @@ ${fill(body)}
 <footer class="foot"><div class="wrap">
   <div class="cols">
     <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda}</div></div>
-    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
+    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
     <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
@@ -261,7 +267,7 @@ function home(lang) {
   <div class="shead"><div><span class="eyebrow">${es ? "Tres formas de entrar" : "Three ways in"}</span><h2>${es ? "Descubrir, comprender, participar" : "Discover, understand, take part"}</h2></div></div>
   <div class="doors">
     <div class="door"><span class="tag">${es ? "Descubrir" : "Discover"}</span><h3>${es ? "Historias e ideas" : "Stories and ideas"}</h3><ul><li><a href="{{L}}${S.historia[lang]}/">${es ? "Historia en 24 capítulos" : "History in 24 chapters"}</a></li><li><a href="{{L}}${S.figuras[lang]}/">${es ? "Grandes figuras" : "Key figures"}</a></li><li><a href="{{L}}${S.explorar[lang]}/#escuelas">${es ? "Escuelas y corrientes" : "Schools and movements"}</a></li><li><a href="{{L}}${S.curiosidades[lang]}/">${es ? "Experimentos y curiosidades" : "Experiments and curiosities"}</a></li></ul></div>
-    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li></ul></div>
+    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li></ul></div>
     <div class="door"><span class="tag">${es ? "Participar" : "Take part"}</span><h3>${es ? "Jugar y aprender" : "Play and learn"}</h3><ul><li><a href="{{L}}${S.quiz[lang]}/">Quiz</a></li><li><a href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${es ? "Retos de razonamiento" : "Reasoning challenges"}</a></li><li><a href="{{L}}${S.tests[lang]}/">${es ? "Actividades de reflexión" : "Reflection activities"}</a></li><li><a href="{{L}}${S.aprender[lang]}/">${es ? "Cursos" : "Courses"}</a></li></ul></div>
   </div>
 </section>
@@ -462,7 +468,7 @@ function rama(i, lang) {
 function vidaIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Vida cotidiana" : "Everyday life", es ? "La psicología está en tu vida" : "Psychology is in your life", es ? "Preguntas de todos los días respondidas con lo que sabe la investigación, y conectadas con sus bases académicas." : "Everyday questions answered with what research knows, and linked to their academic foundations.") + `
-<div class="wrap"><p style="color:var(--mute)">${V.VIDA.length} ${es ? "artículos. Filtra por tema:" : "articles. Filter by topic:"}</p>
+<div class="wrap"><div class="note"><strong>${es ? "Momentos difíciles de la vida" : "Life's hard times"}.</strong> ${es ? "Perder el trabajo, separarse, el duelo, la soledad o las ideas de suicidio:" : "Losing a job, separation, grief, loneliness or suicidal thoughts:"} <a href="{{L}}${S.momentos[lang]}/">${es ? "lo que dice la investigación y qué ayuda" : "what research says and what helps"} →</a></div><p style="color:var(--mute)">${V.VIDA.length} ${es ? "artículos. Filtra por tema:" : "articles. Filter by topic:"}</p>
 <div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todos" : "All"}</button>${V.FAMILIAS.map((f, i) => [f, i, V.VIDA.filter((v) => v.f === i).length]).filter((x) => x[2]).map(([f, i, n]) => `<button data-g="f${i}">${f[lang]} (${n})</button>`).join("")}</div>
 <div class="grid">${V.VIDA.map((v) => `<a class="card" data-g="f${v.f}" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${cimg(I.VIDA[v.slug.es])}<span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div>`;
   return page({ lang, rel: sec("vida", lang), alt: sec("vida", lang === "es" ? "en" : "es"), title: es ? "Psicología de la vida cotidiana" : "Psychology of everyday life", desc: es ? `${V.VIDA.length} preguntas de la vida diaria explicadas con evidencia: emociones, pareja, familia, sueño, trabajo, decisiones, pantallas y más.` : `${V.VIDA.length} everyday questions explained with evidence: emotions, couples, family, sleep, work, decisions, screens and more.`, nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life"]], body });
@@ -474,6 +480,32 @@ function vidaArt(v, lang) {
 <aside class="aside"><div class="box"><h4>${T[lang].conecta}</h4><ul>${v.conecta[lang].map((c) => { const a = E.AREAS.find((x) => x.t[lang] === c && (x.full || x.ficha)); return `<li>${a ? `<a href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${c}</a>` : c}</li>`; }).join("")}</ul></div>
 <div class="box"><h4>${es ? "Más preguntas cotidianas" : "More everyday questions"}</h4><ul>${V.VIDA.filter((x) => x !== v && x.f === v.f).concat(V.VIDA.filter((x) => x !== v && x.f !== v.f)).slice(0, 4).map((x) => `<li><a href="{{L}}${vidaURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div></aside></div>`;
   return page({ lang, rel: vidaURL(v, lang), alt: vidaURL(v, lang === "es" ? "en" : "es"), title: v.t[lang], desc: v.d[lang], nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life", sec("vida", lang)], [v.tema[lang]]], body, kind: es ? "Vida cotidiana" : "Everyday life" });
+}
+
+
+// ---------- MOMENTOS DIFÍCILES ----------
+const moURL = (m, lang) => sec("momentos", lang, m.slug[lang]);
+const vidaBy = (slug) => V.VIDA.find((v) => v.slug.es === slug);
+function momentosIndex(lang) {
+  const es = lang === "es";
+  const body = phead(es ? "Momentos difíciles" : "Hard times", es ? "Los momentos más difíciles de la vida" : "Life's hardest moments", es ? "Los problemas que más nos afectan, explicados con lo que sabe la investigación: qué pasa, qué es normal y qué suele ayudar." : "The problems that affect us most, explained with what research knows: what happens, what is normal and what tends to help.") + `
+<div class="wrap article"><div class="prose">${MO.INTRO[lang]}
+<h2>${es ? "Los momentos que tratamos" : "The moments we cover"}</h2>
+<ol>${MO.M.map((m) => `<li><a href="{{L}}${moURL(m, lang).slice(base(lang).length)}">${m.t[lang]}</a>: ${m.d[lang]}</li>`).join("")}</ol>
+${MO.AYUDA[lang]}</div>
+<aside class="aside"><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Vida cotidiana" : "Everyday life"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li></ul></div></aside></div>
+<div class="wrap"><div class="grid">${MO.M.map((m) => `<a class="card" href="{{L}}${moURL(m, lang).slice(base(lang).length)}">${cimg(m.img)}<span class="tag">${es ? "Momentos difíciles" : "Hard times"}</span><h3>${m.t[lang]}</h3><p>${m.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div>`;
+  return page({ lang, rel: sec("momentos", lang), alt: sec("momentos", lang === "es" ? "en" : "es"), title: es ? "Momentos difíciles de la vida: qué dice la psicología" : "Life's hard times: what psychology says", desc: es ? "Perder el trabajo, el divorcio, una mudanza, la soledad, las ideas de suicidio, el duelo o la muerte de un hijo: qué dice la investigación y qué ayuda." : "Job loss, divorce, moving, loneliness, suicidal thoughts, grief or the death of a child: what research says and what helps.", nav: "vida", crumbs: [[es ? "Momentos difíciles" : "Hard times"]], body });
+}
+function momentoArt(m, lang) {
+  const es = lang === "es";
+  const rel = m.rel.map(vidaBy).filter(Boolean);
+  const body = phead(es ? "Momentos difíciles" : "Hard times", m.t[lang], m.d[lang]) + `
+<div class="wrap article"><article class="prose">${fig(m.img, lang)}${m[lang]}${m.ayuda ? MO.AYUDA[lang] : ""}${refsHTML(lang, m.refs)}${meta(lang)}</article>
+<aside class="aside"><div class="box"><h4>${es ? "Otros momentos difíciles" : "Other hard times"}</h4><ul>${MO.M.filter((x) => x !== m).map((x) => `<li><a href="{{L}}${moURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div>
+${rel.length ? `<div class="box"><h4>${es ? "Para seguir leyendo" : "Further reading"}</h4><ul>${rel.map((v) => `<li><a href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${v.t[lang]}</a></li>`).join("")}</ul></div>` : ""}
+<div class="box"><h4>${es ? "¿Necesitas ayuda ya?" : "Need help now?"}</h4><p>${es ? "Línea 024 (España), gratuita y 24 horas. Emergencias: 112." : "Samaritans 116 123 (UK and Ireland), 988 (US and Canada), 024 (Spain). Emergencies: your local number."}</p></div></aside></div>`;
+  return page({ lang, rel: moURL(m, lang), alt: moURL(m, lang === "es" ? "en" : "es"), title: m.t[lang], desc: m.d[lang], nav: "vida", crumbs: [[es ? "Momentos difíciles" : "Hard times", sec("momentos", lang)], [m.t[lang]]], body, kind: es ? "Momentos difíciles" : "Hard times" });
 }
 
 // ---------- CURIOSIDADES ----------
@@ -844,6 +876,8 @@ for (const lang of LANGS) {
   E.RAMAS.forEach((_, i) => write(ramaURL(i, lang), rama(i, lang)));
   write(sec("vida", lang), vidaIndex(lang));
   for (const v of V.VIDA) write(vidaURL(v, lang), vidaArt(v, lang));
+  write(sec("momentos", lang), momentosIndex(lang));
+  for (const m of MO.M) write(moURL(m, lang), momentoArt(m, lang));
   write(sec("curiosidades", lang), curIndex(lang));
   for (const c of P.CURIOSIDADES) write(curURL(c, lang), curArt(c, lang));
   write(sec("tests", lang), tests(lang));
