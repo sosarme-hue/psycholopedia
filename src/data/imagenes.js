@@ -70,17 +70,53 @@ const IMG = {
   "neuro": { u: 1, alt: A("Representación digital de un cerebro", "Digital rendering of a brain") },
   "tests": { u: 1, alt: A("Un rompecabezas al que le falta una pieza", "A jigsaw puzzle with one piece missing") },
   "quiz": { u: 1, alt: A("Un signo de interrogación", "A question mark") },
+  "r-clinica": { u: 1, alt: A("Dos personas conversan sentadas frente a frente", "Two people talking, seated face to face") },
+  "r-educativa": { u: 1, alt: A("Alumnos atentos en un aula", "Students paying attention in a classroom") },
+  "r-trabajo": { u: 1, alt: A("Un equipo reunido alrededor de una mesa de trabajo", "A team gathered around a work table") },
+  "r-juridica": { u: 1, alt: A("Fachada con columnas de un edificio judicial", "Columned façade of a courthouse") },
+  "r-comunitaria": { u: 1, alt: A("Voluntarias preparan bolsas de comida en un reparto solidario", "Volunteers packing food bags at a distribution point") },
+  "r-deporte": { u: 1, alt: A("Corredores en plena carrera sobre la pista", "Runners mid-race on the track") },
+  "r-ambiental": { u: 1, alt: A("Luz entre los árboles de un bosque", "Light through the trees of a forest") },
+  "r-consumo": { u: 1, alt: A("Pasillo de un supermercado lleno de productos", "A supermarket aisle full of products") },
+  "r-tecnologia": { u: 1, alt: A("Manos trabajando en un ordenador portátil", "Hands working on a laptop") },
+  "r-rehabilitacion": { u: 1, alt: A("Una fisioterapeuta acompaña un ejercicio de rehabilitación", "A physiotherapist guiding a rehabilitation exercise") },
+  "r-cultural": { u: 1, alt: A("Personas con trajes tradicionales en una celebración", "People in traditional dress at a celebration") },
+  "r-arte": { u: 1, alt: A("Una violinista tocando, en blanco y negro", "A violinist playing, in black and white") },
+  "e-sistemicos": { u: 1, alt: A("Una familia camina junta por la orilla al atardecer", "A family walking together along the shore at sunset") },
+  "e-contextuales": { u: 1, alt: A("Una persona sentada en calma frente a las montañas", "A person sitting calmly facing the mountains") },
+  "f-percepcion": { u: 1, alt: A("Primer plano de un ojo humano", "Close-up of a human eye") },
+  "f-atencion": { u: 1, alt: A("Una persona concentrada leyendo un libro", "A person absorbed in a book") },
+  "f-aprendizaje": { u: 1, alt: A("Una niña aprendiendo a montar en bicicleta", "A girl learning to ride a bicycle") },
+  "f-memoria": { u: 1, alt: A("Manos que hojean un álbum de fotos antiguas", "Hands leafing through an album of old photographs") },
+  "f-pensamiento": { u: 1, alt: A("Dos caballos de ajedrez, blanco y negro, frente a frente", "A black and a white chess knight facing each other") },
+  "f-emocion": { u: 1, alt: A("Retrato en blanco y negro de una mujer de mirada intensa", "Black and white portrait of a woman with an intense gaze") },
+  "f-inteligencia": { u: 1, alt: A("Un rompecabezas al que le falta una pieza", "A jigsaw puzzle with one piece missing") },
+  "f-psicobiologia": { u: 1, alt: A("Modelo de un cerebro humano sobre fondo negro", "Model of a human brain on a black background") },
+  "f-neuropsicologia": { u: 1, alt: A("Una médica explica una radiografía craneal a un paciente", "A doctor explaining a skull X-ray to a patient") },
+  "f-metodos": { u: 1, alt: A("Pantalla con gráficos y datos", "A screen showing charts and data") },
+  "f-psicometria": { u: 1, alt: A("Una mano rellena un cuestionario en papel", "A hand filling in a paper questionnaire") },
+  "f-humanismo": { u: 1, alt: A("Tres amigos sentados juntos frente a la niebla", "Three friends sitting together facing the fog") },
+  "f-cognitiva": { u: 1, alt: A("Detalle de una placa de circuitos", "Detail of a circuit board") },
+  "f-socioculturales": { u: 1, alt: A("Una abuela abraza a una niña", "A grandmother hugging a young girl") },
+  "f-evolucionistas": { u: 1, alt: A("Retrato de un gorila", "Portrait of a gorilla") },
+  "f-mozart": { u: 1, alt: A("Partitura de música", "Sheet music") },
+  "f-asch": { u: 1, alt: A("Una multitud de personas en blanco y negro", "A crowd of people in black and white") },
 };
 
 // Dónde se usa cada una
 const ERAS = ["descartes", "p-fechner", "wundt-grupo", "clark-conferencia-1909", "eniac", "neuro"];
 const CAPS = { 9: "p-fechner", 10: "wundt-grupo", 15: "rubin", 19: "eniac" };
 const AREAS = { percepcion: "kanizsa", atencion: "stroop", aprendizaje: "perro-pavlov", memoria: "curva-olvido", pensamiento: "pensador", lenguaje: "lenguaje", motivacion: "motivacion", emocion: "duchenne", personalidad: "personalidad", "inteligencia-y-creatividad": "binet-test", psicobiologia: "cajal-purkinje", neuropsicologia: "phineas-gage", desarrollo: "desarrollo", "psicologia-social": "social", "metodos-y-estadistica": "galton", "psicometria-y-evaluacion": "rorschach" };
-const ESCUELAS = { estructuralismo: "p-titchener", funcionalismo: "p-james", psicoanalisis: "p-freud", conductismo: "p-watson", gestalt: "rubin", humanismo: "p-maslow", "psicologia-cognitiva": "eniac", "enfoques-socioculturales": "p-vygotski", "perspectivas-evolucionistas": "darwin" };
+const ESCUELAS = { estructuralismo: "p-titchener", funcionalismo: "p-james", psicoanalisis: "p-freud", conductismo: "p-watson", gestalt: "rubin", humanismo: "p-maslow", "psicologia-cognitiva": "eniac", "enfoques-socioculturales": "p-vygotski", "perspectivas-evolucionistas": "darwin", "enfoques-sistemicos": "e-sistemicos", "enfoques-contextuales": "e-contextuales" };
+const RAMAS = ["r-clinica","r-educativa","r-trabajo","r-juridica","r-comunitaria","r-deporte","r-ambiental","r-consumo","r-tecnologia","r-rehabilitacion","r-cultural","r-arte"];
 const FIGURAS = { "Wilhelm Wundt": "p-wundt", "William James": "p-james", "Mary Whiton Calkins": "p-calkins", "Margaret Floy Washburn": "p-washburn", "Sigmund Freud": "p-freud", "Iván Pávlov": "p-pavlov", "John B. Watson": "p-watson", "B. F. Skinner": "p-skinner", "Max Wertheimer": "p-wertheimer", "Wolfgang Köhler": "p-kohler", "Jean Piaget": "p-piaget", "Lev Vygotski": "p-vygotski", "Frederic Bartlett": "p-bartlett", "Carl Rogers": "p-rogers", "Abraham Maslow": "p-maslow", "Albert Bandura": "p-bandura", "Alexander Luria": "p-luria", "Brenda Milner": "p-milner", "Elizabeth Loftus": "p-loftus", "Daniel Kahneman": "p-kahneman" };
 const VIDA = { "por-que-dejo-las-cosas-para-manana": "vida-procrastinar", "por-que-damos-vueltas-a-una-preocupacion": "vida-preocupacion", "discutir-sin-perder-el-dialogo": "vida-pareja", "estudiar-mas-o-estudiar-mejor": "vida-estudiar", "nuestra-atencion-en-un-mundo-de-pantallas": "vida-pantallas", "adolescencia-autonomia-y-vinculos": "vida-adolescencia" };
 const BLOG = { "asi-nace-psycholopedia": "clark-conferencia-1909", "dias-mas-cortos-luz-sueno-y-animo": "blog-luz", "ebbinghaus-y-la-curva-del-olvido": "p-ebbinghaus", "soledad-no-deseada": "blog-soledad" };
 const CURIOSIDADES = { "efecto-stroop": "stroop", "el-efecto-mozart": "mozart", "asch-y-la-presion-del-grupo": "asch" };
 const SECCIONES = { historia: "clark-conferencia-1909", salud: "salud", consulta: "consulta", tests: "tests", quiz: "quiz", aprender: "aprender", razonamiento: "tests", personalidad: "personalidad", pareja: "vida-pareja" };
 
-module.exports = { IMG, ERAS, CAPS, AREAS, ESCUELAS, FIGURAS, VIDA, BLOG, CURIOSIDADES, SECCIONES };
+module.exports = { RAMAS, IMG, ERAS, CAPS, AREAS, ESCUELAS, FIGURAS, VIDA, BLOG, CURIOSIDADES, SECCIONES };
+
+// Respaldo de Unsplash: si la imagen histórica de Commons aún no está, se usa la segunda.
+const FALLBACK = { kanizsa: "f-percepcion", stroop: "f-atencion", "perro-pavlov": "f-aprendizaje", "curva-olvido": "f-memoria", pensador: "f-pensamiento", duchenne: "f-emocion", "binet-test": "f-inteligencia", "cajal-purkinje": "f-psicobiologia", "phineas-gage": "f-neuropsicologia", galton: "f-metodos", rorschach: "f-psicometria", "p-maslow@esc": "f-humanismo", "eniac@esc": "f-cognitiva", "p-vygotski@esc": "f-socioculturales", "darwin@esc": "f-evolucionistas", mozart: "f-mozart", asch: "f-asch" };
+module.exports.FALLBACK = FALLBACK;

@@ -140,6 +140,9 @@ const phead = (eyebrow, h1, lead) => `<header class="phead wrap"><span class="ey
 let CRED = {}; try { CRED = JSON.parse(fs.readFileSync(path.join(__dirname, "src/data/creditos.json"), "utf8")); } catch (e) { CRED = {}; }
 const UTM = "?utm_source=psycholopedia&utm_medium=referral";
 const HAS = (k) => { const m = I.IMG[k]; return !!m && (m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
+// Sustituye en los mapas de uso las imágenes que faltan por su respaldo de Unsplash.
+{ const fb = (k, tag) => (HAS(k) ? k : I.FALLBACK[k + "@" + tag] || I.FALLBACK[k] || k);
+  for (const [m, tag] of [[I.AREAS, "area"], [I.ESCUELAS, "esc"], [I.CURIOSIDADES, "cur"]]) for (const s in m) m[s] = fb(m[s], tag); }
 function isrc(k, w = 900) {
   const m = I.IMG[k]; if (!m) return "";
   if (m.c) return `{{R}}assets/img/${m.c}`;
@@ -346,7 +349,7 @@ function explorar(lang) {
 <div class="grid g4">${E.ESCUELAS.map((s) => s.tabla ? `<a class="card" href="{{L}}${escURL(s, lang).slice(base(lang).length)}">${cimg(I.ESCUELAS[s.slug.es])}<h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>` : `<div class="card soon">${cimg(I.ESCUELAS[s.slug.es])}<h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></section>
 
 <section class="section" id="ramas" style="padding-top:0"><div class="shead"><div><span class="eyebrow">${es ? "Ramas aplicadas" : "Applied branches"}</span><h2>${es ? "Dónde trabaja la psicología" : "Where psychology works"}</h2></div><p>${es ? "Además de la clínica, la psicología trabaja en educación, empresas, justicia, deporte, medio ambiente o tecnología." : "Besides clinical work, psychology is applied in education, business, justice, sport, the environment and technology."}</p></div>
-<div class="grid g4">${E.RAMAS.map(([t, d]) => `<div class="card"><h3>${t[lang]}</h3><p>${d[lang]}</p></div>`).join("")}</div></section>
+<div class="grid g4">${E.RAMAS.map(([t, d], i) => `<div class="card">${cimg(I.RAMAS[i])}<h3>${t[lang]}</h3><p>${d[lang]}</p></div>`).join("")}</div></section>
 
 <section id="figuras"><div class="shead"><div><span class="eyebrow">${es ? "Grandes figuras" : "Key figures"}</span><h2>${es ? "Biografías" : "Biographies"}</h2></div></div>
 <div class="grid">${F.FIGURAS.filter((f) => f.slug).map((f) => `<a class="card" href="{{L}}figuras/${f.slug}/">${av(I.FIGURAS[f.nombre], f.nombre)}<span class="tag">${f.vida}</span><h3>${f.nombre}</h3><p>${F.FICHAS[f.slug].resumen[lang]}</p></a>`).join("")}</div>
