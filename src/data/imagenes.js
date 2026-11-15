@@ -106,6 +106,16 @@ const IMG = {
   "f-evolucionistas": { u: 1, alt: A("Retrato de un gorila", "Portrait of a gorilla") },
   "f-mozart": { u: 1, alt: A("Partitura de música", "Sheet music") },
   "f-asch": { u: 1, alt: A("Una multitud de personas en blanco y negro", "A crowd of people in black and white") },
+  "d-ansiedad": { u: 1, alt: A("Una mujer sentada junto a una ventana", "A woman sitting by a window") },
+  "d-depresion": { u: 1, alt: A("Un hombre sentado en un sofá con la cabeza entre las manos", "A man sitting on a sofa holding his head") },
+  "d-toc": { u: 1, alt: A("Manos lavándose bajo el grifo", "Hands being washed under a tap") },
+  "d-trauma": { u: 1, alt: A("Cuatro mujeres juntas mirando hacia abajo", "Four women together looking down") },
+  "d-tca": { u: 1, alt: A("Un plato de cerámica blanca sobre una mesa de madera", "A white ceramic plate on a wooden table") },
+  "d-adicciones": { u: 1, alt: A("Un grupo de personas sentadas en círculo sobre la hierba", "A group of people sitting in a circle on the grass") },
+  "d-psicosis": { u: 1, alt: A("Una persona de pie en un paisaje con niebla", "A person standing in a misty landscape") },
+  "d-bipolar": { u: 1, alt: A("Una gran ola en mar abierto", "A large wave on the open sea") },
+  "d-personalidad": { u: 1, alt: A("Personas caminando bajo la lluvia vistas a través de un cristal mojado", "People walking in the rain seen through wet glass") },
+  "d-neurodesarrollo": { u: 1, alt: A("Manos apilando bloques de colores", "Hands stacking coloured blocks") },
 };
 
 // Dónde se usa cada una
@@ -118,9 +128,10 @@ const FIGURAS = { "Wilhelm Wundt": "p-wundt", "William James": "p-james", "Mary 
 const VIDA = { "por-que-dejo-las-cosas-para-manana": "vida-procrastinar", "por-que-damos-vueltas-a-una-preocupacion": "vida-preocupacion", "discutir-sin-perder-el-dialogo": "vida-pareja", "estudiar-mas-o-estudiar-mejor": "vida-estudiar", "nuestra-atencion-en-un-mundo-de-pantallas": "vida-pantallas", "adolescencia-autonomia-y-vinculos": "vida-adolescencia" };
 const BLOG = { "asi-nace-psycholopedia": "clark-conferencia-1909", "dias-mas-cortos-luz-sueno-y-animo": "blog-luz", "ebbinghaus-y-la-curva-del-olvido": "p-ebbinghaus", "soledad-no-deseada": "blog-soledad" };
 const CURIOSIDADES = { "efecto-stroop": "stroop", "el-efecto-mozart": "mozart", "asch-y-la-presion-del-grupo": "asch" };
+const DOSSIERS = ["d-ansiedad","d-depresion","d-toc","d-trauma","d-tca","d-adicciones","d-psicosis","d-bipolar","d-personalidad","d-neurodesarrollo"];
 const SECCIONES = { historia: "clark-conferencia-1909", salud: "salud", consulta: "consulta", tests: "tests", quiz: "quiz", aprender: "aprender", razonamiento: "tests", personalidad: "personalidad", pareja: "vida-pareja" };
 
-module.exports = { RAMAS, IMG, ERAS, CAPS, AREAS, ESCUELAS, FIGURAS, VIDA, BLOG, CURIOSIDADES, SECCIONES };
+module.exports = { DOSSIERS, RAMAS, IMG, ERAS, CAPS, AREAS, ESCUELAS, FIGURAS, VIDA, BLOG, CURIOSIDADES, SECCIONES };
 
 // Respaldo de Unsplash: si la imagen histórica de Commons aún no está, se usa la segunda.
 const FALLBACK = { kanizsa: "f-percepcion", stroop: "f-atencion", "perro-pavlov": "f-aprendizaje", "curva-olvido": "f-memoria", pensador: "f-pensamiento", duchenne: "f-emocion", "binet-test": "f-inteligencia", "cajal-purkinje": "f-psicobiologia", "phineas-gage": "f-neuropsicologia", galton: "f-metodos", rorschach: "f-psicometria", "p-maslow@esc": "f-humanismo", "eniac@esc": "f-cognitiva", "p-vygotski@esc": "f-socioculturales", "darwin@esc": "f-evolucionistas", mozart: "f-mozart", asch: "f-asch" };

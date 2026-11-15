@@ -263,3 +263,14 @@ a.card:hover .cimg img{transform:scale(1.03)}
   .card.hz{grid-template-columns:84px minmax(0,1fr)}
   .credits .cthumb{width:48px;height:36px}
 }
+
+.ltest .lins{margin:1em 0}
+.ltest .lq{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:0 0 10px;background:var(--card);min-width:0}
+.ltest .lq.miss{border-color:#b5523b}
+.ltest legend{font-weight:600;padding:0 4px;float:left;width:100%;margin-bottom:8px}
+.ltest legend .num{color:var(--gold)}
+.ltest .lo{clear:both;display:flex;flex-wrap:wrap;gap:6px}
+.ltest .lo label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px;cursor:pointer;background:var(--bg)}
+.ltest .lo label:has(input:checked){border-color:var(--accent);background:var(--okbg)}
+.lres .lsc{font-size:18px;margin:0 0 8px}.lres .lsc b{font:600 32px var(--serif)}
+.note.crisis{background:var(--kobg);border-left:4px solid #b5523b}

@@ -1,6 +1,8 @@
 // Generador de Psycholopedia: node build.js → dist/   ·   PREVIEW=1 node build.js → preview/ (enlaces a index.html)
 // Castellano en la raíz, inglés en /en/. Sin dependencias.
 const fs = require("fs");
+const VER = (f) => require("crypto").createHash("md5").update(fs.readFileSync(__dirname + "/src/assets/" + f)).digest("hex").slice(0, 8);
+const V_CSS = VER("site.css"), V_JS = VER("app.js");
 const path = require("path");
 const H = require("./src/data/historia");
 const FP = require("./src/data/filopedia");
@@ -10,6 +12,33 @@ const V = require("./src/data/vida");
 const P = require("./src/data/participar");
 const B = require("./src/data/blog");
 const I = require("./src/data/imagenes");
+const CURSOSL = Object.assign({}, require("./src/data/cursos1"), require("./src/data/cursos2"), require("./src/data/cursos3"), require("./src/data/cursos4"));
+const CURSO_EN = ["psychology-from-scratch", "how-we-learn-and-remember", "understanding-emotions", "personality-without-labels", "communication-and-relationships", "human-development", "reading-studies-without-getting-lost", "history-of-the-great-schools", "digital-psychology", "introduction-to-mental-health"];
+const INS = require("./src/data/instrumentos");
+const LIB = require("./src/data/libres");
+// Adaptaciones españolas validadas (referencia para uso clínico)
+const LIBVAL = {
+  "PHQ-9": "Diez-Quevedo C, Rangil T, Sánchez-Planell L, Kroenke K, Spitzer RL. Validation and utility of the Patient Health Questionnaire in diagnosing mental disorders in 1003 general hospital Spanish inpatients. Psychosom Med. 2001;63(4):679-686.",
+  "GAD-7": "García-Campayo J, Zamorano E, Ruiz MA, et al. Cultural adaptation into Spanish of the generalized anxiety disorder-7 (GAD-7) scale as a screening tool. Health Qual Life Outcomes. 2010;8:8.",
+  "AUDIT": "Rubio Valladolid G, Bermejo Vicedo J, Caballero Sánchez-Serrano MC, Santo-Domingo Carrasco J. Validación de la prueba para la identificación de trastornos por uso de alcohol (AUDIT) en atención primaria. Rev Clin Esp. 1998;198(1):11-14.",
+  "RSES": "Martín-Albo J, Núñez JL, Navarro JG, Grijalvo F. The Rosenberg Self-Esteem Scale: translation and validation in university students. Span J Psychol. 2007;10(2):458-467.",
+  "SWLS": "Atienza FL, Pons D, Balaguer I, García-Merita M. Propiedades psicométricas de la Escala de Satisfacción con la Vida en adolescentes. Psicothema. 2000;12(2):314-319.",
+  "PSS-10": "Remor E. Psychometric properties of a European Spanish version of the Perceived Stress Scale (PSS). Span J Psychol. 2006;9(1):86-93.",
+  "GDS-15": "Martínez de la Iglesia J, Onís Vilches MC, Dueñas Herrero R, et al. Versión española del cuestionario de Yesavage abreviado (GDS) para el despistaje de depresión en mayores de 65 años. Medifam. 2002;12(10):620-630.",
+};
+// Normaliza cada test: ítems con sus opciones y valores ya invertidos cuando toca
+const libN = (x, lang) => ({ s: x.s, n: x.n[lang], ins: x.ins[lang], max: x.max, mult: x.mult || 1, alerta: x.alerta || [], consejo: x.consejo, bajo: !!x.consejoBajo,
+  bandas: x.bandas.map(([a, b, t]) => [a, b, t[lang]]),
+  items: x.items[lang].map((it, i) => { const t = typeof it === "string" ? it : it.t; let o = typeof it === "string" ? x.opts[lang] : Array.isArray(it.o) ? it.o : x.sub[it.o][lang];
+    if ((x.inv || []).includes(i)) { const vs = o.map((p) => p[1]), hi = Math.max(...vs), lo = Math.min(...vs); o = o.map(([l, v]) => [l, hi + lo - v]); } return { t, o }; }) });
+const libURL = (x, lang) => sec("libres", lang, x.slug[lang]);
+fs.mkdirSync(path.join(__dirname, "src/pdf"), { recursive: true });
+fs.writeFileSync(path.join(__dirname, "src/pdf/libres.json"), JSON.stringify(LIB.map((x) => ({ slug: x.slug, es: libN(x, "es"), en: libN(x, "en"), lic: x.lic, ref: x.ref, val: LIBVAL[x.s] || "", nota: x.nota || null, autores: x.autores }))));
+const CONSULTA = require("./src/data/consulta");
+const SALUD = [...require("./src/data/salud1"), ...require("./src/data/salud2")];
+{ const ks = Object.keys(CURSOSL); const order = ["psicologia-desde-cero", ...ks.filter((k) => k !== "psicologia-desde-cero")];
+  P.CURSOS.forEach((c, i) => { const k = order[i]; c.slug = { es: k, en: CURSO_EN[i] }; c.lecciones = i === 0 ? [{ ...P.LECCION1, mas: ["h:10", "x:ramas", "k:el-efecto-mozart"] }, ...CURSOSL[k]] : CURSOSL[k]; }); }
+const SALUD_REVISADO = false; // pasa a true cuando Alex confirme su revisión médica
 
 const PREVIEW = !!process.env.PREVIEW;
 const OUT = path.join(__dirname, PREVIEW ? "preview" : "dist");
@@ -30,7 +59,7 @@ const S = {
   enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, privacidad: { es: "privacidad", en: "privacy" },
   blog: { es: "blog", en: "blog" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
   areas: { es: "explorar/areas", en: "explore/areas" }, escuelas: { es: "explorar/escuelas", en: "explore/schools" }, ramas: { es: "explorar/ramas", en: "explore/branches" },
-  razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" },
+  razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" }, instrumentos: { es: "tests/instrumentos", en: "tests/instruments" }, libres: { es: "tests/de-libre-uso", en: "tests/free-to-use" },
 };
 const base = (lang) => (lang === "en" ? "en/" : "");
 const sec = (k, lang, sub = "") => `${base(lang)}${S[k][lang]}/${sub ? sub + "/" : ""}`;
@@ -102,7 +131,7 @@ ${alt ? `<link rel="alternate" hreflang="${lang}" href="${DOMAIN}/${rel}"><link 
 <link rel="icon" href="${R}assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
-<link rel="stylesheet" href="${R}assets/site.css">
+<link rel="stylesheet" href="${R}assets/site.css?v=${V_CSS}">
 </head>
 <body>
 <a class="skip" href="#main">${lang === "es" ? "Saltar al contenido" : "Skip to content"}</a>
@@ -125,7 +154,7 @@ ${fill(body)}
   </div>
   <p style="margin:22px 0 0">${lang === "es" ? `Creada por Alejandro Rosàs, médico de familia con más de 38 años de experiencia en atención primaria, especialista en Medicina Preventiva y Salud Pública (col. 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">Quién está detrás</a>` : `Created by Alejandro Rosàs, a family doctor with more than 38 years in primary care and a specialist in Preventive Medicine and Public Health (licence 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">About</a>`}</p><p style="margin:6px 0 0">© 2026 ${SITE} · ${t.tagline}</p>
 </div></footer>
-<script src="${R}assets/app.js" defer></script>
+<script src="${R}assets/app.js?v=${V_JS}" defer></script>
 ${scripts}
 </body>
 </html>`;
@@ -181,6 +210,9 @@ const vidaURL = (v, lang) => sec("vida", lang, v.slug[lang]);
 const curURL = (c, lang) => sec("curiosidades", lang, c.slug[lang]);
 const areaURL = (a, lang) => sec("areas", lang, a.slug[lang]);
 const escURL = (e, lang) => sec("escuelas", lang, e.slug[lang]);
+const dosURL = (i, lang) => `${sec("salud", lang)}${SALUD[i].slug[lang]}/`;
+const conURL = (i, lang) => `${sec("consulta", lang)}${CONSULTA[i].slug[lang]}/`;
+const lecURL = (ci, li, lang) => `${sec("aprender", lang)}${P.CURSOS[ci].slug[lang]}/${li ? (lang === "es" ? "leccion-" : "lesson-") + (li + 1) + "/" : ""}`;
 const ramaURL = (i, lang) => sec("ramas", lang, E.RAMASD[i].slug[lang]);
 const memoria = E.AREAS.find((a) => a.full);
 
@@ -297,7 +329,7 @@ function historiaIndex(lang) {
   const body = phead(es ? "Historia de la psicología" : "History of psychology", es ? "Una historia de preguntas" : "A history of questions",
     es ? "Una narración en 24 capítulos. Cada uno responde a lo mismo: qué se intentaba comprender, con qué métodos, quién participó, qué aportó y qué se revisó después." : "A narrative in 24 chapters. Each one answers the same questions: what people were trying to understand, with what methods, who took part, what it contributed and what was revised later.") + banner(I.SECCIONES.historia, lang) + `
 <div class="wrap narrow"><div class="note">${es ? "Incluimos expresamente a mujeres investigadoras, contextos no occidentales y la relación con la historia social. Las fechas célebres sirven de orientación, no como una sucesión de descubrimientos aislados." : "We deliberately include women researchers, non-Western contexts and links with social history. Famous dates serve as signposts, not as a chain of isolated discoveries."}</div>
-<p>${es ? `Ya puedes leer ${capEscritos.length} capítulos; los demás están en preparación.` : `${capEscritos.length} chapters are ready to read; the rest are in preparation.`}</p>
+<p>${capEscritos.length === Object.keys(H.CAPS).length ? (es ? `Los ${capEscritos.length} capítulos están disponibles.` : `All ${capEscritos.length} chapters are available.`) : (es ? `Ya puedes leer ${capEscritos.length} capítulos; los demás están en preparación.` : `${capEscritos.length} chapters are ready to read; the rest are in preparation.`)}</p>
 <div class="blocks">${H.BLOQUES.map((b, bi) => `<section class="block">${HASL(I.ERAS[bi]) ? `<span class="bimg"><img src="${isrc(I.ERAS[bi], 1200)}" alt="${esc(I.IMG[I.ERAS[bi]].alt[lang])}" loading="lazy" decoding="async"></span>` : ""}<span class="eyebrow">${es ? "Bloque" : "Part"} ${bi + 1}</span><h2>${b[lang]}</h2>${b.caps.map((n) => {
     const w = H.ESCRITOS[n];
     return w ? `<a class="chap" href="{{L}}${capURL(n, lang).slice(base(lang).length)}"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3><p>${w.desc[lang]}</p></div><span class="pill">${w.fechas}</span></a>` : `<div class="chap"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3></div>${pill(lang)}</div>`;
@@ -458,6 +490,59 @@ function curArt(c, lang) {
   return page({ lang, rel: curURL(c, lang), alt: curURL(c, lang === "es" ? "en" : "es"), title: c.t[lang], desc: c.d[lang], nav: "explorar", crumbs: [[es ? "Curiosidades" : "Curiosities", sec("curiosidades", lang)], [c.serie[lang]]], body, kind: es ? "Curiosidad" : "Curiosity" });
 }
 
+function instrumentos(lang) {
+  const es = lang === "es";
+  const lab = es ? ["Autores", "Año", "Qué mide", "Formato", "Uso y límites"] : ["Authors", "Year", "What it measures", "Format", "Use and limits"];
+  const secs = INS.CATS.map(([k, t, d]) => { const xs = INS.I.filter((x) => x.c === k); return `<section class="section" id="${k}" style="padding-top:30px"><h2>${t[lang]} <small style="color:var(--mute);font-weight:400">(${xs.length})</small></h2><p style="color:var(--mute)">${d[lang]}</p>
+${xs.map((x) => `<details class="box" style="margin:10px 0;padding:14px 18px"><summary style="cursor:pointer"><strong>${x.s}</strong> · ${x.n[lang]}${x.n.en !== x.n[lang] ? ` <small style="color:var(--mute)">(${x.n.en})</small>` : ""}</summary><dl style="margin:12px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px"><dt><b>${lab[0]}</b></dt><dd style="margin:0">${x.a}</dd><dt><b>${lab[1]}</b></dt><dd style="margin:0">${x.y}</dd><dt><b>${lab[2]}</b></dt><dd style="margin:0">${x.m[lang]}</dd><dt><b>${lab[3]}</b></dt><dd style="margin:0">${x.f[lang]}</dd><dt><b>${lab[4]}</b></dt><dd style="margin:0">${x.l[lang]}</dd></dl></details>`).join("")}</section>`; }).join("");
+  const body = phead("Tests", es ? `${INS.I.length} tests usados en psicología` : `${INS.I.length} tests used in psychology`, es ? "Fichas descriptivas de los instrumentos de evaluación más utilizados: qué miden, quién los creó, cómo se aplican y qué límites tienen." : "Descriptive profiles of the most widely used assessment instruments: what they measure, who created them, how they are given and what their limits are.") + `
+<div class="wrap narrow prose">${fig(I.AREAS["psicometria-y-evaluacion"], lang)}
+<div class="note warn">${es ? `<b>Esto es un catálogo, no una consulta.</b> Psycholopedia no reproduce los ítems de estos tests: muchos tienen derechos de autor y su aplicación e interpretación corresponden a profesionales formados. Ningún test, por sí solo, establece un diagnóstico. Muchos tienen versiones adaptadas y baremadas en España y Latinoamérica. Los de libre uso puedes <a href="{{L}}${sec("libres", lang).slice(base(lang).length)}">hacerlos y descargarlos aquí</a>.` : `<b>This is a catalogue, not a consultation.</b> Psycholopedia does not reproduce the items of these tests: many are copyrighted, and administering and interpreting them is a job for trained professionals. No test establishes a diagnosis on its own. Many have adapted, normed versions in different countries. The free-to-use ones can be <a href="{{L}}${sec("libres", lang).slice(base(lang).length)}">taken and downloaded here</a>.`}</div>
+<p>${es ? "Ir a:" : "Go to:"} ${INS.CATS.map(([k, t]) => `<a href="#${k}">${t[lang]}</a>`).join(" · ")}</p>
+<p>${es ? "Para entender qué significan fiabilidad, validez y baremos, lee" : "To understand reliability, validity and norms, read"} <a href="{{L}}${S.tests[lang]}/#evaluacion">${es ? "¿Qué puede decir un resultado?" : "What can a score tell you?"}</a> ${es ? "y el área de" : "and the area of"} <a href="{{L}}${areaURL(E.AREAS.find((a) => a.slug.es === "psicometria-y-evaluacion"), lang).slice(base(lang).length)}">${es ? "psicometría y evaluación" : "psychometrics and assessment"}</a>.</p></div>
+<div class="wrap narrow">${secs}${meta(lang)}</div>`;
+  return page({ lang, rel: sec("instrumentos", lang), alt: sec("instrumentos", es ? "en" : "es"), title: es ? "Tests usados en psicología: catálogo de instrumentos" : "Tests used in psychology: a catalogue of instruments", desc: es ? `Fichas de ${INS.I.length} tests psicológicos: WAIS, MMPI, Rorschach, Beck, PHQ-9, MoCA, ADOS y muchos más. Qué miden, autores, formato y límites.` : `Profiles of ${INS.I.length} psychological tests: WAIS, MMPI, Rorschach, Beck, PHQ-9, MoCA, ADOS and more. What they measure, authors, format and limits.`, nav: "tests", crumbs: [["Tests", sec("tests", lang)], [es ? "Catálogo de instrumentos" : "Instrument catalogue"]], body, kind: "Tests" });
+}
+
+// ---------- TESTS DE LIBRE USO ----------
+const pdfName = (x, lang) => `${x.slug.es}-${lang}.pdf`;
+function libresIndex(lang) {
+  const es = lang === "es";
+  const body = phead("Tests", es ? "Tests de libre uso para hacer y descargar" : "Free-to-use tests to take and download", es ? `${LIB.length} cuestionarios breves cuyos autores permiten reproducirlos libremente. Puedes contestarlos aquí, con una puntuación orientativa, o descargarlos en PDF para imprimir.` : `${LIB.length} short questionnaires whose authors allow free reproduction. You can answer them here, with an approximate score, or download them as a printable PDF.`) + `
+<div class="wrap narrow prose"><div class="note warn">${es ? "<b>Orientan, no diagnostican.</b> Son cuestionarios de cribado y autoevaluación usados en atención primaria e investigación. Un resultado alto indica que vale la pena hablarlo con un profesional; un resultado bajo no descarta un problema si tú notas que algo no va bien. Tus respuestas se calculan en tu navegador y no se guardan ni se envían." : "<b>They guide, they do not diagnose.</b> These are screening and self-assessment questionnaires used in primary care and research. A high score means it is worth talking to a professional; a low score does not rule out a problem if you feel something is wrong. Your answers are scored in your browser and are neither stored nor sent."}</div>
+<div class="note">${T[lang].ayuda}</div></div>
+<div class="wrap"><div class="grid">${LIB.map((x) => `<div class="card"><span class="tag">${x.s} · ${x.min} min</span><h3><a href="{{L}}${libURL(x, lang).slice(base(lang).length)}">${x.n[lang]}</a></h3><p>${x.que[lang]}</p><p style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto"><a class="btn primary" href="{{L}}${libURL(x, lang).slice(base(lang).length)}">${es ? "Hacer el test" : "Take the test"}</a> <a class="btn" href="{{R}}assets/pdf/${pdfName(x, lang)}" download>PDF</a></p></div>`).join("")}</div>
+<div class="narrow prose" style="margin-top:30px"><h2>${es ? "¿Por qué no están el Beck, el HADS o el STAI?" : "Why are the Beck, HADS or STAI not here?"}</h2><p>${es ? "Porque tienen derechos de autor y solo pueden usarse con licencia de sus editoriales. Los encontrarás descritos, sin sus ítems, en el" : "Because they are copyrighted and can only be used under licence from their publishers. You will find them described, without their items, in the"} <a href="{{L}}${sec("instrumentos", lang).slice(base(lang).length)}">${es ? "catálogo de instrumentos" : "instrument catalogue"}</a>.</p>
+${es ? "<p>Las versiones en castellano de esta sección son traducciones de trabajo de Psycholopedia a partir del original. Para uso clínico o de investigación conviene emplear la adaptación española validada que se cita en cada test.</p>" : "<p>For clinical or research use outside English-speaking settings, use the validated adaptation for your language.</p>"}
+${meta(lang)}</div></div>`;
+  return page({ lang, rel: sec("libres", lang), alt: sec("libres", es ? "en" : "es"), title: es ? "Tests de libre uso: PHQ-9, GAD-7, AUDIT y más" : "Free-to-use tests: PHQ-9, GAD-7, AUDIT and more", desc: es ? "Haz online o descarga en PDF cuestionarios de libre uso: PHQ-9, GAD-7, WHO-5, AUDIT, Rosenberg, estrés percibido, soledad, K10 y GDS-15." : "Take online or download as PDF free-to-use questionnaires: PHQ-9, GAD-7, WHO-5, AUDIT, Rosenberg, perceived stress, loneliness, K10 and GDS-15.", nav: "tests", crumbs: [["Tests", sec("tests", lang)], [es ? "De libre uso" : "Free to use"]], body, kind: "Tests" });
+}
+function libre(x, lang) {
+  const es = lang === "es", d = libN(x, lang);
+  const form = d.items.map((it, i) => `<fieldset class="lq"><legend><span class="num">${i + 1}.</span> ${it.t}</legend><div class="lo">${it.o.map(([l, v], k) => `<label><input type="radio" name="i${i}" value="${v}" required> ${l}</label>`).join("")}</div></fieldset>`).join("");
+  const tx = { res: es ? "Tu resultado" : "Your result", pts: es ? "puntos sobre" : "points out of", ver: es ? "Ver mi resultado" : "See my result", falta: es ? "Te faltan preguntas por contestar." : "Some questions are still unanswered.",
+    consejo: es ? "Con esta puntuación es aconsejable comentarlo con tu médico de familia o con un profesional de salud mental." : "With this score it is advisable to discuss it with your family doctor or a mental health professional.",
+    alerta: es ? "<b>Has indicado pensamientos de hacerte daño o de que estarías mejor muerto/a.</b> No tienes que pasar esto a solas: llama ahora a la <b>Línea 024</b> (gratuita, 24 horas) o habla hoy con tu médico. Si estás en peligro inmediato, llama al <b>112</b>." : "<b>You have indicated thoughts of harming yourself or of being better off dead.</b> You do not have to face this alone: talk to your doctor today, or contact a crisis line in your country (in Spain, <b>024</b>). If you are in immediate danger, call your local emergency number (<b>112</b> in Europe).",
+    orient: es ? "Este resultado es orientativo y no es un diagnóstico." : "This result is a guide, not a diagnosis." };
+  const data = { ...d, tx };
+  const val = es && LIBVAL[x.s] ? `<li>${es ? "Adaptación española validada: " : ""}${LIBVAL[x.s]}</li>` : "";
+  const body = phead(`${x.s} · ${x.min} min`, x.n[lang], x.que[lang]) + `
+<div class="wrap narrow prose">
+<div class="note warn">${es ? "Cuestionario de cribado: <b>orienta, no diagnostica</b>. Tus respuestas se calculan en tu navegador y no se guardan ni se envían." : "A screening questionnaire: <b>it guides, it does not diagnose</b>. Your answers are scored in your browser and are neither stored nor sent."}</div>
+<p><a class="btn" href="{{R}}assets/pdf/${pdfName(x, lang)}" download>${es ? "Descargar en PDF para imprimir" : "Download printable PDF"}</a></p>
+<form class="ltest" id="ltest" data-test="${esc(json(data))}" novalidate><p class="lins"><b>${d.ins}</b></p>${form}<p><button class="btn primary" type="submit">${tx.ver}</button></p></form>
+<div id="ltest-res" aria-live="polite"></div>
+${x.nota ? `<p class="note">${x.nota[lang]}</p>` : ""}
+<h2>${es ? "Sobre este cuestionario" : "About this questionnaire"}</h2>
+<p><b>${es ? "Autoría" : "Authors"}:</b> ${x.autores}.</p>
+<p><b>${es ? "Licencia" : "Licence"}:</b> ${x.lic[lang]}</p>
+<p><b>${es ? "Puntuación" : "Scoring"}:</b> ${d.bandas.map(([a, b, t]) => `${a}–${b}: ${t}`).join("; ")}.</p>
+${es ? "<p class=\"meta\">Versión en castellano: traducción de trabajo de Psycholopedia a partir del original.</p>" : ""}
+<h2>${T[lang].refs}</h2><ol class="refs"><li>${x.ref}</li>${val}</ol>
+<p><a href="{{L}}${sec("libres", lang).slice(base(lang).length)}">← ${es ? "Todos los tests de libre uso" : "All free-to-use tests"}</a></p>
+${meta(lang)}</div>`;
+  return page({ lang, rel: libURL(x, lang), alt: libURL(x, es ? "en" : "es"), title: es ? `${x.s}: ${x.n.es} online y en PDF` : `${x.s}: ${x.n.en} online and PDF`, desc: es ? `Hazlo online con puntuación orientativa o descárgalo en PDF. ${x.que.es} Uso libre.` : `Take it online with an approximate score or download it as a PDF. ${x.que.en} Free to use.`, nav: "tests", crumbs: [["Tests", sec("tests", lang)], [es ? "De libre uso" : "Free to use", sec("libres", lang)], [x.s]], body, kind: "Tests" });
+}
 // ---------- TESTS ----------
 function tests(lang) {
   const es = lang === "es";
@@ -465,9 +550,12 @@ function tests(lang) {
 <div class="wrap">
 <table class="qtable" style="max-width:880px"><thead><tr><th>${es ? "Nivel" : "Level"}</th><td><b>${es ? "Qué ofrece" : "What it offers"}</b></td></tr></thead><tbody>
 <tr><th>${es ? "Reflexión" : "Reflection"}</th><td>${es ? "Preguntas para explorar preferencias, experiencias y contextos. Disponible." : "Questions to explore preferences, experiences and contexts. Available."}</td></tr>
-<tr><th>${es ? "Instrumentos con evidencia" : "Evidence-based instruments"}</th><td>${es ? "Cuestionarios seleccionados con versión, permisos, puntuación y documentación adecuados. En preparación: solo se publicarán tras revisar permisos, versiones e interpretación." : "Selected questionnaires with proper version, permissions, scoring and documentation. In preparation: they will only be published after reviewing permissions, versions and interpretation."}</td></tr>
+<tr><th>${es ? "Instrumentos con evidencia" : "Evidence-based instruments"}</th><td>${es ? `Catálogo de ${INS.I.length} tests usados en psicología: qué miden, autores, formato, usos y límites. <a href=\"{{L}}${sec("instrumentos", lang).slice(base(lang).length)}\">Ver el catálogo</a>. No se reproducen sus ítems, que tienen derechos y deben aplicarlos profesionales.` : `A catalogue of ${INS.I.length} tests used in psychology: what they measure, authors, format, uses and limits. <a href=\"{{L}}${sec("instrumentos", lang).slice(base(lang).length)}\">See the catalogue</a>. Their items are not reproduced: they are copyrighted and should be administered by professionals.`}</td></tr>
+<tr><th>${es ? "De libre uso" : "Free to use"}</th><td>${es ? `${LIB.length} cuestionarios breves (PHQ-9, GAD-7, AUDIT…) para hacer aquí o descargar en PDF. <a href=\"{{L}}${sec("libres", lang).slice(base(lang).length)}\">Ir a los tests</a>.` : `${LIB.length} short questionnaires (PHQ-9, GAD-7, AUDIT…) to take here or download as PDF. <a href=\"{{L}}${sec("libres", lang).slice(base(lang).length)}\">Go to the tests</a>.`}</td></tr>
 <tr><th>${es ? "Aprender sobre evaluación" : "Learning about assessment"}</th><td>${es ? "Qué puede y qué no puede concluirse de un resultado. Disponible abajo." : "What can and cannot be concluded from a score. Available below."}</td></tr></tbody></table>
 <div class="grid" style="margin-top:30px">
+<a class="card" href="{{L}}${sec("libres", lang).slice(base(lang).length)}">${cimg("tests")}<span class="tag">${es ? "Hacer y descargar" : "Take and download"}</span><h3>${es ? `${LIB.length} tests de libre uso` : `${LIB.length} free-to-use tests`}</h3><p>${es ? "Depresión, ansiedad, alcohol, autoestima, estrés, soledad y bienestar: contéstalos aquí o imprímelos en PDF." : "Depression, anxiety, alcohol, self-esteem, stress, loneliness and well-being: answer them here or print them as PDF."}</p><span class="more">${es ? "Empezar" : "Start"} →</span></a>
+<a class="card" href="{{L}}${sec("instrumentos", lang).slice(base(lang).length)}">${cimg("rorschach")}<span class="tag">${es ? "Catálogo" : "Catalogue"}</span><h3>${es ? `${INS.I.length} tests usados en psicología` : `${INS.I.length} tests used in psychology`}</h3><p>${es ? "Inteligencia, neuropsicología, personalidad, síntomas, infancia y bienestar: fichas de los instrumentos más usados." : "Intelligence, neuropsychology, personality, symptoms, childhood and well-being: profiles of the most used instruments."}</p><span class="more">${T[lang].leer} →</span></a>
 <a class="card" href="{{L}}${sec("personalidad", lang).slice(base(lang).length)}">${cimg("personalidad")}<span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Tu forma de ser" : "Your personality"}</h3><p>${es ? "Diez afirmaciones para pensar en las cinco grandes dimensiones de la personalidad." : "Ten statements to reflect on the five broad dimensions of personality."}</p></a>
 <a class="card" href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${cimg("tests")}<span class="tag">${es ? "Reto" : "Challenge"}</span><h3>${es ? "Pon a prueba tu razonamiento" : "Test your reasoning"}</h3><p>${es ? "Series, lógica, problemas y retos espaciales con explicación. No calcula un CI." : "Series, logic, problems and spatial puzzles with explanations. It does not calculate an IQ."}</p></a>
 <a class="card" href="{{L}}${sec("pareja", lang).slice(base(lang).length)}">${cimg("vida-pareja")}<span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Conversar en pareja" : "Couple conversations"}</h3><p>${es ? "Siete ámbitos con preguntas para hablar. Sin porcentajes ni veredictos." : "Seven areas with questions to talk about. No percentages or verdicts."}</p></a></div>
@@ -536,14 +624,29 @@ function quiz(lang) {
 function aprender(lang) {
   const es = lang === "es";
   const body = phead(es ? "Aprender" : "Learn", es ? "Cursos y rutas de aprendizaje" : "Courses and learning paths", es ? "Formato común: lección breve → ejemplo → actividad → comprobación → ampliación. Son rutas divulgativas: no habilitan para evaluar ni tratar a personas." : "Common format: short lesson → example → activity → check → going further. They are popular-science paths and do not qualify anyone to assess or treat people.") + banner(I.SECCIONES.aprender, lang) + `
-<div class="wrap"><div class="grid">${P.CURSOS.map((c, i) => c.slug ? `<a class="card" href="{{L}}${S.aprender[lang]}/${c.slug[lang]}/"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${es ? "Empezar la lección 1" : "Start lesson 1"} →</span></a>` : `<div class="card soon"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></div>`;
+<div class="wrap"><div class="grid">${P.CURSOS.map((c, i) => c.slug ? `<a class="card" href="{{L}}${S.aprender[lang]}/${c.slug[lang]}/"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${c.lecciones.length} ${es ? "lecciones · Empezar" : "lessons · Start"} →</span></a>` : `<div class="card soon"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></div>`;
   return page({ lang, rel: sec("aprender", lang), alt: sec("aprender", lang === "es" ? "en" : "es"), title: es ? "Cursos de psicología" : "Psychology courses", desc: es ? "Rutas de aprendizaje de psicología para empezar desde cero." : "Psychology learning paths for complete beginners.", nav: "aprender", crumbs: [[es ? "Aprender" : "Learn"]], body });
 }
-function curso1(lang) {
-  const es = lang === "es"; const c = P.CURSOS[0]; const Lc = P.LECCION1;
-  const chk = Lc.comprobacion[lang];
-  const temario = es ? ["¿Qué estudia la psicología?", "Una breve historia", "Ramas básicas y aplicadas", "Cómo investiga la psicología", "Mitos frecuentes", "Repaso final"] : ["What does psychology study?", "A brief history", "Basic and applied branches", "How psychology does research", "Common myths", "Final review"];
-  const body = phead(es ? "Curso 01" : "Course 01", c.t[lang], c.d[lang]) + `
+function enlace(code, lang) {
+  const es = lang === "es"; const [k, v] = [code.slice(0, 1), code.slice(2)]; const r = (u) => u.slice(base(lang).length);
+  if (k === "a") { const a = E.AREAS.find((x) => x.slug.es === v); return [r(areaURL(a, lang)), a.t[lang]]; }
+  if (k === "e") { const x = E.ESCUELAS.find((y) => y.slug.es === v); return [r(escURL(x, lang)), x.t[lang]]; }
+  if (k === "v") { const x = V.VIDA.find((y) => y.slug.es === v); return [r(vidaURL(x, lang)), x.t[lang]]; }
+  if (k === "d") { const n = SALUD.findIndex((y) => y.slug.es === v); return [r(dosURL(n, lang)), SALUD[n].t[lang]]; }
+  if (k === "f") { const x = F.FIGURAS.find((y) => y.slug === v); return [r(figURL(v, lang)), x.nombre]; }
+  if (k === "r") { const n = E.RAMASD.findIndex((y) => y.slug.es === v); return [r(ramaURL(n, lang)), (es ? "Psicología: " : "Psychology: ") + E.RAMAS[n][0][lang].toLowerCase()]; }
+  if (k === "k") { const x = P.CURIOSIDADES.find((y) => y.slug.es === v); return [r(curURL(x, lang)), x.t[lang]]; }
+  if (k === "h") return [r(capURL(+v, lang)), H.CAPS[+v][lang]];
+  if (k === "c") { const n = P.CURSOS.findIndex((y) => y.slug.es === v); return [r(lecURL(n, 0, lang)), (es ? "Curso: " : "Course: ") + P.CURSOS[n].t[lang]]; }
+  const X = { mapa: [`${S.explorar[lang]}/#mapa`, es ? "Mapa de 16 áreas" : "Map of 16 areas"], ramas: [`${S.explorar[lang]}/#ramas`, es ? "Ramas aplicadas de la psicología" : "Applied branches of psychology"], escuelas: [`${S.explorar[lang]}/#escuelas`, es ? "Escuelas de psicología" : "Schools of psychology"], quiz: [`${S.quiz[lang]}/`, "Quiz"], tests: [`${S.tests[lang]}/`, es ? "Actividades de reflexión" : "Reflection activities"], personalidad: [`${S.personalidad[lang]}/`, es ? "Actividad: tu forma de ser" : "Activity: your personality"], pareja: [`${S.pareja[lang]}/`, es ? "Actividad: conversar en pareja" : "Activity: couple conversations"], salud: [`${S.salud[lang]}/`, es ? "Salud mental y terapias" : "Mental health and therapies"], consulta: [`${S.consulta[lang]}/`, es ? "Desde la consulta" : "From the surgery"] };
+  if (k === "x" && X[v]) return X[v];
+  throw new Error("enlace desconocido: " + code);
+}
+function leccion(ci, li, lang) {
+  const es = lang === "es"; const c = P.CURSOS[ci]; const Ls = c.lecciones; const Lc = Ls[li]; const chk = Lc.comprobacion[lang];
+  const num = String(ci + 1).padStart(2, "0"); const other = es ? "en" : "es";
+  const nav = `<p class="lnav" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:28px">${li ? `<a href="{{L}}${lecURL(ci, li - 1, lang).slice(base(lang).length)}">← ${Ls[li - 1].t[lang]}</a>` : "<span></span>"}${li < Ls.length - 1 ? `<a href="{{L}}${lecURL(ci, li + 1, lang).slice(base(lang).length)}">${Ls[li + 1].t[lang]} →</a>` : `<a href="{{L}}${S.aprender[lang]}/">${es ? "Ver todos los cursos" : "See all courses"} →</a>`}</p>`;
+  const body = phead((es ? "Curso " : "Course ") + num, c.t[lang], c.d[lang]) + `
 <div class="wrap article"><article class="prose">
 <h2>${Lc.t[lang]}</h2>
 <span class="eyebrow">1 · ${es ? "Lección" : "Lesson"}</span>${Lc.leccion[lang]}
@@ -552,40 +655,56 @@ function curso1(lang) {
 <span class="eyebrow">4 · ${es ? "Comprobación" : "Check"}</span>
 <div class="quiz" data-quiz="${esc(json(chk.map((q) => ({ q: q.q, o: q.o, a: q.a, x: "" }))))}" data-lang="${lang}"></div>
 <span class="eyebrow" style="margin-top:24px">5 · ${es ? "Ampliación" : "Going further"}</span>
-<ul><li><a href="{{L}}${capURL(10, lang).slice(base(lang).length)}">${H.CAPS[10][lang]}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas de la psicología" : "Applied branches of psychology"}</a></li><li><a href="{{L}}${curURL(P.CURIOSIDADES[1], lang).slice(base(lang).length)}">${P.CURIOSIDADES[1].t[lang]}</a></li></ul>
+<ul>${(Lc.mas || []).map((m) => { const [h, t] = enlace(m, lang); return `<li><a href="{{L}}${h}">${t}</a></li>`; }).join("")}</ul>
+${nav}
 ${meta(lang)}</article>
-<aside class="aside"><div class="box"><h4>${es ? "Temario del curso" : "Course outline"}</h4><ol style="margin:0;padding-left:20px">${temario.map((t, i) => `<li>${t}${i ? ` <small style="color:var(--mute)">· ${T[lang].preparacion.toLowerCase()}</small>` : ""}</li>`).join("")}</ol></div></aside></div>`;
-  return page({ lang, rel: `${base(lang)}${S.aprender[lang]}/${c.slug[lang]}/`, alt: `${base(lang === "es" ? "en" : "es")}${S.aprender[lang === "es" ? "en" : "es"]}/${c.slug[lang === "es" ? "en" : "es"]}/`, title: c.t[lang], desc: es ? "Curso de introducción a la psicología. Lección 1: qué estudia la psicología." : "Introductory psychology course. Lesson 1: what psychology studies.", nav: "aprender", crumbs: [[es ? "Aprender" : "Learn", sec("aprender", lang)], [c.t[lang]]], body, kind: es ? "Curso" : "Course" });
+<aside class="aside"><div class="box"><h4>${es ? "Temario del curso" : "Course outline"}</h4><ol style="margin:0;padding-left:20px">${Ls.map((l, i) => { const t = l.t[lang].replace(/^(Lección|Lesson) \d+\. /, ""); return `<li>${i === li ? `<strong>${t}</strong>` : `<a href="{{L}}${lecURL(ci, i, lang).slice(base(lang).length)}">${t}</a>`}</li>`; }).join("")}</ol></div><div class="box"><h4>${es ? "Otros cursos" : "Other courses"}</h4><ul>${P.CURSOS.map((x, i) => i === ci ? "" : `<li><a href="{{L}}${lecURL(i, 0, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div></aside></div>`;
+  return page({ lang, rel: lecURL(ci, li, lang), alt: lecURL(ci, li, other), title: `${Lc.t[lang]} · ${c.t[lang]}`, desc: `${es ? "Curso" : "Course"} ${num}: ${c.t[lang]}. ${Lc.t[lang]}.`, nav: "aprender", crumbs: [[es ? "Aprender" : "Learn", sec("aprender", lang)], [c.t[lang], li ? lecURL(ci, 0, lang) : undefined], ...(li ? [[Lc.t[lang]]] : [])].map((x) => x[1] === undefined ? [x[0]] : x), body, kind: es ? "Curso" : "Course" });
 }
 
 // ---------- SALUD MENTAL ----------
 function salud(lang) {
   const es = lang === "es";
-  const dossiers = es ? ["Ansiedad", "Depresión", "Obsesiones y compulsiones", "Trauma", "Trastornos de la conducta alimentaria", "Adicciones", "Psicosis", "Trastorno bipolar", "Trastornos de la personalidad", "Neurodesarrollo: TDAH, autismo y dificultades específicas de aprendizaje"] : ["Anxiety", "Depression", "Obsessions and compulsions", "Trauma", "Eating disorders", "Addictions", "Psychosis", "Bipolar disorder", "Personality disorders", "Neurodevelopment: ADHD, autism and specific learning difficulties"];
-  const body = phead(es ? "Salud mental y terapias" : "Mental health and therapies", es ? "Salud mental con rigor y sin etiquetas" : "Mental health with rigour and without labels", es ? "Una sección amplia, con revisión médica y psicológica especializada antes de publicar cada dossier." : "A broad section, with specialist medical and psychological review before each dossier is published.") + banner(I.SECCIONES.salud, lang) + `
+  const body = phead(es ? "Salud mental y terapias" : "Mental health and therapies", es ? "Salud mental con rigor y sin etiquetas" : "Mental health with rigour and without labels", es ? "Diez dossiers sobre los problemas de salud mental más frecuentes, explicados con rigor, sin alarmismo y sin etiquetas." : "Ten dossiers on the most common mental health problems, explained with rigour, without alarmism and without labels.") + banner(I.SECCIONES.salud, lang) + `
 <div class="wrap narrow prose">
 <div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas a personas con pensamientos de suicidio y a sus allegados. En una emergencia, llama al <b>112</b>. Tu médico de familia es también una buena puerta de entrada." : "In Spain, <b>024</b> is free and open 24 hours for people with suicidal thoughts and those close to them. In an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. Your family doctor is also a good place to start."}</div>
 <h2>${es ? "Emociones, dificultades y trastornos" : "Emotions, difficulties and disorders"}</h2>
 <p>${es ? "Sentir tristeza, miedo o preocupación forma parte de la vida. Hablamos de dificultad cuando algo nos cuesta más de lo habitual durante un tiempo. La Organización Mundial de la Salud describe un <strong>trastorno mental</strong> como una alteración clínicamente significativa de la cognición, la regulación emocional o la conducta, que suele asociarse a malestar o a deterioro en áreas importantes del funcionamiento. Distinguir estos niveles evita tanto quitar importancia a lo que la tiene como convertir en enfermedad lo que no lo es." : "Feeling sad, afraid or worried is part of life. We speak of a difficulty when something is harder than usual for a while. The World Health Organization describes a <strong>mental disorder</strong> as a clinically significant disturbance in cognition, emotional regulation or behaviour, usually associated with distress or impairment in important areas of functioning. Telling these levels apart avoids both downplaying what matters and turning into illness what is not."}</p>
-<h2>${es ? "Cómo será cada dossier" : "What each dossier will cover"}</h2>
+<h2>${es ? "Cómo está hecho cada dossier" : "How each dossier is built"}</h2>
 <p>${es ? "Qué es · Qué no es · Cómo se evalúa · Qué intervenciones se estudian · Cómo buscar ayuda · Cómo acompañar · Qué mitos evitar." : "What it is · What it is not · How it is assessed · Which interventions are studied · How to seek help · How to support someone · Which myths to avoid."}</p>
-<h2>${es ? "Dossiers previstos" : "Planned dossiers"}</h2>
-<ul>${dossiers.map((d) => `<li>${d} ${pill(lang)}</li>`).join("")}</ul>
+</div><div class="wrap"><h2>${es ? "Dossiers" : "Dossiers"}</h2><div class="grid">${SALUD.map((d, i) => `<a class="card" href="{{L}}${dosURL(i, lang).slice(base(lang).length)}">${cimg(I.DOSSIERS[i])}<h3>${d.t[lang]}</h3><p>${d.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div><div class="wrap narrow prose">
 <h2>${es ? "Terapias" : "Therapies"}</h2>
-<p>${es ? "Describiremos los enfoques cognitivo-conductuales, contextuales, sistémicos, humanistas, psicodinámicos y otros: para qué problemas se han estudiado y con qué límites. El respaldo científico no se resumirá en una lista única de «terapias buenas y malas»." : "We will describe cognitive-behavioural, contextual, systemic, humanistic, psychodynamic and other approaches: which problems they have been studied for and with what limits. Scientific support will not be reduced to a single list of \"good and bad therapies\"."}</p>
+<p>${es ? "Cada dossier explica qué intervenciones se han estudiado para ese problema y con qué límites. Los enfoques de fondo se describen en las fichas de las escuelas: la <a href=\"{{L}}explorar/escuelas/psicologia-cognitiva/\">terapia cognitivo-conductual</a>, las <a href=\"{{L}}explorar/escuelas/enfoques-contextuales/\">terapias contextuales</a>, la <a href=\"{{L}}explorar/escuelas/enfoques-sistemicos/\">terapia sistémica</a>, la <a href=\"{{L}}explorar/escuelas/humanismo/\">humanista</a> y la <a href=\"{{L}}explorar/escuelas/psicoanalisis/\">psicodinámica</a>. El respaldo científico no se resume en una lista única de «terapias buenas y malas»: depende del problema, de la persona y de la calidad de la relación terapéutica." : "Each dossier explains which interventions have been studied for that problem and with what limits. The underlying approaches are described in the school pages: <a href=\"{{L}}explore/schools/cognitive-psychology/\">cognitive-behavioural therapy</a>, <a href=\"{{L}}explore/schools/contextual-approaches/\">contextual therapies</a>, <a href=\"{{L}}explore/schools/systemic-approaches/\">systemic therapy</a>, <a href=\"{{L}}explore/schools/humanism/\">humanistic</a> and <a href=\"{{L}}explore/schools/psychoanalysis/\">psychodynamic</a> therapy. Scientific support is not reduced to a single list of \"good and bad therapies\": it depends on the problem, the person and the quality of the therapeutic relationship."}</p>
 <h2>${es ? "Revisión" : "Review"}</h2>
-<p>${es ? "Los contenidos de salud llevarán el sello <span class=\"pill\">Revisión médica</span> de Alejandro Rosàs, médico de familia, y la revisión de profesionales de la psicología con competencias acreditadas en evaluación y clínica." : "Health content will carry the <span class=\"pill\">Medical review</span> seal from Alejandro Rosàs, family doctor, and review by psychology professionals with accredited expertise in assessment and clinical work."}</p>
-<p>${es ? "Mientras tanto, puedes leer los textos" : "Meanwhile, you can read"} <a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a>.</p>
+<p>${es ? (SALUD_REVISADO ? "Los dossiers llevan el sello <span class=\"pill\">Revisión médica</span> de Alejandro Rosàs, médico de familia." : "Los dossiers llevarán el sello <span class=\"pill\">Revisión médica</span> de Alejandro Rosàs, médico de familia, en cuanto termine su revisión.") + " Se actualizan cuando cambian las guías clínicas o la evidencia." : (SALUD_REVISADO ? "The dossiers carry the <span class=\"pill\">Medical review</span> seal from Alejandro Rosàs, family doctor." : "The dossiers will carry the <span class=\"pill\">Medical review</span> seal from Alejandro Rosàs, family doctor, once his review is complete.") + " They are updated when clinical guidelines or the evidence change."}</p>
+<p>${es ? "También puedes leer los textos" : "You can also read"} <a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a>.</p>
 </div>`;
   return page({ lang, rel: sec("salud", lang), alt: sec("salud", lang === "es" ? "en" : "es"), title: es ? "Salud mental y terapias" : "Mental health and therapies", desc: es ? "Salud mental explicada con rigor: emociones, dificultades y trastornos, dossiers y terapias. Línea 024." : "Mental health explained with rigour: emotions, difficulties and disorders, dossiers and therapies.", nav: "explorar", crumbs: [[es ? "Salud mental" : "Mental health"]], body });
+}
+function dossier(i, lang) {
+  const es = lang === "es"; const d = SALUD[i];
+  const otros = SALUD.map((x, j) => j === i ? "" : `<li><a href="{{L}}${dosURL(j, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("");
+  const sello = SALUD_REVISADO ? `<p><span class="pill">${es ? "Revisión médica" : "Medical review"}</span> Alejandro Rosàs, ${es ? "médico de familia" : "family doctor"}</p>` : "";
+  const body = phead(es ? "Salud mental" : "Mental health", d.t[lang], d.d[lang]) + `
+<div class="wrap article"><article class="prose">${sello}<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas. En una emergencia, llama al <b>112</b>. Este texto es divulgativo: no sirve para diagnosticar ni sustituye la consulta con un profesional." : "In Spain, <b>024</b> is free and open 24 hours; in an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. This text is for general information: it cannot diagnose and does not replace seeing a professional."}</div>${fig(I.DOSSIERS[i], lang)}${d.body[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
+<aside class="aside"><div class="box"><h4>${es ? "Otros dossiers" : "Other dossiers"}</h4><ul>${otros}</ul></div><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li></ul></div></aside></div>`;
+  return page({ lang, rel: dosURL(i, lang), alt: dosURL(i, es ? "en" : "es"), title: d.t[lang], desc: d.d[lang], nav: "explorar", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [d.t[lang]]], body, kind: "Dossier" });
+}
+function consultaEntrada(i, lang) {
+  const es = lang === "es"; const c = CONSULTA[i];
+  const otras = CONSULTA.map((x, j) => j === i ? "" : `<li><a href="{{L}}${conURL(j, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("");
+  const body = phead(es ? "Desde la consulta" : "From the surgery", c.t[lang], c.d[lang]) + `
+<div class="wrap article"><article class="prose"><p class="meta">${es ? "Por Alejandro Rosàs, médico de familia" : "By Alejandro Rosàs, family doctor"}</p>${c.body[lang]}<h3>${es ? "Para seguir leyendo" : "Further reading"}</h3><ul>${c.mas.map((m) => { const [h, t] = enlace(m, lang); return `<li><a href="{{L}}${h}">${t}</a></li>`; }).join("")}</ul><p class="meta">${es ? "Texto divulgativo: no sustituye la consulta con un profesional." : "General information: it does not replace seeing a professional."}</p>${meta(lang)}</article>
+<aside class="aside"><div class="box"><h4>${es ? "Otras reflexiones" : "Other reflections"}</h4><ul>${otras}</ul></div><div class="box"><h4>${es ? "Sobre el autor" : "About the author"}</h4><ul><li><a href="{{L}}${S.autor[lang]}/">${es ? "Quién está detrás" : "Who is behind it"}</a></li></ul></div></aside></div>`;
+  return page({ lang, rel: conURL(i, lang), alt: conURL(i, es ? "en" : "es"), title: c.t[lang], desc: c.d[lang], crumbs: [[es ? "Desde la consulta" : "From the surgery", sec("consulta", lang)], [c.t[lang]]], body, kind: es ? "Desde la consulta" : "From the surgery" });
 }
 function consulta(lang) {
   const es = lang === "es";
   const body = phead(es ? "Desde la consulta" : "From the surgery", es ? "Desde la consulta" : "From the surgery", es ? "Reflexiones de un médico de familia sobre lo que la psicología aporta a la atención primaria." : "Reflections from a family doctor on what psychology brings to primary care.") + banner(I.SECCIONES.consulta, lang) + `
 <div class="wrap narrow prose">
 <p>${es ? "En la consulta de atención primaria se ve a diario cómo se mezclan el cuerpo y la mente: el insomnio que empieza con un duelo, el dolor que empeora con el estrés, la preocupación que lleva a pedir pruebas, la soledad de muchas personas mayores. Esta sección reunirá textos breves, escritos desde esa experiencia, que conecten esas situaciones con lo que sabe la psicología." : "Primary care shows every day how body and mind intertwine: insomnia that begins with grief, pain that worsens with stress, worry that leads to requests for tests, the loneliness of many older people. This section will gather short texts, written from that experience, linking those situations to what psychology knows."}</p>
-<p>${es ? "Los casos se presentarán siempre anonimizados y modificados para que nadie pueda ser reconocido." : "Cases will always be anonymised and altered so that no one can be recognised."}</p>
-<p>${pill(lang)} ${es ? "Primeras entradas en preparación." : "First entries in preparation."}</p>
+<p>${es ? "Si alguna vez se menciona un caso, se presentará anonimizado y modificado para que nadie pueda ser reconocido." : "If a case is ever mentioned, it will be anonymised and altered so that no one can be recognised."}</p>
+</div><div class="wrap"><div class="grid">${CONSULTA.map((c, i) => `<a class="card" href="{{L}}${conURL(i, lang).slice(base(lang).length)}"><span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div><div class="wrap narrow prose">
 <p><a href="{{L}}${S.autor[lang]}/">${es ? "Quién está detrás" : "Who is behind it"}</a> →</p></div>`;
   return page({ lang, rel: sec("consulta", lang), alt: sec("consulta", lang === "es" ? "en" : "es"), title: es ? "Desde la consulta" : "From the surgery", desc: es ? "Reflexiones de un médico de familia sobre psicología y atención primaria." : "Reflections from a family doctor on psychology and primary care.", crumbs: [[es ? "Desde la consulta" : "From the surgery"]], body });
 }
@@ -697,6 +816,8 @@ function feed(lang) {
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, "assets/img"), { recursive: true });
 for (const f of fs.readdirSync("src/assets")) if (f !== "img") fs.copyFileSync(`src/assets/${f}`, path.join(OUT, "assets", f));
+fs.mkdirSync(path.join(OUT, "assets/pdf"), { recursive: true });
+for (const f of fs.readdirSync("src/pdf")) if (f.endsWith(".pdf")) fs.copyFileSync(`src/pdf/${f}`, path.join(OUT, "assets/pdf", f));
 for (const f of fs.readdirSync("src/assets/img")) if (f !== "u") fs.copyFileSync(`src/assets/img/${f}`, path.join(OUT, "assets/img", f));
 if (PREVIEW && fs.existsSync("src/assets/img/u")) { fs.mkdirSync(path.join(OUT, "assets/img/u"), { recursive: true }); for (const f of fs.readdirSync("src/assets/img/u")) fs.copyFileSync(`src/assets/img/u/${f}`, path.join(OUT, "assets/img/u", f)); }
 
@@ -716,14 +837,19 @@ for (const lang of LANGS) {
   write(sec("curiosidades", lang), curIndex(lang));
   for (const c of P.CURIOSIDADES) write(curURL(c, lang), curArt(c, lang));
   write(sec("tests", lang), tests(lang));
+  write(sec("instrumentos", lang), instrumentos(lang));
+  write(sec("libres", lang), libresIndex(lang));
+  for (const x of LIB) write(libURL(x, lang), libre(x, lang));
   write(sec("razonamiento", lang), razonamiento(lang));
   write(sec("personalidad", lang), personalidad(lang));
   write(sec("pareja", lang), pareja(lang));
   write(sec("quiz", lang), quiz(lang));
   write(sec("aprender", lang), aprender(lang));
-  write(`${base(lang)}${S.aprender[lang]}/${P.CURSOS[0].slug[lang]}/`, curso1(lang));
+  P.CURSOS.forEach((c, ci) => c.lecciones.forEach((_, li) => write(lecURL(ci, li, lang), leccion(ci, li, lang))));
   write(sec("salud", lang), salud(lang));
+  SALUD.forEach((_, i) => write(dosURL(i, lang), dossier(i, lang)));
   write(sec("consulta", lang), consulta(lang));
+  CONSULTA.forEach((_, i) => write(conURL(i, lang), consultaEntrada(i, lang)));
   write(sec("autor", lang), autor(lang));
   write(sec("enfoque", lang), enfoque(lang));
   write(sec("legal", lang), legal(lang));
