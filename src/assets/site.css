@@ -62,8 +62,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .hero h1 em{font-style:normal;color:var(--accent2)}
 .hero h1 em::after{content:"";display:block;width:64px;height:3px;background:var(--gold);margin-top:10px;border-radius:2px}
 .hero .lead{font-size:17px;color:var(--mute);max-width:500px;margin:0}
-.arch{position:relative;border-radius:170px 170px 12px 12px;overflow:hidden;background:var(--soft);margin:0}
-.arch img{width:100%;height:340px;object-fit:cover;filter:grayscale(1) contrast(1.05);display:block}
+.arch{position:relative;border-radius:120px 120px 12px 12px;overflow:hidden;background:var(--soft);margin:0}
+.arch img{width:100%;height:390px;object-fit:cover;object-position:center 32%;display:block}
 .arch figcaption{position:absolute;left:12px;right:12px;bottom:12px;background:color-mix(in srgb,var(--card) 92%,transparent);border-radius:7px;padding:8px 12px;font-size:13px;color:var(--mute)}
 .arch figcaption b{display:block;color:var(--ink);font-size:14.5px}
 .search{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px;max-width:480px;margin-top:16px;position:relative}
@@ -194,7 +194,7 @@ a.chap:hover h3{color:var(--accent)}
 @media (max-width:900px){
   .hero{grid-template-columns:1fr;gap:18px;padding-top:18px}
   .arch{border-radius:12px}
-  .arch img{height:190px;object-position:center 30%}
+  .arch img{height:230px;object-position:center 28%}
   .grid,.grid.g4,.doors{grid-template-columns:repeat(2,minmax(0,1fr))}
   .article{grid-template-columns:1fr;gap:20px}
   .aside{position:static}
@@ -225,4 +225,40 @@ a.chap:hover h3{color:var(--accent)}
   .foot .cols>div:first-child{grid-column:1/-1}
   .chap{grid-template-columns:28px minmax(0,1fr)}
   .chap .pill{grid-column:2;justify-self:start}
+}
+
+/* ---------- Imágenes ---------- */
+.card .cimg{display:block;margin:-14px -16px 12px;aspect-ratio:16/9;overflow:hidden;border-radius:9px 9px 0 0;background:var(--soft)}
+.card .cimg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.card .cimg.ct img,.pic.ct img{object-fit:contain;background:#fff;padding:6px}
+a.card:hover .cimg img{transform:scale(1.03)}
+.grid.g4 .card .cimg{aspect-ratio:2/1}
+.card .av{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:center 18%;display:block;margin-bottom:8px;filter:grayscale(1);background:var(--soft)}
+.card .av.ini{display:grid;place-items:center;font:600 18px var(--serif);color:var(--accent2);border:1.5px solid var(--accent2);filter:none;background:transparent}
+.card.hz{display:grid;grid-template-columns:104px minmax(0,1fr);gap:14px;align-items:stretch}
+.card.hz .cimg{margin:-14px 0 -14px -16px;aspect-ratio:auto;min-height:100%;border-radius:9px 0 0 9px}
+.card.hz > span:last-child{min-width:0;padding:2px 0}
+.era .eimg{display:block;aspect-ratio:4/3;overflow:hidden;border-radius:8px;margin-bottom:9px;background:#0003}
+.era .eimg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.3);opacity:.9;display:block}
+.block .bimg{display:block;height:130px;border-radius:10px;overflow:hidden;margin:0 0 10px;background:var(--soft)}
+.block .bimg img{width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;filter:grayscale(.15)}
+.pic{margin:0 0 1.3em}
+.pic img{width:100%;max-height:440px;object-fit:cover;border-radius:10px;display:block;background:var(--soft)}
+.pic.portrait img{width:auto;max-width:100%;max-height:400px;object-fit:contain;background:none}
+.pic figcaption{font-size:13.5px;line-height:1.45;color:var(--mute);margin-top:7px}
+.pic .cred,.banner figcaption{font-size:12px;color:var(--mute)}
+.pic .cred a,.banner figcaption a,.credits td a{color:inherit}
+.banner{margin:-6px 0 24px}
+.banner img{width:100%;height:220px;object-fit:cover;border-radius:12px;display:block;background:var(--soft)}
+.banner figcaption{text-align:right;margin-top:4px}
+.tablewrap{overflow-x:auto}
+.credits{width:100%;border-collapse:collapse;font-size:14px}
+.credits th,.credits td{text-align:left;vertical-align:top;padding:8px 8px;border-bottom:1px solid var(--line)}
+.credits .cthumb{width:64px;height:48px;object-fit:cover;border-radius:6px;display:block;background:var(--soft)}
+@media (max-width:600px){
+  .grid.g4 .card .cimg{margin:-10px -12px 8px}
+  .banner img{height:140px}
+  .block .bimg{height:96px}
+  .card.hz{grid-template-columns:84px minmax(0,1fr)}
+  .credits .cthumb{width:48px;height:36px}
 }

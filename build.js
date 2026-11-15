@@ -8,6 +8,7 @@ const E = require("./src/data/explorar");
 const V = require("./src/data/vida");
 const P = require("./src/data/participar");
 const B = require("./src/data/blog");
+const I = require("./src/data/imagenes");
 
 const PREVIEW = !!process.env.PREVIEW;
 const OUT = path.join(__dirname, PREVIEW ? "preview" : "dist");
@@ -26,7 +27,7 @@ const S = {
   quiz: { es: "quiz", en: "quiz" }, aprender: { es: "aprender", en: "learn" }, salud: { es: "salud-mental", en: "mental-health" },
   consulta: { es: "desde-la-consulta", en: "from-the-surgery" }, autor: { es: "quien-esta-detras", en: "about" },
   enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, privacidad: { es: "privacidad", en: "privacy" },
-  blog: { es: "blog", en: "blog" },
+  blog: { es: "blog", en: "blog" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
   areas: { es: "explorar/areas", en: "explore/areas" }, escuelas: { es: "explorar/escuelas", en: "explore/schools" },
   razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" },
 };
@@ -95,7 +96,7 @@ function page({ lang, rel, alt, title, desc, nav = "", crumbs = [], body, script
 <meta name="description" content="${esc(strip(desc))}">
 <link rel="canonical" href="${DOMAIN}/${rel}">
 ${alt ? `<link rel="alternate" hreflang="${lang}" href="${DOMAIN}/${rel}"><link rel="alternate" hreflang="${other}" href="${DOMAIN}/${alt}"><link rel="alternate" hreflang="x-default" href="${DOMAIN}/${lang === "es" ? rel : alt}">` : ""}
-<meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(strip(desc))}"><meta property="og:type" content="website"><meta property="og:image" content="${DOMAIN}/assets/img/wundt-leipzig-1880.jpg">
+<meta property="og:title" content="${esc(full)}"><meta property="og:description" content="${esc(strip(desc))}"><meta property="og:type" content="website"><meta property="og:image" content="${DOMAIN}/assets/img/clark-1909.jpg">
 <link rel="alternate" type="application/rss+xml" title="Psycholopedia" href="${R}${base(lang)}blog/feed.xml">
 <link rel="icon" href="${R}assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -118,7 +119,7 @@ ${fill(body)}
   <div class="cols">
     <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda}</div></div>
     <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
-    <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a></div>
+    <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
   <p style="margin:22px 0 0">${lang === "es" ? `Creada por Alejandro Rosàs, médico de familia con más de 38 años de experiencia en atención primaria, especialista en Medicina Preventiva y Salud Pública (col. 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">Quién está detrás</a>` : `Created by Alejandro Rosàs, a family doctor with more than 38 years in primary care and a specialist in Preventive Medicine and Public Health (licence 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">About</a>`}</p><p style="margin:6px 0 0">© 2026 ${SITE} · ${t.tagline}</p>
@@ -135,6 +136,29 @@ const refsHTML = (lang, refs) => refs && refs.length ? `<h2>${T[lang].refs}</h2>
 const meta = (lang, extra = "") => `<p class="meta">${T[lang].autoria}${extra} · ${T[lang].actualizado}: ${HOY} · ${T[lang].errores} <a href="mailto:${MAIL}">${MAIL}</a></p>`;
 const pill = (lang) => `<span class="pill soon">${T[lang].preparacion}</span>`;
 const phead = (eyebrow, h1, lead) => `<header class="phead wrap"><span class="eyebrow">${eyebrow}</span><h1>${h1}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}</header>`;
+// ---------- Imágenes ----------
+let CRED = {}; try { CRED = JSON.parse(fs.readFileSync(path.join(__dirname, "src/data/creditos.json"), "utf8")); } catch (e) { CRED = {}; }
+const UTM = "?utm_source=psycholopedia&utm_medium=referral";
+const HAS = (k) => { const m = I.IMG[k]; return !!m && (m.c ? fs.existsSync(path.join(__dirname, "src/assets/img", m.c)) : !!(CRED[k] && CRED[k].ph)); };
+function isrc(k, w = 900) {
+  const m = I.IMG[k]; if (!m) return "";
+  if (m.c) return `{{R}}assets/img/${m.c}`;
+  const c = CRED[k] || {};
+  return PREVIEW ? `{{R}}assets/img/u/${k}.jpg` : `https://images.unsplash.com/${c.ph}?auto=format&fit=crop&w=${w}&q=70`;
+}
+const CONTAIN = new Set(["stroop", "curva-olvido", "rubin", "kanizsa", "asch", "binet-test", "galton", "rorschach", "cajal-purkinje"]);
+const cimg = (k, cls = "") => (k && HAS(k) ? `<span class="cimg${CONTAIN.has(k) ? " ct" : ""}${cls ? " " + cls : ""}"><img src="${isrc(k, 640)}" alt="" loading="lazy" decoding="async"></span>` : "");
+const ini = (n) => n.split(/\s+/).map((w) => w[0]).filter((ch) => /[A-ZÁÉÍÓÚÜ]/.test(ch)).slice(0, 2).join("");
+const av = (k, n) => (k && HAS(k) ? `<img class="av" src="${isrc(k, 200)}" alt="" loading="lazy" decoding="async">` : `<span class="av ini" aria-hidden="true">${ini(n)}</span>`);
+function credit(k, lang) {
+  const c = CRED[k]; if (!c) return "";
+  const es = lang === "es";
+  if (c.u) return `${es ? "Foto" : "Photo"}: <a href="https://unsplash.com/@${c.user}${UTM}" rel="noopener">${c.by}</a> / <a href="https://unsplash.com/photos/${c.slug}${UTM}" rel="noopener">Unsplash</a>`;
+  const lic = { PD: es ? "Dominio público" : "Public domain", NKR: es ? "Sin restricciones de copyright conocidas" : "No known copyright restrictions" }[c.lic] || c.lic || (es ? "Dominio público" : "Public domain");
+  return `${c.by ? c.by + " · " : ""}<a href="${c.page}" rel="noopener">${lic} · Wikimedia Commons</a>`;
+}
+const fig = (k, lang, cls = "") => (k && HAS(k) ? `<figure class="pic${CONTAIN.has(k) ? " ct" : ""}${cls ? " " + cls : ""}"><img src="${isrc(k, 1200)}" alt="${esc(I.IMG[k].alt[lang])}" loading="lazy" decoding="async"><figcaption>${I.IMG[k].alt[lang]}. <span class="cred">${credit(k, lang)}</span></figcaption></figure>` : "");
+const banner = (k, lang) => (k && HAS(k) ? `<div class="wrap"><figure class="banner"><img src="${isrc(k, 1600)}" alt="${esc(I.IMG[k].alt[lang])}" decoding="async"><figcaption>${credit(k, lang)}</figcaption></figure></div>` : "");
 const json = (o) => JSON.stringify(o).replace(/</g, "\\u003c");
 
 // ---------- datos derivados ----------
@@ -176,7 +200,7 @@ function home(lang) {
     <form class="search" role="search" onsubmit="return false"><input type="search" id="q" placeholder="${es ? "Busca: memoria, Piaget, procrastinar…" : "Search: memory, Piaget, procrastination…"}" aria-label="${es ? "Buscar" : "Search"}" autocomplete="off"><button type="submit">${es ? "Buscar" : "Search"}</button><div class="results" id="results" hidden></div></form>
     <div class="actions"><a class="btn primary" href="{{L}}${S.explorar[lang]}/">${es ? "Explorar la psicología" : "Explore psychology"} →</a><a class="btn" href="{{L}}${S.quiz[lang]}/">${es ? "Jugar al quiz" : "Play the quiz"}</a></div>
   </div>
-  <figure class="arch"><img src="{{R}}assets/img/wundt-leipzig-1880.jpg" alt="${es ? "Wilhelm Wundt y su grupo de investigación en Leipzig, hacia 1880" : "Wilhelm Wundt and his research group in Leipzig, around 1880"}" width="552" height="400"><figcaption><b>${es ? "El nacimiento de una ciencia" : "The birth of a science"}</b>${es ? "Leipzig, hacia 1880. De los primeros laboratorios a las preguntas de hoy." : "Leipzig, around 1880. From the first laboratories to today's questions."}</figcaption></figure>
+  <figure class="arch"><img src="{{R}}assets/img/clark-1909.jpg" alt="${esc(I.IMG["clark-1909"].alt[lang])}" width="1280" height="1021" fetchpriority="high"><figcaption><b>${es ? "Freud y Jung en la Universidad Clark, 1909" : "Freud and Jung at Clark University, 1909"}</b>${es ? "Sentados: Sigmund Freud, G. Stanley Hall y Carl G. Jung. De pie: Abraham A. Brill, Ernest Jones y Sándor Ferenczi. La visita que llevó el psicoanálisis a América." : "Seated: Sigmund Freud, G. Stanley Hall and Carl G. Jung. Standing: Abraham A. Brill, Ernest Jones and Sándor Ferenczi. The visit that brought psychoanalysis to America."}</figcaption></figure>
 </section>
 <div class="wrap"><div class="trust"><span><b>${es ? "Historia y grandes figuras" : "History and key figures"}</b></span><span><b>${es ? "Fundamentos y ramas" : "Foundations and branches"}</b></span><span><b>${es ? "Vida cotidiana" : "Everyday life"}</b></span><span><b>${es ? "Aprendizaje interactivo" : "Interactive learning"}</b></span><span>${es ? "Bilingüe · Con referencias · Gratuita" : "Bilingual · Referenced · Free"}</span></div></div>
 
@@ -192,12 +216,12 @@ function home(lang) {
 <section class="section wrap" id="mapa">
   <div class="shead"><div><span class="eyebrow">${es ? "Un mapa de la psicología" : "A map of psychology"}</span><h2>${es ? "¿Qué te gustaría comprender?" : "What would you like to understand?"}</h2></div><p>${es ? "Una organización inspirada en las materias universitarias, explicada para todos." : "An organisation inspired by university subjects, explained for everyone."}</p></div>
   <div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todas" : "All"}</button>${Object.entries(E.GRUPOS).map(([k, v]) => `<button data-g="${k}">${v[lang]}</button>`).join("")}</div>
-  <div class="grid g4" id="areas">${E.AREAS.map((a) => a.full ? `<a class="card" data-g="${a.g}" href="{{L}}${areaURL(a, lang).slice(base(lang).length)}"><span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>` : `<div class="card" data-g="${a.g}"><span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p></div>`).join("")}</div>
+  <div class="grid g4" id="areas">${E.AREAS.map((a) => a.full ? `<a class="card" data-g="${a.g}" href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>` : `<div class="card" data-g="${a.g}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p></div>`).join("")}</div>
 </section>
 
 <section class="section darkband"><div class="wrap">
   <div class="shead"><div><span class="eyebrow">${es ? "Una historia de preguntas" : "A history of questions"}</span><h2>${es ? "De dónde vienen nuestras ideas" : "Where our ideas come from"}</h2></div><p>${es ? "Un recorrido por cambios, escuelas, descubrimientos y debates, sin presentar la disciplina como una sucesión de genios aislados." : "A journey through changes, schools, discoveries and debates, without presenting the discipline as a string of isolated geniuses."}</p></div>
-  <div class="eras">${eras.map(([a, b, c]) => `<div class="era"><time>${a}</time><h3>${b}</h3><p>${c}</p></div>`).join("")}</div>
+  <div class="eras">${eras.map(([a, b, c], i) => `<div class="era">${HAS(I.ERAS[i]) ? `<span class="eimg"><img src="${isrc(I.ERAS[i], 400)}" alt="" loading="lazy" decoding="async"></span>` : ""}<time>${a}</time><h3>${b}</h3><p>${c}</p></div>`).join("")}</div>
   <p style="margin-top:26px"><a class="btn" href="{{L}}${S.historia[lang]}/">${es ? "Recorrer la historia" : "Explore the history"} →</a></p>
   <h3 style="margin-top:34px;color:var(--darkink)">${es ? "Personas que abrieron caminos" : "People who opened the way"}</h3>
   <div class="chips">${F.FIGURAS.filter((f) => f.slug).map((f) => `<a href="{{L}}${figURL(f.slug, lang).slice(base(lang).length)}">${f.nombre}</a>`).join("")}<a href="{{L}}${S.figuras[lang]}/">${es ? "Ver las 24 figuras" : "See all 24 figures"} →</a></div>
@@ -205,7 +229,7 @@ function home(lang) {
 
 <section class="section wrap">
   <div class="shead"><div><span class="eyebrow">${es ? "La psicología está en tu vida" : "Psychology is in your life"}</span><h2>${es ? "Preguntas cotidianas, nuevas perspectivas" : "Everyday questions, new perspectives"}</h2></div><p>${es ? "Cada artículo conecta una situación diaria con las bases académicas." : "Each article links an everyday situation to its academic foundations."}</p></div>
-  <div class="grid">${V.VIDA.map((v) => `<a class="card" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}"><span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
+  <div class="grid">${V.VIDA.map((v) => `<a class="card" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${cimg(I.VIDA[v.slug.es])}<span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
 </section>
 
 <section class="section wrap" style="padding-top:0">
@@ -216,10 +240,10 @@ function home(lang) {
 <section class="section wrap">
   <div class="shead"><div><span class="eyebrow">${es ? "Explora y reflexiona" : "Explore and reflect"}</span><h2>${es ? "Conocerte empieza por hacerte preguntas" : "Knowing yourself starts with asking questions"}</h2></div><p>${es ? "Actividades de reflexión y retos: no son pruebas clínicas ni miden el cociente intelectual." : "Reflection activities and challenges: they are not clinical tests and do not measure IQ."}</p></div>
   <div class="grid g4">
-    <a class="card" href="{{L}}${sec("personalidad", lang).slice(base(lang).length)}"><span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Tu forma de ser" : "Your personality"}</h3><p>${es ? "Diez afirmaciones para pensar en cinco grandes dimensiones de la personalidad." : "Ten statements to think about five broad dimensions of personality."}</p></a>
-    <a class="card" href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}"><span class="tag">${es ? "Razonamiento" : "Reasoning"}</span><h3>${es ? "Pon a prueba tu razonamiento" : "Test your reasoning"}</h3><p>${es ? "Ocho retos originales de lógica, patrones y problemas, con explicación." : "Eight original challenges in logic, patterns and problems, with explanations."}</p></a>
-    <a class="card" href="{{L}}${sec("pareja", lang).slice(base(lang).length)}"><span class="tag">${es ? "Pareja" : "Couples"}</span><h3>${es ? "Conversar en pareja" : "Couple conversations"}</h3><p>${es ? "Preguntas para hablar sobre escucha, acuerdos y proyectos. Sin porcentajes de compatibilidad." : "Questions to talk about listening, agreements and plans. No compatibility scores."}</p></a>
-    <a class="card" href="{{L}}${S.tests[lang]}/#evaluacion"><span class="tag">${es ? "La ciencia de los tests" : "The science of tests"}</span><h3>${es ? "¿Qué puede decir un resultado?" : "What can a score tell you?"}</h3><p>${es ? "Validez, fiabilidad y baremos, y por qué un cuestionario breve no define a nadie." : "Validity, reliability and norms, and why a short questionnaire defines no one."}</p></a>
+    <a class="card" href="{{L}}${sec("personalidad", lang).slice(base(lang).length)}">${cimg("personalidad")}<span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Tu forma de ser" : "Your personality"}</h3><p>${es ? "Diez afirmaciones para pensar en cinco grandes dimensiones de la personalidad." : "Ten statements to think about five broad dimensions of personality."}</p></a>
+    <a class="card" href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${cimg("tests")}<span class="tag">${es ? "Razonamiento" : "Reasoning"}</span><h3>${es ? "Pon a prueba tu razonamiento" : "Test your reasoning"}</h3><p>${es ? "Ocho retos originales de lógica, patrones y problemas, con explicación." : "Eight original challenges in logic, patterns and problems, with explanations."}</p></a>
+    <a class="card" href="{{L}}${sec("pareja", lang).slice(base(lang).length)}">${cimg("vida-pareja")}<span class="tag">${es ? "Pareja" : "Couples"}</span><h3>${es ? "Conversar en pareja" : "Couple conversations"}</h3><p>${es ? "Preguntas para hablar sobre escucha, acuerdos y proyectos. Sin porcentajes de compatibilidad." : "Questions to talk about listening, agreements and plans. No compatibility scores."}</p></a>
+    <a class="card" href="{{L}}${S.tests[lang]}/#evaluacion">${cimg("rorschach")}<span class="tag">${es ? "La ciencia de los tests" : "The science of tests"}</span><h3>${es ? "¿Qué puede decir un resultado?" : "What can a score tell you?"}</h3><p>${es ? "Validez, fiabilidad y baremos, y por qué un cuestionario breve no define a nadie." : "Validity, reliability and norms, and why a short questionnaire defines no one."}</p></a>
   </div>
 </section>
 
@@ -228,7 +252,7 @@ function home(lang) {
     <div>
       <span class="eyebrow">${es ? "El lado sorprendente" : "The surprising side"}</span><h2>${es ? "La curiosidad también enseña" : "Curiosity teaches too"}</h2>
       <p style="color:var(--mute)">${es ? "Historias, ilusiones y experimentos contados con contexto: qué ocurrió, qué sabemos y qué se ha discutido después." : "Stories, illusions and experiments told in context: what happened, what we know and what has been debated since."}</p>
-      ${P.CURIOSIDADES.map((c) => `<a class="card" style="margin-bottom:12px" href="{{L}}${curURL(c, lang).slice(base(lang).length)}"><span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p></a>`).join("")}
+      ${P.CURIOSIDADES.map((c) => `<a class="card hz" style="margin-bottom:12px" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span><span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p></span></a>`).join("")}
     </div>
     <div>
       <span class="eyebrow">${es ? "Quiz de conocimientos" : "Knowledge quiz"}</span><h2>${es ? "¿Cuánto sabes de psicología?" : "How much do you know about psychology?"}</h2>
@@ -259,10 +283,10 @@ function home(lang) {
 function historiaIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Historia de la psicología" : "History of psychology", es ? "Una historia de preguntas" : "A history of questions",
-    es ? "Una narración en 24 capítulos. Cada uno responde a lo mismo: qué se intentaba comprender, con qué métodos, quién participó, qué aportó y qué se revisó después." : "A narrative in 24 chapters. Each one answers the same questions: what people were trying to understand, with what methods, who took part, what it contributed and what was revised later.") + `
+    es ? "Una narración en 24 capítulos. Cada uno responde a lo mismo: qué se intentaba comprender, con qué métodos, quién participó, qué aportó y qué se revisó después." : "A narrative in 24 chapters. Each one answers the same questions: what people were trying to understand, with what methods, who took part, what it contributed and what was revised later.") + banner(I.SECCIONES.historia, lang) + `
 <div class="wrap narrow"><div class="note">${es ? "Incluimos expresamente a mujeres investigadoras, contextos no occidentales y la relación con la historia social. Las fechas célebres sirven de orientación, no como una sucesión de descubrimientos aislados." : "We deliberately include women researchers, non-Western contexts and links with social history. Famous dates serve as signposts, not as a chain of isolated discoveries."}</div>
 <p>${es ? `Ya puedes leer ${capEscritos.length} capítulos; los demás están en preparación.` : `${capEscritos.length} chapters are ready to read; the rest are in preparation.`}</p>
-<div class="blocks">${H.BLOQUES.map((b, bi) => `<section class="block"><span class="eyebrow">${es ? "Bloque" : "Part"} ${bi + 1}</span><h2>${b[lang]}</h2>${b.caps.map((n) => {
+<div class="blocks">${H.BLOQUES.map((b, bi) => `<section class="block">${HAS(I.ERAS[bi]) ? `<span class="bimg"><img src="${isrc(I.ERAS[bi], 1200)}" alt="${esc(I.IMG[I.ERAS[bi]].alt[lang])}" loading="lazy" decoding="async"></span>` : ""}<span class="eyebrow">${es ? "Bloque" : "Part"} ${bi + 1}</span><h2>${b[lang]}</h2>${b.caps.map((n) => {
     const w = H.ESCRITOS[n];
     return w ? `<a class="chap" href="{{L}}${capURL(n, lang).slice(base(lang).length)}"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3><p>${w.desc[lang]}</p></div><span class="pill">${w.fechas}</span></a>` : `<div class="chap"><span class="num">${n}</span><div><h3>${H.CAPS[n][lang]}</h3></div>${pill(lang)}</div>`;
   }).join("")}</section>`).join("")}</div></div>`;
@@ -273,7 +297,7 @@ function capitulo(n, lang) {
   const idx = capEscritos.indexOf(n); const prev = capEscritos[idx - 1]; const next = capEscritos[idx + 1];
   const bloque = H.BLOQUES.find((b) => b.caps.includes(n));
   const body = phead(`${es ? "Capítulo" : "Chapter"} ${n} · ${bloque[lang]} · ${w.fechas}`, H.CAPS[n][lang], w.desc[lang]) + `
-<div class="wrap article"><article class="prose">${w.body[lang]}${refsHTML(lang, w.refs)}
+<div class="wrap article"><article class="prose">${fig(I.CAPS[n], lang, n === 9 ? "portrait" : "")}${w.body[lang]}${refsHTML(lang, w.refs)}
 <p style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px">${prev ? `<a href="{{L}}${capURL(prev, lang).slice(base(lang).length)}">← ${prev}. ${H.CAPS[prev][lang]}</a>` : "<span></span>"}${next ? `<a href="{{L}}${capURL(next, lang).slice(base(lang).length)}">${next}. ${H.CAPS[next][lang]} →</a>` : ""}</p>
 ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Protagonistas" : "Key people"}</h4><ul>${w.personas.map((p) => { const f = F.FIGURAS.find((x) => x.nombre === p && x.slug); return `<li>${f ? `<a href="{{L}}figuras/${f.slug}/">${p}</a>` : p}</li>`; }).join("")}</ul></div>
@@ -291,7 +315,7 @@ function figurasIndex(lang) {
 <div class="filters" data-filter="figs"><button class="on" data-e="*">${es ? "Todas las épocas" : "All periods"}</button>${Object.entries(F.EPOCAS).map(([k, v]) => `<button data-e="${k}">${v[lang]}</button>`).join("")}
 <select id="fig-area" aria-label="${es ? "Área" : "Area"}"><option value="*">${es ? "Todas las áreas" : "All areas"}</option>${areas.map((a) => `<option>${a}</option>`).join("")}</select></div>
 <div class="grid g4" id="figs">${F.FIGURAS.map((f) => {
-    const inner = `<span class="tag">${F.EPOCAS[f.epoca][lang]} · ${f.pais[lang]}</span><h3>${f.nombre}</h3><p>${f.vida}<br>${f.area[lang]} · ${f.escuela[lang]}</p>`;
+    const inner = `${av(I.FIGURAS[f.nombre], f.nombre)}<span class="tag">${F.EPOCAS[f.epoca][lang]} · ${f.pais[lang]}</span><h3>${f.nombre}</h3><p>${f.vida}<br>${f.area[lang]} · ${f.escuela[lang]}</p>`;
     return f.slug ? `<a class="card" data-e="${f.epoca}" data-a="${esc(f.area[lang])}" href="{{L}}figuras/${f.slug}/">${inner}<span class="more">${es ? "Leer ficha" : "Read profile"} →</span></a>` : `<div class="card soon" data-e="${f.epoca}" data-a="${esc(f.area[lang])}">${inner}<p style="margin-top:10px">${pill(lang)}</p></div>`;
   }).join("")}</div>
 <p style="margin-top:24px;color:var(--mute)">${es ? "Cada ficha incluye biografía y contexto, preguntas investigadas, aportaciones, colaboraciones y discrepancias, anécdotas documentadas, críticas y referencias." : "Each profile includes biography and context, research questions, contributions, collaborations and disagreements, documented anecdotes, criticism and references."}</p></div>`;
@@ -301,7 +325,7 @@ function ficha(slug, lang) {
   const es = lang === "es"; const f = F.FIGURAS.find((x) => x.slug === slug); const d = F.FICHAS[slug];
   const caps = capEscritos.filter((n) => H.ESCRITOS[n].personas.includes(f.nombre));
   const body = phead(`${f.vida} · ${f.pais[lang]}`, f.nombre, d.resumen[lang]) + `
-<div class="wrap article"><article class="prose">${f.img ? `<figure><img src="{{R}}assets/img/${f.img}" alt="${f.nombre}" loading="lazy" style="max-height:420px;width:auto;border-radius:10px;filter:grayscale(1)"><figcaption>${es ? "Fotografía de dominio público (Wikimedia Commons)." : "Public domain photograph (Wikimedia Commons)."}</figcaption></figure>` : ""}${d[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
+<div class="wrap article"><article class="prose">${fig(I.FIGURAS[f.nombre], lang, "portrait")}${d[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Ficha" : "Profile"}</h4><dl class="facts"><dt>${es ? "Vida" : "Life"}</dt><dd>${f.vida}</dd><dt>${es ? "País" : "Country"}</dt><dd>${f.pais[lang]}</dd><dt>${es ? "Área" : "Area"}</dt><dd>${f.area[lang]}</dd><dt>${es ? "Enfoque" : "Approach"}</dt><dd>${f.escuela[lang]}</dd></dl></div>
 <div class="box"><h4>${es ? "Obras principales" : "Main works"}</h4><ul>${d.obras.map((o) => `<li><em>${o}</em></li>`).join("")}</ul></div>
 <div class="box"><h4>${es ? "Conceptos relacionados" : "Related concepts"}</h4><ul>${d.conceptos[lang].map((c) => `<li>${c}</li>`).join("")}</ul></div>
@@ -316,16 +340,16 @@ function explorar(lang) {
 <div class="wrap">
 <section id="mapa"><div class="shead"><div><span class="eyebrow">${es ? "16 áreas" : "16 areas"}</span><h2>${es ? "Áreas de conocimiento" : "Areas of knowledge"}</h2></div><p>${es ? "Cada área tendrá tres niveles de lectura: introducción breve, explicación desarrollada y ampliación con referencias." : "Each area will have three reading levels: a short introduction, a fuller explanation and an extension with references."}</p></div>
 <div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todas" : "All"}</button>${Object.entries(E.GRUPOS).map(([k, v]) => `<button data-g="${k}">${v[lang]}</button>`).join("")}</div>
-<div class="grid g4" id="areas">${E.AREAS.map((a) => a.full ? `<a class="card" data-g="${a.g}" href="{{L}}${areaURL(a, lang).slice(base(lang).length)}"><span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p><span class="more">${es ? "Tres niveles de lectura" : "Three reading levels"} →</span></a>` : `<div class="card" data-g="${a.g}"><span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p></div>`).join("")}</div></section>
+<div class="grid g4" id="areas">${E.AREAS.map((a) => a.full ? `<a class="card" data-g="${a.g}" href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p><span class="more">${es ? "Tres niveles de lectura" : "Three reading levels"} →</span></a>` : `<div class="card" data-g="${a.g}">${cimg(I.AREAS[a.slug.es])}<span class="tag">${E.GRUPOS[a.g][lang]}</span><h3>${a.t[lang]}</h3><p>${a.d[lang]}</p></div>`).join("")}</div></section>
 
 <section class="section" id="escuelas"><div class="shead"><div><span class="eyebrow">${es ? "Escuelas y corrientes" : "Schools and movements"}</span><h2>${es ? "Cómo ha cambiado la manera de estudiar la mente" : "How the way of studying the mind has changed"}</h2></div><p>${es ? "Distinguimos siempre la importancia histórica del respaldo científico actual." : "We always separate historical importance from current scientific support."}</p></div>
-<div class="grid g4">${E.ESCUELAS.map((s) => s.tabla ? `<a class="card" href="{{L}}${escURL(s, lang).slice(base(lang).length)}"><h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>` : `<div class="card soon"><h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></section>
+<div class="grid g4">${E.ESCUELAS.map((s) => s.tabla ? `<a class="card" href="{{L}}${escURL(s, lang).slice(base(lang).length)}">${cimg(I.ESCUELAS[s.slug.es])}<h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>` : `<div class="card soon">${cimg(I.ESCUELAS[s.slug.es])}<h3>${s.t[lang]}</h3><p>${s.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></section>
 
 <section class="section" id="ramas" style="padding-top:0"><div class="shead"><div><span class="eyebrow">${es ? "Ramas aplicadas" : "Applied branches"}</span><h2>${es ? "Dónde trabaja la psicología" : "Where psychology works"}</h2></div><p>${es ? "Además de la clínica, la psicología trabaja en educación, empresas, justicia, deporte, medio ambiente o tecnología." : "Besides clinical work, psychology is applied in education, business, justice, sport, the environment and technology."}</p></div>
 <div class="grid g4">${E.RAMAS.map(([t, d]) => `<div class="card"><h3>${t[lang]}</h3><p>${d[lang]}</p></div>`).join("")}</div></section>
 
 <section id="figuras"><div class="shead"><div><span class="eyebrow">${es ? "Grandes figuras" : "Key figures"}</span><h2>${es ? "Biografías" : "Biographies"}</h2></div></div>
-<div class="grid">${F.FIGURAS.filter((f) => f.slug).map((f) => `<a class="card" href="{{L}}figuras/${f.slug}/"><span class="tag">${f.vida}</span><h3>${f.nombre}</h3><p>${F.FICHAS[f.slug].resumen[lang]}</p></a>`).join("")}</div>
+<div class="grid">${F.FIGURAS.filter((f) => f.slug).map((f) => `<a class="card" href="{{L}}figuras/${f.slug}/">${av(I.FIGURAS[f.nombre], f.nombre)}<span class="tag">${f.vida}</span><h3>${f.nombre}</h3><p>${F.FICHAS[f.slug].resumen[lang]}</p></a>`).join("")}</div>
 <p style="margin-top:16px"><a class="btn" href="{{L}}${S.figuras[lang]}/">${es ? "Directorio completo" : "Full directory"} →</a></p></section>
 </div>`;
   return page({ lang, rel: sec("explorar", lang), alt: sec("explorar", lang === "es" ? "en" : "es"), title: es ? "Explorar la psicología" : "Explore psychology", desc: es ? "Mapa de la psicología: 16 áreas de conocimiento, 12 ramas aplicadas, escuelas y grandes figuras." : "Map of psychology: 16 areas of knowledge, 12 applied branches, schools and key figures.", nav: "explorar", crumbs: [[es ? "Explorar" : "Explore"]], body });
@@ -333,7 +357,7 @@ function explorar(lang) {
 function areaMemoria(lang) {
   const es = lang === "es"; const a = memoria; const M = E.MEMORIA;
   const body = phead(es ? "Área · Procesos básicos" : "Area · Core processes", a.t[lang], a.d[lang]) + `
-<div class="wrap article"><article class="prose levels">
+<div class="wrap article"><article class="prose levels">${fig("curva-olvido", lang)}
 <span class="eyebrow">${es ? "Nivel 1 · Introducción breve" : "Level 1 · Short introduction"}</span>${M.breve[lang]}
 <details open><summary>${es ? "Nivel 2 · Explicación desarrollada" : "Level 2 · Fuller explanation"}</summary>${M.desarrollada[lang]}</details>
 <details><summary>${es ? "Nivel 3 · Ampliación con referencias" : "Level 3 · Going further, with references"}</summary>${M.ampliacion[lang]}${refsHTML(lang, M.refs)}</details>
@@ -348,7 +372,7 @@ ${meta(lang)}</article>
 function escuela(s, lang) {
   const es = lang === "es";
   const body = phead(es ? "Escuelas y corrientes" : "Schools and movements", s.t[lang], s.d[lang]) + `
-<div class="wrap narrow prose"><table class="qtable"><tbody>${E.PREG.map((p, i) => `<tr><th scope="row">${p[lang]}</th><td>${s.tabla[lang][i]}</td></tr>`).join("")}</tbody></table>
+<div class="wrap narrow prose">${fig(I.ESCUELAS[s.slug.es], lang, s.slug.es === "gestalt" || s.slug.es === "psicologia-cognitiva" ? "" : "portrait")}<table class="qtable"><tbody>${E.PREG.map((p, i) => `<tr><th scope="row">${p[lang]}</th><td>${s.tabla[lang][i]}</td></tr>`).join("")}</tbody></table>
 <div class="note">${es ? "La importancia histórica de una escuela y el respaldo científico actual de sus ideas son cosas distintas: aquí las explicamos por separado." : "A school's historical importance and the current scientific support for its ideas are different things: we explain them separately."}</div>
 ${meta(lang)}</div>`;
   return page({ lang, rel: escURL(s, lang), alt: escURL(s, lang === "es" ? "en" : "es"), title: s.t[lang], desc: s.d[lang], nav: "explorar", crumbs: [[es ? "Explorar" : "Explore", sec("explorar", lang)], [s.t[lang]]], body, kind: es ? "Escuela" : "School" });
@@ -358,7 +382,7 @@ ${meta(lang)}</div>`;
 function vidaIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Vida cotidiana" : "Everyday life", es ? "La psicología está en tu vida" : "Psychology is in your life", es ? "Preguntas de todos los días respondidas con lo que sabe la investigación, y conectadas con sus bases académicas." : "Everyday questions answered with what research knows, and linked to their academic foundations.") + `
-<div class="wrap"><div class="grid">${V.VIDA.map((v) => `<a class="card" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}"><span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
+<div class="wrap"><div class="grid">${V.VIDA.map((v) => `<a class="card" href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${cimg(I.VIDA[v.slug.es])}<span class="tag">${v.tema[lang]}</span><h3>${v.t[lang]}</h3><p>${v.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
 <h2 style="margin-top:50px">${es ? "Familias temáticas" : "Topic families"}</h2><p style="color:var(--mute)">${es ? "Iremos ampliando cada familia con nuevos artículos." : "We will keep adding articles to each family."}</p>
 <div class="filters">${V.FAMILIAS.map((f) => `<span class="pill" style="padding:6px 12px;font-size:14px">${f[lang]}</span>`).join("")}</div></div>`;
   return page({ lang, rel: sec("vida", lang), alt: sec("vida", lang === "es" ? "en" : "es"), title: es ? "Psicología de la vida cotidiana" : "Psychology of everyday life", desc: es ? "Procrastinación, preocupaciones, discusiones de pareja, estudio, pantallas y adolescencia explicados con evidencia." : "Procrastination, worry, couple arguments, studying, screens and adolescence explained with evidence.", nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life"]], body });
@@ -366,7 +390,7 @@ function vidaIndex(lang) {
 function vidaArt(v, lang) {
   const es = lang === "es";
   const body = phead(v.tema[lang], v.t[lang], v.d[lang]) + `
-<div class="wrap article"><article class="prose">${v[lang]}${refsHTML(lang, v.refs)}${meta(lang)}</article>
+<div class="wrap article"><article class="prose">${fig(I.VIDA[v.slug.es], lang)}${v[lang]}${refsHTML(lang, v.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${T[lang].conecta}</h4><ul>${v.conecta[lang].map((c) => { const a = E.AREAS.find((x) => x.t[lang] === c && x.full); return `<li>${a ? `<a href="{{L}}${areaURL(a, lang).slice(base(lang).length)}">${c}</a>` : c}</li>`; }).join("")}</ul></div>
 <div class="box"><h4>${es ? "Más preguntas cotidianas" : "More everyday questions"}</h4><ul>${V.VIDA.filter((x) => x !== v).slice(0, 4).map((x) => `<li><a href="{{L}}${vidaURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div></aside></div>`;
   return page({ lang, rel: vidaURL(v, lang), alt: vidaURL(v, lang === "es" ? "en" : "es"), title: v.t[lang], desc: v.d[lang], nav: "vida", crumbs: [[es ? "Vida cotidiana" : "Everyday life", sec("vida", lang)], [v.tema[lang]]], body, kind: es ? "Vida cotidiana" : "Everyday life" });
@@ -383,7 +407,7 @@ const STROOP = (lang) => {
 function curIndex(lang) {
   const es = lang === "es";
   const body = phead(es ? "Anécdotas, curiosidades y experimentos" : "Anecdotes, curiosities and experiments", es ? "La curiosidad también enseña" : "Curiosity teaches too", es ? "Experimentos clásicos con su contexto, su ética y sus revisiones. Las anécdotas llevan fuentes; las de procedencia dudosa se señalan o se excluyen." : "Classic experiments with their context, ethics and later revisions. Anecdotes are sourced; doubtful ones are flagged or left out.") + `
-<div class="wrap"><div class="grid">${P.CURIOSIDADES.map((c) => `<a class="card" href="{{L}}${curURL(c, lang).slice(base(lang).length)}"><span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
+<div class="wrap"><div class="grid">${P.CURIOSIDADES.map((c) => `<a class="card" href="{{L}}${curURL(c, lang).slice(base(lang).length)}">${cimg(I.CURIOSIDADES[c.slug.es])}<span class="tag">${c.serie[lang]}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div>
 <h2 style="margin-top:50px">${es ? "Series" : "Series"}</h2><div class="filters">${P.SERIES.map((s) => `<span class="pill" style="padding:6px 12px;font-size:14px">${s[lang]}</span>`).join("")}</div></div>`;
   return page({ lang, rel: sec("curiosidades", lang), alt: sec("curiosidades", lang === "es" ? "en" : "es"), title: es ? "Curiosidades y experimentos de psicología" : "Psychology curiosities and experiments", desc: es ? "El efecto Stroop, el efecto Mozart y el experimento de Asch contados con contexto." : "The Stroop effect, the Mozart effect and Asch's experiment told in context.", nav: "explorar", crumbs: [[es ? "Curiosidades" : "Curiosities"]], body });
 }
@@ -391,23 +415,23 @@ function curArt(c, lang) {
   const es = lang === "es";
   let html = c[lang];
   if (c.stroop) html = html.replace(/(<h2>)/, STROOP(lang) + "$1");
-  const body = phead(c.serie[lang], c.t[lang], c.d[lang]) + `<div class="wrap narrow prose">${html}${refsHTML(lang, c.refs)}${meta(lang)}</div>`;
+  const body = phead(c.serie[lang], c.t[lang], c.d[lang]) + `<div class="wrap narrow prose">${fig(I.CURIOSIDADES[c.slug.es], lang, c.slug.es === "el-efecto-mozart" ? "portrait" : "")}${html}${refsHTML(lang, c.refs)}${meta(lang)}</div>`;
   return page({ lang, rel: curURL(c, lang), alt: curURL(c, lang === "es" ? "en" : "es"), title: c.t[lang], desc: c.d[lang], nav: "explorar", crumbs: [[es ? "Curiosidades" : "Curiosities", sec("curiosidades", lang)], [c.serie[lang]]], body, kind: es ? "Curiosidad" : "Curiosity" });
 }
 
 // ---------- TESTS ----------
 function tests(lang) {
   const es = lang === "es";
-  const body = phead(es ? "Tests y actividades" : "Tests and activities", es ? "Conocerte empieza por hacerte preguntas" : "Knowing yourself starts with asking questions", es ? "Tres niveles claramente identificados, para no confundir una actividad de reflexión con un instrumento de evaluación." : "Three clearly labelled levels, so a reflection activity is never mistaken for an assessment instrument.") + `
+  const body = phead(es ? "Tests y actividades" : "Tests and activities", es ? "Conocerte empieza por hacerte preguntas" : "Knowing yourself starts with asking questions", es ? "Tres niveles claramente identificados, para no confundir una actividad de reflexión con un instrumento de evaluación." : "Three clearly labelled levels, so a reflection activity is never mistaken for an assessment instrument.") + banner(I.SECCIONES.tests, lang) + `
 <div class="wrap">
 <table class="qtable" style="max-width:880px"><thead><tr><th>${es ? "Nivel" : "Level"}</th><td><b>${es ? "Qué ofrece" : "What it offers"}</b></td></tr></thead><tbody>
 <tr><th>${es ? "Reflexión" : "Reflection"}</th><td>${es ? "Preguntas para explorar preferencias, experiencias y contextos. Disponible." : "Questions to explore preferences, experiences and contexts. Available."}</td></tr>
 <tr><th>${es ? "Instrumentos con evidencia" : "Evidence-based instruments"}</th><td>${es ? "Cuestionarios seleccionados con versión, permisos, puntuación y documentación adecuados. En preparación: solo se publicarán tras revisar permisos, versiones e interpretación." : "Selected questionnaires with proper version, permissions, scoring and documentation. In preparation: they will only be published after reviewing permissions, versions and interpretation."}</td></tr>
 <tr><th>${es ? "Aprender sobre evaluación" : "Learning about assessment"}</th><td>${es ? "Qué puede y qué no puede concluirse de un resultado. Disponible abajo." : "What can and cannot be concluded from a score. Available below."}</td></tr></tbody></table>
 <div class="grid" style="margin-top:30px">
-<a class="card" href="{{L}}${sec("personalidad", lang).slice(base(lang).length)}"><span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Tu forma de ser" : "Your personality"}</h3><p>${es ? "Diez afirmaciones para pensar en las cinco grandes dimensiones de la personalidad." : "Ten statements to reflect on the five broad dimensions of personality."}</p></a>
-<a class="card" href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}"><span class="tag">${es ? "Reto" : "Challenge"}</span><h3>${es ? "Pon a prueba tu razonamiento" : "Test your reasoning"}</h3><p>${es ? "Series, lógica, problemas y retos espaciales con explicación. No calcula un CI." : "Series, logic, problems and spatial puzzles with explanations. It does not calculate an IQ."}</p></a>
-<a class="card" href="{{L}}${sec("pareja", lang).slice(base(lang).length)}"><span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Conversar en pareja" : "Couple conversations"}</h3><p>${es ? "Siete ámbitos con preguntas para hablar. Sin porcentajes ni veredictos." : "Seven areas with questions to talk about. No percentages or verdicts."}</p></a></div>
+<a class="card" href="{{L}}${sec("personalidad", lang).slice(base(lang).length)}">${cimg("personalidad")}<span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Tu forma de ser" : "Your personality"}</h3><p>${es ? "Diez afirmaciones para pensar en las cinco grandes dimensiones de la personalidad." : "Ten statements to reflect on the five broad dimensions of personality."}</p></a>
+<a class="card" href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${cimg("tests")}<span class="tag">${es ? "Reto" : "Challenge"}</span><h3>${es ? "Pon a prueba tu razonamiento" : "Test your reasoning"}</h3><p>${es ? "Series, lógica, problemas y retos espaciales con explicación. No calcula un CI." : "Series, logic, problems and spatial puzzles with explanations. It does not calculate an IQ."}</p></a>
+<a class="card" href="{{L}}${sec("pareja", lang).slice(base(lang).length)}">${cimg("vida-pareja")}<span class="tag">${es ? "Reflexión" : "Reflection"}</span><h3>${es ? "Conversar en pareja" : "Couple conversations"}</h3><p>${es ? "Siete ámbitos con preguntas para hablar. Sin porcentajes ni veredictos." : "Seven areas with questions to talk about. No percentages or verdicts."}</p></a></div>
 <section class="section narrow prose" id="evaluacion"><span class="eyebrow">${es ? "La ciencia de los tests" : "The science of tests"}</span><h2>${es ? "¿Qué puede decir un resultado?" : "What can a score tell you?"}</h2>
 ${es ? `<p>Un test psicológico es una herramienta de medida, y como cualquier herramienta tiene que comprobarse antes de usarla. Tres ideas clave:</p>
 <ul><li><strong>Fiabilidad</strong>: si mide de forma consistente. Si repites el test en condiciones parecidas, el resultado debería ser similar.</li>
@@ -461,7 +485,7 @@ function A2(es, en) { return { es, en }; }
 function quiz(lang) {
   const es = lang === "es";
   const data = P.QUIZ.map((q) => ({ q: q.q[lang], o: q.o[lang], a: q.a, x: q.x[lang], tema: q.tema }));
-  const body = phead("Quiz", es ? "¿Cuánto sabes de psicología?" : "How much do you know about psychology?", es ? `${P.QUIZ.length} preguntas con explicación. Juega al quiz diario de 10 preguntas o elige un tema.` : `${P.QUIZ.length} questions with explanations. Play the daily 10-question quiz or choose a topic.`) + `
+  const body = phead("Quiz", es ? "¿Cuánto sabes de psicología?" : "How much do you know about psychology?", es ? `${P.QUIZ.length} preguntas con explicación. Juega al quiz diario de 10 preguntas o elige un tema.` : `${P.QUIZ.length} questions with explanations. Play the daily 10-question quiz or choose a topic.`) + banner(I.SECCIONES.quiz, lang) + `
 <div class="wrap narrow">
 <div class="filters" id="quiz-modes"><button class="on" data-m="diario">${es ? "Quiz diario" : "Daily quiz"}</button><button data-m="*">${es ? "Todas" : "All"}</button>${Object.keys(TEMAS).filter((k) => P.QUIZ.some((q) => q.tema === k)).map((k) => `<button data-m="${k}">${TEMAS[k][lang]}</button>`).join("")}</div>
 <div class="quiz" id="bigquiz" data-all="${esc(json(data))}" data-lang="${lang}"></div>
@@ -472,7 +496,7 @@ function quiz(lang) {
 // ---------- APRENDER ----------
 function aprender(lang) {
   const es = lang === "es";
-  const body = phead(es ? "Aprender" : "Learn", es ? "Cursos y rutas de aprendizaje" : "Courses and learning paths", es ? "Formato común: lección breve → ejemplo → actividad → comprobación → ampliación. Son rutas divulgativas: no habilitan para evaluar ni tratar a personas." : "Common format: short lesson → example → activity → check → going further. They are popular-science paths and do not qualify anyone to assess or treat people.") + `
+  const body = phead(es ? "Aprender" : "Learn", es ? "Cursos y rutas de aprendizaje" : "Courses and learning paths", es ? "Formato común: lección breve → ejemplo → actividad → comprobación → ampliación. Son rutas divulgativas: no habilitan para evaluar ni tratar a personas." : "Common format: short lesson → example → activity → check → going further. They are popular-science paths and do not qualify anyone to assess or treat people.") + banner(I.SECCIONES.aprender, lang) + `
 <div class="wrap"><div class="grid">${P.CURSOS.map((c, i) => c.slug ? `<a class="card" href="{{L}}${S.aprender[lang]}/${c.slug[lang]}/"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><span class="more">${es ? "Empezar la lección 1" : "Start lesson 1"} →</span></a>` : `<div class="card soon"><span class="num">${String(i + 1).padStart(2, "0")}</span><h3>${c.t[lang]}</h3><p>${c.d[lang]}</p><p style="margin-top:10px">${pill(lang)}</p></div>`).join("")}</div></div>`;
   return page({ lang, rel: sec("aprender", lang), alt: sec("aprender", lang === "es" ? "en" : "es"), title: es ? "Cursos de psicología" : "Psychology courses", desc: es ? "Rutas de aprendizaje de psicología para empezar desde cero." : "Psychology learning paths for complete beginners.", nav: "aprender", crumbs: [[es ? "Aprender" : "Learn"]], body });
 }
@@ -499,7 +523,7 @@ ${meta(lang)}</article>
 function salud(lang) {
   const es = lang === "es";
   const dossiers = es ? ["Ansiedad", "Depresión", "Obsesiones y compulsiones", "Trauma", "Trastornos de la conducta alimentaria", "Adicciones", "Psicosis", "Trastorno bipolar", "Trastornos de la personalidad", "Neurodesarrollo: TDAH, autismo y dificultades específicas de aprendizaje"] : ["Anxiety", "Depression", "Obsessions and compulsions", "Trauma", "Eating disorders", "Addictions", "Psychosis", "Bipolar disorder", "Personality disorders", "Neurodevelopment: ADHD, autism and specific learning difficulties"];
-  const body = phead(es ? "Salud mental y terapias" : "Mental health and therapies", es ? "Salud mental con rigor y sin etiquetas" : "Mental health with rigour and without labels", es ? "Una sección amplia, con revisión médica y psicológica especializada antes de publicar cada dossier." : "A broad section, with specialist medical and psychological review before each dossier is published.") + `
+  const body = phead(es ? "Salud mental y terapias" : "Mental health and therapies", es ? "Salud mental con rigor y sin etiquetas" : "Mental health with rigour and without labels", es ? "Una sección amplia, con revisión médica y psicológica especializada antes de publicar cada dossier." : "A broad section, with specialist medical and psychological review before each dossier is published.") + banner(I.SECCIONES.salud, lang) + `
 <div class="wrap narrow prose">
 <div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas a personas con pensamientos de suicidio y a sus allegados. En una emergencia, llama al <b>112</b>. Tu médico de familia es también una buena puerta de entrada." : "In Spain, <b>024</b> is free and open 24 hours for people with suicidal thoughts and those close to them. In an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. Your family doctor is also a good place to start."}</div>
 <h2>${es ? "Emociones, dificultades y trastornos" : "Emotions, difficulties and disorders"}</h2>
@@ -518,7 +542,7 @@ function salud(lang) {
 }
 function consulta(lang) {
   const es = lang === "es";
-  const body = phead(es ? "Desde la consulta" : "From the surgery", es ? "Desde la consulta" : "From the surgery", es ? "Reflexiones de un médico de familia sobre lo que la psicología aporta a la atención primaria." : "Reflections from a family doctor on what psychology brings to primary care.") + `
+  const body = phead(es ? "Desde la consulta" : "From the surgery", es ? "Desde la consulta" : "From the surgery", es ? "Reflexiones de un médico de familia sobre lo que la psicología aporta a la atención primaria." : "Reflections from a family doctor on what psychology brings to primary care.") + banner(I.SECCIONES.consulta, lang) + `
 <div class="wrap narrow prose">
 <p>${es ? "En la consulta de atención primaria se ve a diario cómo se mezclan el cuerpo y la mente: el insomnio que empieza con un duelo, el dolor que empeora con el estrés, la preocupación que lleva a pedir pruebas, la soledad de muchas personas mayores. Esta sección reunirá textos breves, escritos desde esa experiencia, que conecten esas situaciones con lo que sabe la psicología." : "Primary care shows every day how body and mind intertwine: insomnia that begins with grief, pain that worsens with stress, worry that leads to requests for tests, the loneliness of many older people. This section will gather short texts, written from that experience, linking those situations to what psychology knows."}</p>
 <p>${es ? "Los casos se presentarán siempre anonimizados y modificados para que nadie pueda ser reconocido." : "Cases will always be anonymised and altered so that no one can be recognised."}</p>
@@ -581,12 +605,23 @@ function legal(lang) {
 <h2>${es ? "Responsabilidad" : "Liability"}</h2><p>${es ? "Revisamos el contenido con regularidad, pero no podemos garantizar que esté libre de errores. Si encuentras uno, escríbenos." : "We review content regularly but cannot guarantee it is error-free. If you find a mistake, write to us."}</p></div>`;
   return page({ lang, rel: sec("legal", lang), alt: sec("legal", lang === "es" ? "en" : "es"), title: es ? "Aviso legal" : "Legal notice", desc: es ? "Aviso legal de Psycholopedia." : "Psycholopedia legal notice.", crumbs: [[es ? "Aviso legal" : "Legal notice"]], body, index: false });
 }
+function creditos(lang) {
+  const es = lang === "es";
+  const rows = Object.keys(I.IMG).filter((k) => CRED[k] && HAS(k)).map((k) => `<tr><td><img class="cthumb" src="${isrc(k, 200)}" alt="" loading="lazy"></td><td>${I.IMG[k].alt[lang]}</td><td>${credit(k, lang)}</td></tr>`).join("");
+  const body = phead(es ? "Proyecto" : "Project", es ? "Créditos de imágenes" : "Image credits", es ? "Las fotografías históricas proceden de Wikimedia Commons y las actuales, de Unsplash. Aquí figuran su autoría y su licencia." : "Historical photographs come from Wikimedia Commons and present-day ones from Unsplash. Their authorship and licences are listed here.") + `
+<div class="wrap narrow prose">
+<p>${es ? "Las imágenes de dominio público o con licencia Creative Commons se reproducen respetando sus condiciones; las licencias CC BY y CC BY-SA exigen citar la autoría, que se indica junto a cada imagen y en esta lista. Las fotografías de Unsplash se usan con la <a href=\"https://unsplash.com/license\" rel=\"noopener\">licencia de Unsplash</a>." : "Public-domain and Creative Commons images are reproduced in line with their terms; CC BY and CC BY-SA licences require attribution, given next to each image and in this list. Unsplash photographs are used under the <a href=\"https://unsplash.com/license\" rel=\"noopener\">Unsplash licence</a>."}</p>
+<p>${es ? "Si eres autor de alguna imagen y ves un error en la atribución, escríbenos a" : "If you are the author of an image and see an attribution error, write to"} <a href="mailto:${MAIL}">${MAIL}</a>.</p>
+<div class="tablewrap"><table class="credits"><thead><tr><th></th><th>${es ? "Imagen" : "Image"}</th><th>${es ? "Autoría y licencia" : "Author and licence"}</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  return page({ lang, rel: sec("creditos", lang), alt: sec("creditos", lang === "es" ? "en" : "es"), title: es ? "Créditos de imágenes" : "Image credits", desc: es ? "Autoría y licencias de las imágenes de Psycholopedia." : "Authorship and licences of Psycholopedia's images.", crumbs: [[es ? "Créditos de imágenes" : "Image credits"]], body });
+}
 function privacidad(lang) {
   const es = lang === "es";
   const body = phead(es ? "Proyecto" : "Project", es ? "Privacidad" : "Privacy", "") + `
 <div class="wrap narrow prose">
 <p>${es ? "Psycholopedia no utiliza cookies de seguimiento ni guarda datos personales. Las respuestas al quiz, a los retos y a las actividades de reflexión se procesan solo en tu navegador: no se envían a ningún servidor ni se almacenan." : "Psycholopedia does not use tracking cookies or store personal data. Answers to the quiz, challenges and reflection activities are processed only in your browser: they are not sent to any server or stored."}</p>
 <p>${es ? "Las tipografías se cargan desde Google Fonts, que puede registrar tu dirección IP según su propia política de privacidad." : "Fonts are loaded from Google Fonts, which may log your IP address under its own privacy policy."}</p>
+<p>${es ? "Algunas fotografías se muestran desde el servidor de imágenes de Unsplash, como exigen sus condiciones de uso; tu navegador se conecta a él para cargarlas." : "Some photographs are served from Unsplash's image server, as its terms require; your browser connects to it to load them."}</p>
 <p>${es ? "Si en el futuro añadimos estadísticas de visitas, se activarán solo con tu consentimiento y lo explicaremos aquí." : "If we add visitor statistics in future, they will only be enabled with your consent and explained here."}</p>
 <p>${es ? "Responsable" : "Controller"}: Alejandro Rosàs Navarro · <a href="mailto:${MAIL}">${MAIL}</a></p></div>`;
   return page({ lang, rel: sec("privacidad", lang), alt: sec("privacidad", lang === "es" ? "en" : "es"), title: es ? "Privacidad" : "Privacy", desc: es ? "Política de privacidad de Psycholopedia." : "Psycholopedia privacy policy.", crumbs: [[es ? "Privacidad" : "Privacy"]], body, index: false });
@@ -596,7 +631,7 @@ function privacidad(lang) {
 const POSTS = B.BLOG.filter((p) => p.fecha <= HOY).sort((a, b) => b.fecha.localeCompare(a.fecha));
 const postURL = (p, lang) => sec("blog", lang, p.slug[lang]);
 const fFecha = (f, lang) => new Date(f + "T12:00:00Z").toLocaleDateString(lang === "es" ? "es-ES" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
-const postCard = (p, lang) => `<a class="card" href="{{L}}${postURL(p, lang).slice(base(lang).length)}"><span class="tag">${p.cat[lang]} · <time datetime="${p.fecha}">${fFecha(p.fecha, lang)}</time></span><h3>${p.t[lang]}</h3><p>${p.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`;
+const postCard = (p, lang) => `<a class="card" href="{{L}}${postURL(p, lang).slice(base(lang).length)}">${cimg(I.BLOG[p.slug.es])}<span class="tag">${p.cat[lang]} · <time datetime="${p.fecha}">${fFecha(p.fecha, lang)}</time></span><h3>${p.t[lang]}</h3><p>${p.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`;
 function blogIndex(lang) {
   const es = lang === "es";
   const body = phead("Blog", es ? "Blog de Psycholopedia" : "Psycholopedia blog", es ? "Un artículo nuevo cada tres días: historias, experimentos, preguntas cotidianas y reflexiones desde la consulta." : "A new article every three days: stories, experiments, everyday questions and reflections from the surgery.") + `
@@ -607,7 +642,7 @@ function blogIndex(lang) {
 function post(p, lang) {
   const es = lang === "es"; const i = POSTS.indexOf(p); const newer = POSTS[i - 1]; const older = POSTS[i + 1];
   const body = phead(`${p.cat[lang]} · ${fFecha(p.fecha, lang)}`, p.t[lang], p.d[lang]) + `
-<div class="wrap article"><article class="prose">${p[lang]}${refsHTML(lang, p.refs)}
+<div class="wrap article"><article class="prose">${fig(I.BLOG[p.slug.es], lang, p.slug.es === "ebbinghaus-y-la-curva-del-olvido" ? "portrait" : "")}${p[lang]}${refsHTML(lang, p.refs)}
 <p style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:30px">${older ? `<a href="{{L}}${postURL(older, lang).slice(base(lang).length)}">← ${older.t[lang]}</a>` : "<span></span>"}${newer ? `<a href="{{L}}${postURL(newer, lang).slice(base(lang).length)}">${newer.t[lang]} →</a>` : ""}</p>
 ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Últimas entradas" : "Latest posts"}</h4><ul>${POSTS.filter((x) => x !== p).slice(0, 5).map((x) => `<li><a href="{{L}}${postURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div>
@@ -623,7 +658,8 @@ function feed(lang) {
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, "assets/img"), { recursive: true });
 for (const f of fs.readdirSync("src/assets")) if (f !== "img") fs.copyFileSync(`src/assets/${f}`, path.join(OUT, "assets", f));
-for (const f of fs.readdirSync("src/assets/img")) fs.copyFileSync(`src/assets/img/${f}`, path.join(OUT, "assets/img", f));
+for (const f of fs.readdirSync("src/assets/img")) if (f !== "u") fs.copyFileSync(`src/assets/img/${f}`, path.join(OUT, "assets/img", f));
+if (PREVIEW && fs.existsSync("src/assets/img/u")) { fs.mkdirSync(path.join(OUT, "assets/img/u"), { recursive: true }); for (const f of fs.readdirSync("src/assets/img/u")) fs.copyFileSync(`src/assets/img/u/${f}`, path.join(OUT, "assets/img/u", f)); }
 
 for (const lang of LANGS) {
   write(base(lang), home(lang));
@@ -651,6 +687,7 @@ for (const lang of LANGS) {
   write(sec("enfoque", lang), enfoque(lang));
   write(sec("legal", lang), legal(lang));
   write(sec("privacidad", lang), privacidad(lang));
+  write(sec("creditos", lang), creditos(lang));
   write(sec("blog", lang), blogIndex(lang));
   for (const p of POSTS) write(postURL(p, lang), post(p, lang));
   fs.writeFileSync(path.join(OUT, sec("blog", lang), "feed.xml"), feed(lang));

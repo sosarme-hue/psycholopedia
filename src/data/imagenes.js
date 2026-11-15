@@ -1,0 +1,86 @@
+// Imágenes de Psycholopedia.
+// c = Wikimedia Commons (copia local en assets/img/), u = Unsplash (enlace a su CDN, como piden sus normas).
+// Autoría y licencia de cada una: src/data/creditos.json (generado al descargar).
+const A = (es, en) => ({ es, en });
+
+const IMG = {
+  // --- Portada e historia ---
+  "clark-1909": { c: "clark-1909.jpg", alt: A("Sigmund Freud, G. Stanley Hall y Carl G. Jung (sentados) con Abraham A. Brill, Ernest Jones y Sándor Ferenczi en la Universidad Clark, 1909", "Sigmund Freud, G. Stanley Hall and Carl G. Jung (seated) with Abraham A. Brill, Ernest Jones and Sándor Ferenczi at Clark University, 1909") },
+  "clark-conferencia-1909": { c: "clark-conferencia-1909.jpg", alt: A("Participantes en la conferencia de la Universidad Clark, septiembre de 1909: entre otros, William James, Sigmund Freud, Carl G. Jung y Edward Titchener", "Participants in the Clark University conference, September 1909, including William James, Sigmund Freud, Carl G. Jung and Edward Titchener") },
+  "descartes": { c: "descartes.jpg", alt: A("René Descartes, según un retrato de Frans Hals", "René Descartes, after a portrait by Frans Hals") },
+  "wundt-grupo": { c: "wundt-leipzig-1880.jpg", alt: A("Wilhelm Wundt y su grupo de investigación en Leipzig, hacia 1880", "Wilhelm Wundt and his research group in Leipzig, around 1880") },
+  "eniac": { c: "eniac.jpg", alt: A("El ENIAC, uno de los primeros ordenadores electrónicos (hacia 1946)", "ENIAC, one of the first electronic computers (around 1946)") },
+  // --- Conceptos y experimentos ---
+  "kanizsa": { c: "kanizsa.jpg", alt: A("Contorno ilusorio: vemos una figura que no está dibujada", "Illusory contour: we see a shape that is not drawn") },
+  "rubin": { c: "rubin.png", alt: A("Jarrón de Rubin: ¿un jarrón o dos perfiles enfrentados?", "Rubin's vase: a vase or two facing profiles?") },
+  "stroop": { c: "stroop.png", alt: A("Ejemplo de la tarea de Stroop: nombres de colores escritos en tinta de otro color", "Example of the Stroop task: colour names printed in a different ink colour") },
+  "perro-pavlov": { c: "perro-pavlov.jpg", alt: A("Uno de los perros de los experimentos de Pávlov, conservado en un museo", "One of the dogs from Pavlov's experiments, preserved in a museum") },
+  "curva-olvido": { c: "curva-olvido.png", alt: A("La curva del olvido de Hermann Ebbinghaus", "Hermann Ebbinghaus's forgetting curve") },
+  "pensador": { c: "pensador.jpg", alt: A("El pensador, de Auguste Rodin (Museo Rodin, París)", "The Thinker by Auguste Rodin (Musée Rodin, Paris)") },
+  "duchenne": { c: "duchenne.jpg", alt: A("Lámina de Duchenne de Boulogne sobre la expresión facial de las emociones (1862)", "Plate by Duchenne de Boulogne on the facial expression of emotions (1862)") },
+  "rorschach": { c: "rorschach.jpg", alt: A("Primera lámina del test de Rorschach (1921)", "First card of the Rorschach test (1921)") },
+  "binet-test": { c: "binet-test.jpg", alt: A("Material de la escala de Binet y Simon (1905)", "Material from the Binet–Simon scale (1905)") },
+  "cajal-purkinje": { c: "cajal-purkinje.jpg", alt: A("Dibujo de una célula de Purkinje de Santiago Ramón y Cajal", "Drawing of a Purkinje cell by Santiago Ramón y Cajal") },
+  "phineas-gage": { c: "phineas-gage.jpg", alt: A("Phineas Gage con la barra de hierro que le atravesó el cráneo (daguerrotipo)", "Phineas Gage holding the iron rod that passed through his skull (daguerreotype)") },
+  "galton": { c: "galton.jpg", alt: A("Página de Inquiries into Human Faculty, de Francis Galton (1883)", "Page from Francis Galton's Inquiries into Human Faculty (1883)") },
+  "mozart": { c: "mozart.jpg", alt: A("Wolfgang Amadeus Mozart, retrato inacabado de Joseph Lange", "Wolfgang Amadeus Mozart, unfinished portrait by Joseph Lange") },
+  "asch": { c: "asch.png", alt: A("Esquema del experimento de conformidad de Solomon Asch", "Diagram of Solomon Asch's conformity experiment") },
+  "darwin": { c: "darwin.jpg", alt: A("Charles Darwin fotografiado por Julia Margaret Cameron (1868)", "Charles Darwin photographed by Julia Margaret Cameron (1868)") },
+  // --- Retratos ---
+  "p-wundt": { c: "p-wundt.jpg", alt: A("Wilhelm Wundt", "Wilhelm Wundt") },
+  "p-james": { c: "william-james-1906.jpg", alt: A("William James", "William James") },
+  "p-calkins": { c: "p-calkins.jpg", alt: A("Mary Whiton Calkins", "Mary Whiton Calkins") },
+  "p-washburn": { c: "p-washburn.jpg", alt: A("Margaret Floy Washburn", "Margaret Floy Washburn") },
+  "p-freud": { c: "freud-1921.jpg", alt: A("Sigmund Freud, fotografiado por Max Halberstadt", "Sigmund Freud, photographed by Max Halberstadt") },
+  "p-pavlov": { c: "p-pavlov.jpg", alt: A("Iván Pávlov", "Ivan Pavlov") },
+  "p-watson": { c: "p-watson.jpg", alt: A("John B. Watson", "John B. Watson") },
+  "p-skinner": { c: "p-skinner.jpg", alt: A("B. F. Skinner en Harvard, hacia 1950", "B. F. Skinner at Harvard, around 1950") },
+  "p-wertheimer": { c: "p-wertheimer.jpg", alt: A("Max Wertheimer", "Max Wertheimer") },
+  "p-kohler": { c: "p-kohler.jpg", alt: A("Wolfgang Köhler", "Wolfgang Köhler") },
+  "p-piaget": { c: "p-piaget.png", alt: A("Jean Piaget", "Jean Piaget") },
+  "p-vygotski": { c: "p-vygotski.jpg", alt: A("Lev Vygotski", "Lev Vygotsky") },
+  "p-bartlett": { c: "p-bartlett.jpg", alt: A("Frederic Bartlett en 1948", "Frederic Bartlett in 1948") },
+  "p-rogers": { c: "p-rogers.jpg", alt: A("Carl Rogers", "Carl Rogers") },
+  "p-maslow": { c: "p-maslow.jpg", alt: A("Abraham Maslow", "Abraham Maslow") },
+  "p-bandura": { c: "p-bandura.jpg", alt: A("Albert Bandura", "Albert Bandura") },
+  "p-luria": { c: "p-luria.jpg", alt: A("Alexander Luria", "Alexander Luria") },
+  "p-milner": { c: "p-milner.jpg", alt: A("Brenda Milner", "Brenda Milner") },
+  "p-loftus": { c: "p-loftus.jpg", alt: A("Elizabeth Loftus en 2011", "Elizabeth Loftus in 2011") },
+  "p-kahneman": { c: "p-kahneman.jpg", alt: A("Daniel Kahneman", "Daniel Kahneman") },
+  "p-ebbinghaus": { c: "p-ebbinghaus.jpg", alt: A("Hermann Ebbinghaus", "Hermann Ebbinghaus") },
+  "p-fechner": { c: "p-fechner.jpg", alt: A("Gustav Theodor Fechner", "Gustav Theodor Fechner") },
+  "p-titchener": { c: "p-titchener.jpg", alt: A("Edward B. Titchener", "Edward B. Titchener") },
+  // --- Unsplash ---
+  "vida-procrastinar": { u: 1, alt: A("Un joven dormido sobre la mesa de trabajo, junto al portátil", "A young man asleep at his desk next to a laptop") },
+  "vida-preocupacion": { u: 1, alt: A("Una mujer sentada junto a la ventana, pensativa", "A woman sitting by a window, lost in thought") },
+  "vida-pareja": { u: 1, alt: A("Silueta de una pareja sentada frente a una ventana", "Silhouette of a couple sitting in front of a window") },
+  "vida-estudiar": { u: 1, alt: A("Una estudiante en una gran biblioteca universitaria", "A student in a large university library") },
+  "vida-pantallas": { u: 1, alt: A("Varias manos sosteniendo teléfonos móviles", "Several hands holding mobile phones") },
+  "vida-adolescencia": { u: 1, alt: A("Un grupo de amigos jóvenes al aire libre", "A group of young friends outdoors") },
+  "blog-luz": { u: 1, alt: A("Un árbol otoñal visto a través de una ventana", "An autumn tree seen through a window") },
+  "blog-soledad": { u: 1, alt: A("Un hombre mayor sentado solo en un banco", "An older man sitting alone on a bench") },
+  "consulta": { u: 1, alt: A("Un médico conversa con una madre y su hijo en la consulta", "A doctor talks with a mother and her son in the surgery") },
+  "salud": { u: 1, alt: A("Un lago en calma por la mañana, con montañas al fondo", "A calm lake in the morning, with mountains behind") },
+  "aprender": { u: 1, alt: A("Un libro abierto sobre la mesa", "An open book on a table") },
+  "desarrollo": { u: 1, alt: A("Una mano infantil apila bloques de colores", "A child's hand stacking coloured blocks") },
+  "social": { u: 1, alt: A("Una multitud en la calle, en blanco y negro", "A crowd in the street, in black and white") },
+  "lenguaje": { u: 1, alt: A("Dos amigas conversan sentadas a una mesa", "Two friends talking at a table") },
+  "motivacion": { u: 1, alt: A("Un corredor en una carretera al amanecer", "A runner on a road at dawn") },
+  "personalidad": { u: 1, alt: A("Una pared de retratos de personas distintas", "A wall of portraits of different people") },
+  "neuro": { u: 1, alt: A("Representación digital de un cerebro", "Digital rendering of a brain") },
+  "tests": { u: 1, alt: A("Un rompecabezas al que le falta una pieza", "A jigsaw puzzle with one piece missing") },
+  "quiz": { u: 1, alt: A("Un signo de interrogación", "A question mark") },
+};
+
+// Dónde se usa cada una
+const ERAS = ["descartes", "p-fechner", "wundt-grupo", "clark-conferencia-1909", "eniac", "neuro"];
+const CAPS = { 9: "p-fechner", 10: "wundt-grupo", 15: "rubin", 19: "eniac" };
+const AREAS = { percepcion: "kanizsa", atencion: "stroop", aprendizaje: "perro-pavlov", memoria: "curva-olvido", pensamiento: "pensador", lenguaje: "lenguaje", motivacion: "motivacion", emocion: "duchenne", personalidad: "personalidad", "inteligencia-y-creatividad": "binet-test", psicobiologia: "cajal-purkinje", neuropsicologia: "phineas-gage", desarrollo: "desarrollo", "psicologia-social": "social", "metodos-y-estadistica": "galton", "psicometria-y-evaluacion": "rorschach" };
+const ESCUELAS = { estructuralismo: "p-titchener", funcionalismo: "p-james", psicoanalisis: "p-freud", conductismo: "p-watson", gestalt: "rubin", humanismo: "p-maslow", "psicologia-cognitiva": "eniac", "enfoques-socioculturales": "p-vygotski", "perspectivas-evolucionistas": "darwin" };
+const FIGURAS = { "Wilhelm Wundt": "p-wundt", "William James": "p-james", "Mary Whiton Calkins": "p-calkins", "Margaret Floy Washburn": "p-washburn", "Sigmund Freud": "p-freud", "Iván Pávlov": "p-pavlov", "John B. Watson": "p-watson", "B. F. Skinner": "p-skinner", "Max Wertheimer": "p-wertheimer", "Wolfgang Köhler": "p-kohler", "Jean Piaget": "p-piaget", "Lev Vygotski": "p-vygotski", "Frederic Bartlett": "p-bartlett", "Carl Rogers": "p-rogers", "Abraham Maslow": "p-maslow", "Albert Bandura": "p-bandura", "Alexander Luria": "p-luria", "Brenda Milner": "p-milner", "Elizabeth Loftus": "p-loftus", "Daniel Kahneman": "p-kahneman" };
+const VIDA = { "por-que-dejo-las-cosas-para-manana": "vida-procrastinar", "por-que-damos-vueltas-a-una-preocupacion": "vida-preocupacion", "discutir-sin-perder-el-dialogo": "vida-pareja", "estudiar-mas-o-estudiar-mejor": "vida-estudiar", "nuestra-atencion-en-un-mundo-de-pantallas": "vida-pantallas", "adolescencia-autonomia-y-vinculos": "vida-adolescencia" };
+const BLOG = { "asi-nace-psycholopedia": "clark-conferencia-1909", "dias-mas-cortos-luz-sueno-y-animo": "blog-luz", "ebbinghaus-y-la-curva-del-olvido": "p-ebbinghaus", "soledad-no-deseada": "blog-soledad" };
+const CURIOSIDADES = { "efecto-stroop": "stroop", "el-efecto-mozart": "mozart", "asch-y-la-presion-del-grupo": "asch" };
+const SECCIONES = { historia: "clark-conferencia-1909", salud: "salud", consulta: "consulta", tests: "tests", quiz: "quiz", aprender: "aprender", razonamiento: "tests", personalidad: "personalidad", pareja: "vida-pareja" };
+
+module.exports = { IMG, ERAS, CAPS, AREAS, ESCUELAS, FIGURAS, VIDA, BLOG, CURIOSIDADES, SECCIONES };
