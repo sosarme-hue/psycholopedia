@@ -192,4 +192,5 @@ const LECCION1 = {
   ]),
 };
 
+QUIZ.push(...require("./quiz"));
 module.exports = { QUIZ, RETOS, DIMS, AFIRM, PAREJA, CURIOSIDADES, SERIES, CURSOS, LECCION1 };

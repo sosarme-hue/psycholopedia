@@ -7,25 +7,25 @@ const FIGURAS = [
   { slug: "william-james", nombre: "William James", vida: "1842–1910", pais: A("Estados Unidos", "United States"), area: A("Conciencia y emoción", "Consciousness and emotion"), escuela: A("Funcionalismo", "Functionalism"), epoca: "xix", img: "william-james-1906.jpg" },
   { slug: "mary-whiton-calkins", nombre: "Mary Whiton Calkins", vida: "1863–1930", pais: A("Estados Unidos", "United States"), area: A("Memoria y self", "Memory and the self"), escuela: A("Psicología del self", "Self psychology"), epoca: "xix" },
   { slug: "margaret-floy-washburn", nombre: "Margaret Floy Washburn", vida: "1871–1939", pais: A("Estados Unidos", "United States"), area: A("Psicología comparada", "Comparative psychology"), escuela: A("Estructuralismo y después", "Structuralism and beyond"), epoca: "1900" },
-  { nombre: "Sigmund Freud", vida: "1856–1939", pais: A("Austria", "Austria"), area: A("Clínica", "Clinical"), escuela: A("Psicoanálisis", "Psychoanalysis"), epoca: "1900", img: "freud-1921.jpg" },
+  { slug: "sigmund-freud", nombre: "Sigmund Freud", vida: "1856–1939", pais: A("Austria", "Austria"), area: A("Clínica", "Clinical"), escuela: A("Psicoanálisis", "Psychoanalysis"), epoca: "1900", img: "freud-1921.jpg" },
   { slug: "ivan-pavlov", nombre: "Iván Pávlov", vida: "1849–1936", pais: A("Rusia", "Russia"), area: A("Aprendizaje", "Learning"), escuela: A("Fisiología", "Physiology"), epoca: "1900" },
-  { nombre: "John B. Watson", vida: "1878–1958", pais: A("Estados Unidos", "United States"), area: A("Aprendizaje", "Learning"), escuela: A("Conductismo", "Behaviourism"), epoca: "1900" },
-  { nombre: "B. F. Skinner", vida: "1904–1990", pais: A("Estados Unidos", "United States"), area: A("Aprendizaje", "Learning"), escuela: A("Conductismo", "Behaviourism"), epoca: "1950" },
-  { nombre: "Max Wertheimer", vida: "1880–1943", pais: A("Alemania", "Germany"), area: A("Percepción", "Perception"), escuela: A("Gestalt", "Gestalt"), epoca: "1900" },
-  { nombre: "Wolfgang Köhler", vida: "1887–1967", pais: A("Alemania", "Germany"), area: A("Percepción y pensamiento", "Perception and thinking"), escuela: A("Gestalt", "Gestalt"), epoca: "1900" },
+  { slug: "john-b-watson", nombre: "John B. Watson", vida: "1878–1958", pais: A("Estados Unidos", "United States"), area: A("Aprendizaje", "Learning"), escuela: A("Conductismo", "Behaviourism"), epoca: "1900" },
+  { slug: "b-f-skinner", nombre: "B. F. Skinner", vida: "1904–1990", pais: A("Estados Unidos", "United States"), area: A("Aprendizaje", "Learning"), escuela: A("Conductismo", "Behaviourism"), epoca: "1950" },
+  { slug: "max-wertheimer", nombre: "Max Wertheimer", vida: "1880–1943", pais: A("Alemania", "Germany"), area: A("Percepción", "Perception"), escuela: A("Gestalt", "Gestalt"), epoca: "1900" },
+  { slug: "wolfgang-kohler", nombre: "Wolfgang Köhler", vida: "1887–1967", pais: A("Alemania", "Germany"), area: A("Percepción y pensamiento", "Perception and thinking"), escuela: A("Gestalt", "Gestalt"), epoca: "1900" },
   { slug: "jean-piaget", nombre: "Jean Piaget", vida: "1896–1980", pais: A("Suiza", "Switzerland"), area: A("Desarrollo", "Development"), escuela: A("Constructivismo", "Constructivism"), epoca: "1950" },
-  { nombre: "Lev Vygotski", vida: "1896–1934", pais: A("URSS", "USSR"), area: A("Desarrollo", "Development"), escuela: A("Sociocultural", "Sociocultural"), epoca: "1900" },
-  { nombre: "Frederic Bartlett", vida: "1886–1969", pais: A("Reino Unido", "United Kingdom"), area: A("Memoria", "Memory"), escuela: A("Cognitiva (precursor)", "Cognitive (forerunner)"), epoca: "1900" },
+  { slug: "lev-vygotski", nombre: "Lev Vygotski", vida: "1896–1934", pais: A("URSS", "USSR"), area: A("Desarrollo", "Development"), escuela: A("Sociocultural", "Sociocultural"), epoca: "1900" },
+  { slug: "frederic-bartlett", nombre: "Frederic Bartlett", vida: "1886–1969", pais: A("Reino Unido", "United Kingdom"), area: A("Memoria", "Memory"), escuela: A("Cognitiva (precursor)", "Cognitive (forerunner)"), epoca: "1900" },
   { slug: "mary-ainsworth", nombre: "Mary Ainsworth", vida: "1913–1999", pais: A("Estados Unidos y Canadá", "United States and Canada"), area: A("Desarrollo", "Development"), escuela: A("Teoría del apego", "Attachment theory"), epoca: "1950" },
-  { nombre: "John Bowlby", vida: "1907–1990", pais: A("Reino Unido", "United Kingdom"), area: A("Desarrollo", "Development"), escuela: A("Teoría del apego", "Attachment theory"), epoca: "1950" },
-  { nombre: "Carl Rogers", vida: "1902–1987", pais: A("Estados Unidos", "United States"), area: A("Clínica", "Clinical"), escuela: A("Humanismo", "Humanism"), epoca: "1950" },
-  { nombre: "Abraham Maslow", vida: "1908–1970", pais: A("Estados Unidos", "United States"), area: A("Motivación", "Motivation"), escuela: A("Humanismo", "Humanism"), epoca: "1950" },
-  { nombre: "Albert Bandura", vida: "1925–2021", pais: A("Canadá y Estados Unidos", "Canada and United States"), area: A("Aprendizaje social", "Social learning"), escuela: A("Sociocognitiva", "Social-cognitive"), epoca: "1950" },
+  { slug: "john-bowlby", nombre: "John Bowlby", vida: "1907–1990", pais: A("Reino Unido", "United Kingdom"), area: A("Desarrollo", "Development"), escuela: A("Teoría del apego", "Attachment theory"), epoca: "1950" },
+  { slug: "carl-rogers", nombre: "Carl Rogers", vida: "1902–1987", pais: A("Estados Unidos", "United States"), area: A("Clínica", "Clinical"), escuela: A("Humanismo", "Humanism"), epoca: "1950" },
+  { slug: "abraham-maslow", nombre: "Abraham Maslow", vida: "1908–1970", pais: A("Estados Unidos", "United States"), area: A("Motivación", "Motivation"), escuela: A("Humanismo", "Humanism"), epoca: "1950" },
+  { slug: "albert-bandura", nombre: "Albert Bandura", vida: "1925–2021", pais: A("Canadá y Estados Unidos", "Canada and United States"), area: A("Aprendizaje social", "Social learning"), escuela: A("Sociocognitiva", "Social-cognitive"), epoca: "1950" },
   { slug: "alexander-luria", nombre: "Alexander Luria", vida: "1902–1977", pais: A("URSS", "USSR"), area: A("Neuropsicología", "Neuropsychology"), escuela: A("Sociocultural", "Sociocultural"), epoca: "1950" },
-  { nombre: "Brenda Milner", vida: "n. 1918", pais: A("Reino Unido y Canadá", "United Kingdom and Canada"), area: A("Neuropsicología", "Neuropsychology"), escuela: A("Neurociencia cognitiva", "Cognitive neuroscience"), epoca: "1950" },
+  { slug: "brenda-milner", nombre: "Brenda Milner", vida: "n. 1918", pais: A("Reino Unido y Canadá", "United Kingdom and Canada"), area: A("Neuropsicología", "Neuropsychology"), escuela: A("Neurociencia cognitiva", "Cognitive neuroscience"), epoca: "1950" },
   { slug: "elizabeth-loftus", nombre: "Elizabeth Loftus", vida: "n. 1944", pais: A("Estados Unidos", "United States"), area: A("Memoria", "Memory"), escuela: A("Cognitiva", "Cognitive"), epoca: "hoy" },
   { slug: "ulric-neisser", nombre: "Ulric Neisser", vida: "1928–2012", pais: A("Alemania y Estados Unidos", "Germany and United States"), area: A("Cognición", "Cognition"), escuela: A("Cognitiva", "Cognitive"), epoca: "1950" },
-  { nombre: "Daniel Kahneman", vida: "1934–2024", pais: A("Israel y Estados Unidos", "Israel and United States"), area: A("Decisión", "Decision-making"), escuela: A("Cognitiva", "Cognitive"), epoca: "hoy" },
+  { slug: "daniel-kahneman", nombre: "Daniel Kahneman", vida: "1934–2024", pais: A("Israel y Estados Unidos", "Israel and United States"), area: A("Decisión", "Decision-making"), escuela: A("Cognitiva", "Cognitive"), epoca: "hoy" },
   { slug: "amos-tversky", nombre: "Amos Tversky", vida: "1937–1996", pais: A("Israel y Estados Unidos", "Israel and United States"), area: A("Decisión", "Decision-making"), escuela: A("Cognitiva", "Cognitive"), epoca: "1950" },
 ];
 
@@ -233,5 +233,5 @@ const FICHAS = {
 
 const EPOCAS = { xix: A("Siglo XIX", "19th century"), "1900": A("1900–1950", "1900–1950"), "1950": A("1950–2000", "1950–2000"), hoy: A("Actualidad", "Today") };
 
-Object.assign(FICHAS, require("./fichas2"));
+Object.assign(FICHAS, require("./fichas2"), require("./fichas3"), require("./fichas4"));
 module.exports = { FIGURAS, FICHAS, EPOCAS };

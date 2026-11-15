@@ -51,8 +51,9 @@ def build(t, lang):
     W = 178 * mm
     same = all(it["o"] == d["items"][0]["o"] or [o[0] for o in it["o"]] == [o[0] for o in d["items"][0]["o"]] for it in d["items"])
     if same and len(d["items"][0]["o"]) <= 7:
-        n = len(d["items"][0]["o"]); qw = W - n * 21 * mm if n > 4 else W - n * 25 * mm; cw = (W - qw) / n
-        head = [Paragraph("", OP)] + [Paragraph(o[0], OPC) for o in d["items"][0]["o"]]
+        n = len(d["items"][0]["o"]); qw = W - n * 24 * mm if n > 4 else W - n * 25 * mm; cw = (W - qw) / n
+        hs = OPC if max(len(o[0]) for o in d["items"][0]["o"]) <= 12 else ParagraphStyle("opcs", parent=OPC, fontSize=6.6, leading=8)
+        head = [Paragraph("", OP)] + [Paragraph(o[0], hs) for o in d["items"][0]["o"]]
         rows = [head]
         for i, it in enumerate(d["items"]):
             rows.append([Paragraph(f"<b>{i + 1}.</b> {it['t']}", IT)] + [Paragraph(f"☐ {o[1]}", OPC) for o in it["o"]])

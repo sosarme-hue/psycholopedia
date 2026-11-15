@@ -125,4 +125,5 @@ const BLOG = [
   },
 ];
 
+BLOG.push(...require("./blog2"));
 module.exports = { BLOG };
