@@ -11,6 +11,7 @@ const E = require("./src/data/explorar");
 const V = require("./src/data/vida");
 const MO = require("./src/data/momentos"); MO.M.push(...require("./src/data/momentos2"));
 const AY = require("./src/data/ayuda");
+const CL = require("./src/data/clasificacion"); CL.G.push(...require("./src/data/clasificacion2"));
 const P = require("./src/data/participar");
 const B = require("./src/data/blog");
 const I = require("./src/data/imagenes");
@@ -54,6 +55,7 @@ const CONSULTA = require("./src/data/consulta"); CONSULTA.push(...require("./src
 const SALUD = [...require("./src/data/salud1"), ...require("./src/data/salud2")];
 { const ks = Object.keys(CURSOSL); const order = ["psicologia-desde-cero", ...ks.filter((k) => k !== "psicologia-desde-cero")];
   P.CURSOS.forEach((c, i) => { const k = order[i]; c.slug = { es: k, en: CURSO_EN[i] }; c.lecciones = i === 0 ? [{ ...P.LECCION1, mas: ["h:10", "x:ramas", "k:el-efecto-mozart"] }, ...CURSOSL[k]] : CURSOSL[k]; }); }
+for (const f of ["cursos5", "cursos6", "cursos7", "cursos8", "cursos9"]) { try { require.resolve("./src/data/" + f); } catch { continue; } for (const c of require("./src/data/" + f)) P.CURSOS.push(c); }
 const SALUD_REVISADO = true; // pasa a true cuando Alex confirme su revisión médica
 
 const PREVIEW = !!process.env.PREVIEW;
@@ -82,7 +84,7 @@ const sec = (k, lang, sub = "") => `${base(lang)}${S[k][lang]}/${sub ? sub + "/"
 
 const T = {
   es: {
-    menu: [["historia", "Historia"], ["explorar", "Explorar"], ["vida", "Vida cotidiana"], ["tests", "Tests"], ["quiz", "Quiz"], ["aprender", "Aprender"], ["blog", "Blog"]],
+    menu: [["historia", "Historia"], ["explorar", "Explorar"], ["vida", "Vida cotidiana"], ["salud", "Salud mental"], ["tests", "Tests"], ["quiz", "Quiz"], ["aprender", "Aprender"], ["blog", "Blog"]],
     inicio: "Inicio", otro: "English", otroLang: "en", menuBtn: "Menú", leer: "Leer", preparacion: "En preparación", refs: "Referencias", relacionado: "Contenidos relacionados",
     actualizado: "Actualizado", autoria: "Texto: equipo editorial de Psycholopedia", errores: "¿Has visto un error? Escríbenos a", conecta: "Conecta con",
     tagline: "Comprender la mente. Entender la vida.",
@@ -91,7 +93,7 @@ const T = {
     secc: "Secciones", proyecto: "Proyecto", red: "Red de webs",
   },
   en: {
-    menu: [["historia", "History"], ["explorar", "Explore"], ["vida", "Everyday life"], ["tests", "Tests"], ["quiz", "Quiz"], ["aprender", "Learn"], ["blog", "Blog"]],
+    menu: [["historia", "History"], ["explorar", "Explore"], ["vida", "Everyday life"], ["salud", "Mental health"], ["tests", "Tests"], ["quiz", "Quiz"], ["aprender", "Learn"], ["blog", "Blog"]],
     inicio: "Home", otro: "Español", otroLang: "es", menuBtn: "Menu", leer: "Read", preparacion: "In preparation", refs: "References", relacionado: "Related content",
     actualizado: "Updated", autoria: "Text: Psycholopedia editorial team", errores: "Spotted a mistake? Write to", conecta: "Connects with",
     tagline: "Understand the mind. Understand life.",
@@ -164,7 +166,7 @@ ${fill(body)}
 <footer class="foot"><div class="wrap">
   <div class="cols">
     <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda} <a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"} →</a></div></div>
-    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
+    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
     <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
@@ -494,7 +496,7 @@ function momentosIndex(lang) {
 <h2>${es ? "Los momentos que tratamos" : "The moments we cover"}</h2>
 <ol>${MO.M.map((m) => `<li><a href="{{L}}${moURL(m, lang).slice(base(lang).length)}">${m.t[lang]}</a>: ${m.d[lang]}</li>`).join("")}</ol>
 ${MO.AYUDA[lang]}</div>
-<aside class="aside"><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Vida cotidiana" : "Everyday life"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li></ul></div></aside></div>
+<aside class="aside"><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Vida cotidiana" : "Everyday life"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li><li><a href="{{L}}${clBase(lang).slice(base(lang).length)}">${es ? "Clasificación de los trastornos mentales" : "Classification of mental disorders"}</a></li></ul></div></aside></div>
 <div class="wrap"><div class="grid">${MO.M.map((m) => `<a class="card" href="{{L}}${moURL(m, lang).slice(base(lang).length)}">${cimg(m.img)}<span class="tag">${es ? "Momentos difíciles" : "Hard times"}</span><h3>${m.t[lang]}</h3><p>${m.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div>`;
   return page({ lang, rel: sec("momentos", lang), alt: sec("momentos", lang === "es" ? "en" : "es"), title: es ? "Momentos difíciles de la vida: qué dice la psicología" : "Life's hard times: what psychology says", desc: es ? "Perder el trabajo, el divorcio, una mudanza, la soledad, las ideas de suicidio, el duelo o la muerte de un hijo: qué dice la investigación y qué ayuda." : "Job loss, divorce, moving, loneliness, suicidal thoughts, grief or the death of a child: what research says and what helps.", nav: "vida", crumbs: [[es ? "Momentos difíciles" : "Hard times"]], body });
 }
@@ -717,13 +719,15 @@ function salud(lang) {
 <h2>${es ? "Cómo está hecho cada dossier" : "How each dossier is built"}</h2>
 <p>${es ? "Qué es · Qué no es · Cómo se evalúa · Qué intervenciones se estudian · Cómo buscar ayuda · Cómo acompañar · Qué mitos evitar." : "What it is · What it is not · How it is assessed · Which interventions are studied · How to seek help · How to support someone · Which myths to avoid."}</p>
 </div><div class="wrap"><h2>${es ? "Dossiers" : "Dossiers"}</h2><div class="grid">${SALUD.map((d, i) => `<a class="card" href="{{L}}${dosURL(i, lang).slice(base(lang).length)}">${cimg(I.DOSSIERS[i])}<h3>${d.t[lang]}</h3><p>${d.d[lang]}</p><span class="more">${T[lang].leer} →</span></a>`).join("")}</div></div><div class="wrap narrow prose">
+<h2>${es ? "Clasificación de los trastornos mentales" : "Classification of mental disorders"}</h2>
+<p>${es ? "Cómo ordenan los trastornos mentales la CIE-11 de la OMS y el DSM-5-TR, en 22 grandes grupos, con enlaces a las fuentes oficiales." : "How WHO's ICD-11 and the DSM-5-TR organise mental disorders, in 22 major groups, with links to the official sources."} <a href="{{L}}${clBase(lang).slice(base(lang).length)}">${es ? "Ver la clasificación" : "See the classification"} →</a></p>
 <h2>${es ? "Terapias" : "Therapies"}</h2>
 <p>${es ? "Cada dossier explica qué intervenciones se han estudiado para ese problema y con qué límites. Los enfoques de fondo se describen en las fichas de las escuelas: la <a href=\"{{L}}explorar/escuelas/psicologia-cognitiva/\">terapia cognitivo-conductual</a>, las <a href=\"{{L}}explorar/escuelas/enfoques-contextuales/\">terapias contextuales</a>, la <a href=\"{{L}}explorar/escuelas/enfoques-sistemicos/\">terapia sistémica</a>, la <a href=\"{{L}}explorar/escuelas/humanismo/\">humanista</a> y la <a href=\"{{L}}explorar/escuelas/psicoanalisis/\">psicodinámica</a>. El respaldo científico no se resume en una lista única de «terapias buenas y malas»: depende del problema, de la persona y de la calidad de la relación terapéutica." : "Each dossier explains which interventions have been studied for that problem and with what limits. The underlying approaches are described in the school pages: <a href=\"{{L}}explore/schools/cognitive-psychology/\">cognitive-behavioural therapy</a>, <a href=\"{{L}}explore/schools/contextual-approaches/\">contextual therapies</a>, <a href=\"{{L}}explore/schools/systemic-approaches/\">systemic therapy</a>, <a href=\"{{L}}explore/schools/humanism/\">humanistic</a> and <a href=\"{{L}}explore/schools/psychoanalysis/\">psychodynamic</a> therapy. Scientific support is not reduced to a single list of \"good and bad therapies\": it depends on the problem, the person and the quality of the therapeutic relationship."}</p>
 <h2>${es ? "Revisión" : "Review"}</h2>
 <p>${es ? (SALUD_REVISADO ? "Los dossiers llevan el sello <span class=\"pill\">Revisión médica</span> de Alejandro Rosàs, médico de familia." : "Los dossiers llevarán el sello <span class=\"pill\">Revisión médica</span> de Alejandro Rosàs, médico de familia, en cuanto termine su revisión.") + " Se actualizan cuando cambian las guías clínicas o la evidencia." : (SALUD_REVISADO ? "The dossiers carry the <span class=\"pill\">Medical review</span> seal from Alejandro Rosàs, family doctor." : "The dossiers will carry the <span class=\"pill\">Medical review</span> seal from Alejandro Rosàs, family doctor, once his review is complete.") + " They are updated when clinical guidelines or the evidence change."}</p>
 <p>${es ? "También puedes leer los textos" : "You can also read"} <a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a>.</p>
 </div>`;
-  return page({ lang, rel: sec("salud", lang), alt: sec("salud", lang === "es" ? "en" : "es"), title: es ? "Salud mental y terapias" : "Mental health and therapies", desc: es ? "Salud mental explicada con rigor: emociones, dificultades y trastornos, dossiers y terapias. Línea 024." : "Mental health explained with rigour: emotions, difficulties and disorders, dossiers and therapies.", nav: "explorar", crumbs: [[es ? "Salud mental" : "Mental health"]], body });
+  return page({ lang, rel: sec("salud", lang), alt: sec("salud", lang === "es" ? "en" : "es"), title: es ? "Salud mental y terapias" : "Mental health and therapies", desc: es ? "Salud mental explicada con rigor: emociones, dificultades y trastornos, dossiers y terapias. Línea 024." : "Mental health explained with rigour: emotions, difficulties and disorders, dossiers and therapies.", nav: "salud", crumbs: [[es ? "Salud mental" : "Mental health"]], body });
 }
 function dossier(i, lang) {
   const es = lang === "es"; const d = SALUD[i];
@@ -732,7 +736,7 @@ function dossier(i, lang) {
   const body = phead(es ? "Salud mental" : "Mental health", d.t[lang], d.d[lang]) + `
 <div class="wrap article"><article class="prose">${sello}<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas. En una emergencia, llama al <b>112</b>. Este texto es divulgativo: no sirve para diagnosticar ni sustituye la consulta con un profesional." : "In Spain, <b>024</b> is free and open 24 hours; in an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. This text is for general information: it cannot diagnose and does not replace seeing a professional."} <a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"} →</a></div>${fig(I.DOSSIERS[i], lang)}${d.body[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Otros dossiers" : "Other dossiers"}</h4><ul>${otros}</ul></div><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li></ul></div></aside></div>`;
-  return page({ lang, rel: dosURL(i, lang), alt: dosURL(i, es ? "en" : "es"), title: d.t[lang], desc: d.d[lang], nav: "explorar", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [d.t[lang]]], body, kind: "Dossier" });
+  return page({ lang, rel: dosURL(i, lang), alt: dosURL(i, es ? "en" : "es"), title: d.t[lang], desc: d.d[lang], nav: "salud", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [d.t[lang]]], body, kind: "Dossier" });
 }
 function consultaEntrada(i, lang) {
   const es = lang === "es"; const c = CONSULTA[i];
@@ -796,6 +800,39 @@ function enfoque(lang) {
 <div class="grid g4">${RED.map(([n, u, d]) => `<a class="card" href="${u}" rel="noopener"><h3>${n}</h3><p>${d[lang]}</p></a>`).join("")}</div></section>
 <p class="refs">${es ? "Fuentes de la estructura: planes de estudio de Psicología de la UNED y la UAM (organización propia inspirada en sus materias), clasificación de campos de la APA, directrices de la International Test Commission y descripción de trastornos mentales de la OMS." : "Sources for the structure: Psychology curricula at UNED and UAM (our own organisation inspired by their subjects), the APA's classification of fields, International Test Commission guidelines and the WHO's description of mental disorders."}</p></div>`;
   return page({ lang, rel: sec("enfoque", lang), alt: sec("enfoque", lang === "es" ? "en" : "es"), title: es ? "Enfoque editorial" : "Editorial approach", desc: es ? "Cómo trabaja Psycholopedia: referencias, revisión, historia y evidencia, diversidad y bilingüismo." : "How Psycholopedia works: references, review, history and evidence, diversity and bilingualism.", crumbs: [[es ? "Enfoque editorial" : "Editorial approach"]], body });
+}
+const clBase = (lang) => `${sec("salud", lang)}${lang === "es" ? "clasificacion" : "classification"}/`;
+const clURL = (g, lang) => `${clBase(lang)}${g.slug[lang]}/`;
+const ICD = (lang) => `https://icd.who.int/browse/latest-release/mms/${lang}`;
+const DSMURL = "https://www.psychiatry.org/psychiatrists/practice/dsm";
+function clasifIndex(lang) {
+  const es = lang === "es";
+  const body = phead(es ? "Salud mental" : "Mental health", es ? "Clasificación de los trastornos mentales" : "Classification of mental disorders", es ? "Cómo ordenan los trastornos mentales la CIE-11 de la OMS y el DSM-5-TR, qué incluye cada gran grupo y para qué sirve un diagnóstico." : "How WHO's ICD-11 and the DSM-5-TR organise mental disorders, what each major group includes and what a diagnosis is for.") + `
+<div class="wrap narrow prose">${CL.INTRO[lang]}
+<h2>${es ? `Los ${CL.G.length} grandes grupos` : `The ${CL.G.length} major groups`}</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>${es ? "Grupo" : "Group"}</th><th>CIE-11</th><th>DSM-5-TR</th></tr></thead><tbody>${CL.G.map((g) => `<tr><td><a href="{{L}}${clURL(g, lang).slice(base(lang).length)}">${g.t[lang]}</a></td><td>${g.cie}</td><td>${g.dsm[lang]}</td></tr>`).join("")}</tbody></table></div>
+<h2>${es ? "Consultar las fuentes oficiales" : "Official sources"}</h2>
+<ul><li><a href="${ICD(lang)}" rel="noopener">${es ? "CIE-11 en línea (OMS), de acceso libre y en español" : "ICD-11 online (WHO), free to access"}</a>. ${es ? "Escribe el código o el nombre en el buscador." : "Type the code or name in the search box."}</li>
+<li><a href="${DSMURL}" rel="noopener">${es ? "DSM-5-TR (Asociación Americana de Psiquiatría)" : "DSM-5-TR (American Psychiatric Association)"}</a>. ${es ? "Obra con derechos de autor; se adquiere a través de la editorial de la asociación. Existe edición en español." : "Copyrighted work available from the association's publisher."}</li></ul>
+<p><a href="{{L}}${S.salud[lang]}/">${es ? "Dossiers de salud mental" : "Mental health dossiers"} →</a> · <a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"} →</a></p></div>`;
+  return page({ lang, rel: clBase(lang), alt: clBase(es ? "en" : "es"), title: es ? "Clasificación de los trastornos mentales: CIE-11 y DSM-5-TR" : "Classification of mental disorders: ICD-11 and DSM-5-TR", desc: es ? "Guía divulgativa de la clasificación de los trastornos mentales en la CIE-11 y el DSM-5-TR: grupos, diferencias y enlaces oficiales." : "A plain-language guide to how ICD-11 and DSM-5-TR classify mental disorders: groups, differences and official links.", nav: "salud", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [es ? "Clasificación" : "Classification"]], body });
+}
+function clasifGrupo(i, lang) {
+  const es = lang === "es"; const g = CL.G[i];
+  const dn = g.dos ? SALUD.findIndex((y) => y.slug.es === g.dos) : -1;
+  const mo = g.mo ? MO.M.find((y) => y.slug.es === g.mo) : null;
+  const leer = [dn >= 0 ? `<li><a href="{{L}}${dosURL(dn, lang).slice(base(lang).length)}">${es ? "Dossier" : "Dossier"}: ${SALUD[dn].t[lang]}</a></li>` : "", mo ? `<li><a href="{{L}}${moURL(mo, lang).slice(base(lang).length)}">${mo.t[lang]}</a></li>` : ""].join("");
+  const otros = CL.G.map((x, j) => j === i ? "" : `<li><a href="{{L}}${clURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("");
+  const body = phead(es ? "Clasificación" : "Classification", g.t[lang], "") + `
+<div class="wrap article"><article class="prose">
+<div class="box" style="margin-bottom:1.2em"><p style="margin:0"><b>CIE-11:</b> ${es ? "bloque" : "block"} ${g.cie} · <a href="${ICD(lang)}" rel="noopener">${es ? "consultar en la CIE-11" : "look up in ICD-11"} ↗</a><br><b>DSM-5-TR:</b> ${g.dsm[lang]}</p></div>
+${g[lang]}
+<h2>${es ? "Qué incluye" : "What it includes"}</h2><ul>${g.inc[lang].map((x) => `<li>${x}</li>`).join("")}</ul>
+${leer ? `<h2>${es ? "Para saber más en Psycholopedia" : "Read more on Psycholopedia"}</h2><ul>${leer}</ul>` : ""}
+<div class="note warn">${es ? "Esta página es divulgativa y no reproduce criterios diagnósticos. No sirve para autodiagnosticarse: el diagnóstico requiere una evaluación profesional. Si algo te preocupa, coméntalo con tu médico de familia." : "This page is for general information and does not reproduce diagnostic criteria. It is not for self-diagnosis: diagnosis requires a professional assessment. If something worries you, talk to your doctor."} <a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"} →</a></div>
+${meta(lang)}</article>
+<aside class="aside"><div class="box"><h4>${es ? "Volver" : "Back"}</h4><ul><li><a href="{{L}}${clBase(lang).slice(base(lang).length)}">${es ? "Clasificación: introducción" : "Classification: introduction"}</a></li></ul></div><div class="box"><h4>${es ? "Otros grupos" : "Other groups"}</h4><ul>${otros}</ul></div></aside></div>`;
+  return page({ lang, rel: clURL(g, lang), alt: clURL(g, es ? "en" : "es"), title: `${g.t[lang]}: ${es ? "clasificación CIE-11 y DSM-5-TR" : "ICD-11 and DSM-5-TR"}`, desc: (es ? "Qué son y qué incluyen los " : "What they are and what they include: ") + g.t[lang].toLowerCase() + (es ? ", según la CIE-11 y el DSM-5-TR, explicado de forma divulgativa." : ", according to ICD-11 and DSM-5-TR, in plain language."), nav: "salud", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [es ? "Clasificación" : "Classification", clBase(lang)], [g.t[lang]]], body, kind: es ? "Clasificación" : "Classification" });
 }
 function ayudaPage(lang) {
   const es = lang === "es";
@@ -900,6 +937,8 @@ for (const lang of LANGS) {
   P.CURSOS.forEach((c, ci) => c.lecciones.forEach((_, li) => write(lecURL(ci, li, lang), leccion(ci, li, lang))));
   write(sec("salud", lang), salud(lang));
   SALUD.forEach((_, i) => write(dosURL(i, lang), dossier(i, lang)));
+  write(clBase(lang), clasifIndex(lang));
+  CL.G.forEach((_, i) => write(clURL(CL.G[i], lang), clasifGrupo(i, lang)));
   write(sec("consulta", lang), consulta(lang));
   CONSULTA.forEach((_, i) => write(conURL(i, lang), consultaEntrada(i, lang)));
   write(sec("autor", lang), autor(lang));
