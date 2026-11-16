@@ -283,3 +283,4 @@ a.gl{text-decoration-style:dotted;text-underline-offset:3px}
 .gl-list dt{font-weight:700;margin-top:14px}
 .gl-list dd{margin:2px 0 0;color:var(--muted,inherit)}
 .glletras a{text-decoration:none}
+/*seo-cls*/.pic:not(.portrait) img{aspect-ratio:16/9;height:auto}.pic.portrait img{height:400px}@media(max-width:600px){.pic.portrait img{height:320px}}
