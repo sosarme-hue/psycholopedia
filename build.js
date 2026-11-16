@@ -9,7 +9,8 @@ const FP = require("./src/data/filopedia");
 const F = require("./src/data/figuras");
 const E = require("./src/data/explorar");
 const V = require("./src/data/vida");
-const MO = require("./src/data/momentos");
+const MO = require("./src/data/momentos"); MO.M.push(...require("./src/data/momentos2"));
+const AY = require("./src/data/ayuda");
 const P = require("./src/data/participar");
 const B = require("./src/data/blog");
 const I = require("./src/data/imagenes");
@@ -71,7 +72,7 @@ const S = {
   vida: { es: "vida-cotidiana", en: "everyday-life" }, curiosidades: { es: "curiosidades", en: "curiosities" }, tests: { es: "tests", en: "tests" },
   quiz: { es: "quiz", en: "quiz" }, aprender: { es: "aprender", en: "learn" }, salud: { es: "salud-mental", en: "mental-health" },
   consulta: { es: "desde-la-consulta", en: "from-the-surgery" }, autor: { es: "quien-esta-detras", en: "about" },
-  enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, privacidad: { es: "privacidad", en: "privacy" },
+  enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, ayuda: { es: "donde-pedir-ayuda", en: "where-to-get-help" }, privacidad: { es: "privacidad", en: "privacy" },
   blog: { es: "blog", en: "blog" }, momentos: { es: "momentos-dificiles", en: "hard-times" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
   areas: { es: "explorar/areas", en: "explore/areas" }, escuelas: { es: "explorar/escuelas", en: "explore/schools" }, ramas: { es: "explorar/ramas", en: "explore/branches" },
   razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" }, instrumentos: { es: "tests/instrumentos", en: "tests/instruments" }, libres: { es: "tests/de-libre-uso", en: "tests/free-to-use" },
@@ -162,8 +163,8 @@ ${fill(body)}
 </main>
 <footer class="foot"><div class="wrap">
   <div class="cols">
-    <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda}</div></div>
-    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
+    <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda} <a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"} →</a></div></div>
+    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.salud[lang]}/">${lang === "es" ? "Salud mental" : "Mental health"}</a><a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
     <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
@@ -267,7 +268,7 @@ function home(lang) {
   <div class="shead"><div><span class="eyebrow">${es ? "Tres formas de entrar" : "Three ways in"}</span><h2>${es ? "Descubrir, comprender, participar" : "Discover, understand, take part"}</h2></div></div>
   <div class="doors">
     <div class="door"><span class="tag">${es ? "Descubrir" : "Discover"}</span><h3>${es ? "Historias e ideas" : "Stories and ideas"}</h3><ul><li><a href="{{L}}${S.historia[lang]}/">${es ? "Historia en 24 capítulos" : "History in 24 chapters"}</a></li><li><a href="{{L}}${S.figuras[lang]}/">${es ? "Grandes figuras" : "Key figures"}</a></li><li><a href="{{L}}${S.explorar[lang]}/#escuelas">${es ? "Escuelas y corrientes" : "Schools and movements"}</a></li><li><a href="{{L}}${S.curiosidades[lang]}/">${es ? "Experimentos y curiosidades" : "Experiments and curiosities"}</a></li></ul></div>
-    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li></ul></div>
+    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li><li><a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"}</a></li></ul></div>
     <div class="door"><span class="tag">${es ? "Participar" : "Take part"}</span><h3>${es ? "Jugar y aprender" : "Play and learn"}</h3><ul><li><a href="{{L}}${S.quiz[lang]}/">Quiz</a></li><li><a href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${es ? "Retos de razonamiento" : "Reasoning challenges"}</a></li><li><a href="{{L}}${S.tests[lang]}/">${es ? "Actividades de reflexión" : "Reflection activities"}</a></li><li><a href="{{L}}${S.aprender[lang]}/">${es ? "Cursos" : "Courses"}</a></li></ul></div>
   </div>
 </section>
@@ -504,7 +505,7 @@ function momentoArt(m, lang) {
 <div class="wrap article"><article class="prose">${fig(m.img, lang)}${m[lang]}${m.ayuda ? MO.AYUDA[lang] : ""}${refsHTML(lang, m.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Otros momentos difíciles" : "Other hard times"}</h4><ul>${MO.M.filter((x) => x !== m).map((x) => `<li><a href="{{L}}${moURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul></div>
 ${rel.length ? `<div class="box"><h4>${es ? "Para seguir leyendo" : "Further reading"}</h4><ul>${rel.map((v) => `<li><a href="{{L}}${vidaURL(v, lang).slice(base(lang).length)}">${v.t[lang]}</a></li>`).join("")}</ul></div>` : ""}
-<div class="box"><h4>${es ? "¿Necesitas ayuda ya?" : "Need help now?"}</h4><p>${es ? "Línea 024 (España), gratuita y 24 horas. Emergencias: 112." : "Samaritans 116 123 (UK and Ireland), 988 (US and Canada), 024 (Spain). Emergencies: your local number."}</p></div></aside></div>`;
+<div class="box"><h4>${es ? "¿Necesitas ayuda ya?" : "Need help now?"}</h4><p>${es ? "Línea 024 (España), gratuita y 24 horas. Emergencias: 112." : "Samaritans 116 123 (UK and Ireland), 988 (US and Canada), 024 (Spain). Emergencies: your local number."} <a href="{{L}}${S.ayuda[lang]}/">${es ? "Más teléfonos, también de Latinoamérica" : "More helplines"} →</a></p></div></aside></div>`;
   return page({ lang, rel: moURL(m, lang), alt: moURL(m, lang === "es" ? "en" : "es"), title: m.t[lang], desc: m.d[lang], nav: "vida", crumbs: [[es ? "Momentos difíciles" : "Hard times", sec("momentos", lang)], [m.t[lang]]], body, kind: es ? "Momentos difíciles" : "Hard times" });
 }
 
@@ -709,7 +710,7 @@ function salud(lang) {
   const es = lang === "es";
   const body = phead(es ? "Salud mental y terapias" : "Mental health and therapies", es ? "Salud mental con rigor y sin etiquetas" : "Mental health with rigour and without labels", es ? "Diez dossiers sobre los problemas de salud mental más frecuentes, explicados con rigor, sin alarmismo y sin etiquetas." : "Ten dossiers on the most common mental health problems, explained with rigour, without alarmism and without labels.") + banner(I.SECCIONES.salud, lang) + `
 <div class="wrap narrow prose">
-<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas a personas con pensamientos de suicidio y a sus allegados. En una emergencia, llama al <b>112</b>. Tu médico de familia es también una buena puerta de entrada." : "In Spain, <b>024</b> is free and open 24 hours for people with suicidal thoughts and those close to them. In an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. Your family doctor is also a good place to start."}</div>
+<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas a personas con pensamientos de suicidio y a sus allegados. En una emergencia, llama al <b>112</b>. Tu médico de familia es también una buena puerta de entrada." : "In Spain, <b>024</b> is free and open 24 hours for people with suicidal thoughts and those close to them. In an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. Your family doctor is also a good place to start."} <a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"} →</a></div>
 <h2>${es ? "Emociones, dificultades y trastornos" : "Emotions, difficulties and disorders"}</h2>
 <p>${es ? "Sentir tristeza, miedo o preocupación forma parte de la vida. Hablamos de dificultad cuando algo nos cuesta más de lo habitual durante un tiempo. La Organización Mundial de la Salud describe un <strong>trastorno mental</strong> como una alteración clínicamente significativa de la cognición, la regulación emocional o la conducta, que suele asociarse a malestar o a deterioro en áreas importantes del funcionamiento. Distinguir estos niveles evita tanto quitar importancia a lo que la tiene como convertir en enfermedad lo que no lo es." : "Feeling sad, afraid or worried is part of life. We speak of a difficulty when something is harder than usual for a while. The World Health Organization describes a <strong>mental disorder</strong> as a clinically significant disturbance in cognition, emotional regulation or behaviour, usually associated with distress or impairment in important areas of functioning. Telling these levels apart avoids both downplaying what matters and turning into illness what is not."}</p>
 <h2>${es ? "Cómo está hecho cada dossier" : "How each dossier is built"}</h2>
@@ -728,7 +729,7 @@ function dossier(i, lang) {
   const otros = SALUD.map((x, j) => j === i ? "" : `<li><a href="{{L}}${dosURL(j, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("");
   const sello = SALUD_REVISADO ? `<p><span class="pill">${es ? "Revisión médica" : "Medical review"}</span> Alejandro Rosàs, ${es ? "médico de familia" : "family doctor"}</p>` : "";
   const body = phead(es ? "Salud mental" : "Mental health", d.t[lang], d.d[lang]) + `
-<div class="wrap article"><article class="prose">${sello}<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas. En una emergencia, llama al <b>112</b>. Este texto es divulgativo: no sirve para diagnosticar ni sustituye la consulta con un profesional." : "In Spain, <b>024</b> is free and open 24 hours; in an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. This text is for general information: it cannot diagnose and does not replace seeing a professional."}</div>${fig(I.DOSSIERS[i], lang)}${d.body[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
+<div class="wrap article"><article class="prose">${sello}<div class="note warn"><b>${es ? "¿Necesitas ayuda ahora?" : "Need help now?"}</b> ${es ? "En España, la <b>Línea 024</b> atiende gratis las 24 horas. En una emergencia, llama al <b>112</b>. Este texto es divulgativo: no sirve para diagnosticar ni sustituye la consulta con un profesional." : "In Spain, <b>024</b> is free and open 24 hours; in an emergency call <b>112</b>. Elsewhere, contact your local helpline or emergency services. This text is for general information: it cannot diagnose and does not replace seeing a professional."} <a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"} →</a></div>${fig(I.DOSSIERS[i], lang)}${d.body[lang]}${refsHTML(lang, d.refs)}${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Otros dossiers" : "Other dossiers"}</h4><ul>${otros}</ul></div><div class="box"><h4>${es ? "Sigue leyendo" : "Keep reading"}</h4><ul><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental y terapias" : "Mental health and therapies"}</a></li><li><a href="{{L}}${S.consulta[lang]}/">${es ? "Desde la consulta" : "From the surgery"}</a></li></ul></div></aside></div>`;
   return page({ lang, rel: dosURL(i, lang), alt: dosURL(i, es ? "en" : "es"), title: d.t[lang], desc: d.d[lang], nav: "explorar", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [d.t[lang]]], body, kind: "Dossier" });
 }
@@ -794,6 +795,12 @@ function enfoque(lang) {
 <div class="grid g4">${RED.map(([n, u, d]) => `<a class="card" href="${u}" rel="noopener"><h3>${n}</h3><p>${d[lang]}</p></a>`).join("")}</div></section>
 <p class="refs">${es ? "Fuentes de la estructura: planes de estudio de Psicología de la UNED y la UAM (organización propia inspirada en sus materias), clasificación de campos de la APA, directrices de la International Test Commission y descripción de trastornos mentales de la OMS." : "Sources for the structure: Psychology curricula at UNED and UAM (our own organisation inspired by their subjects), the APA's classification of fields, International Test Commission guidelines and the WHO's description of mental disorders."}</p></div>`;
   return page({ lang, rel: sec("enfoque", lang), alt: sec("enfoque", lang === "es" ? "en" : "es"), title: es ? "Enfoque editorial" : "Editorial approach", desc: es ? "Cómo trabaja Psycholopedia: referencias, revisión, historia y evidencia, diversidad y bilingüismo." : "How Psycholopedia works: references, review, history and evidence, diversity and bilingualism.", crumbs: [[es ? "Enfoque editorial" : "Editorial approach"]], body });
+}
+function ayudaPage(lang) {
+  const es = lang === "es";
+  const body = phead(es ? "Ayuda" : "Help", es ? "Dónde pedir ayuda" : "Where to get help", es ? "Teléfonos gratuitos y recursos fiables de España y Latinoamérica para cuando lo estás pasando mal, o te preocupa alguien." : "Free helplines and reliable resources for when you are struggling or worried about someone.") + `
+<div class="wrap narrow prose">${AY.HTML[lang]}<p><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"} →</a> · <a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"} →</a></p></div>`;
+  return page({ lang, rel: sec("ayuda", lang), alt: sec("ayuda", lang === "es" ? "en" : "es"), title: es ? "Dónde pedir ayuda: teléfonos y recursos" : "Where to get help: helplines and resources", desc: es ? "Teléfonos gratuitos de ayuda en España y Latinoamérica: 112, 024, 016, ANAR, Teléfono de la Esperanza y cómo pedir cita en salud mental." : "Free helplines in the UK, US, Spain and Latin America, and how to get mental health care.", crumbs: [[es ? "Dónde pedir ayuda" : "Where to get help"]], body });
 }
 function legal(lang) {
   const es = lang === "es";
@@ -897,6 +904,7 @@ for (const lang of LANGS) {
   write(sec("autor", lang), autor(lang));
   write(sec("enfoque", lang), enfoque(lang));
   write(sec("legal", lang), legal(lang));
+  write(sec("ayuda", lang), ayudaPage(lang));
   write(sec("privacidad", lang), privacidad(lang));
   write(sec("creditos", lang), creditos(lang));
   write(sec("blog", lang), blogIndex(lang));
