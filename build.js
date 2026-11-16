@@ -1034,6 +1034,7 @@ for (const lang of LANGS) {
 }
 // sitemap y robots
 fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${PAGES.map((p) => `<url><loc>${DOMAIN}/${p.rel}</loc><lastmod>${HOY}</lastmod></url>`).join("\n")}\n</urlset>\n`);
+fs.writeFileSync(path.join(OUT, "7cb9164e4a1d4c6582e4120c3c040499.txt"), "7cb9164e4a1d4c6582e4120c3c040499"); // clave IndexNow
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 // 404
 fs.writeFileSync(path.join(OUT, "404.html"), page({ lang: "es", rel: "", alt: null, title: "Página no encontrada", desc: "Página no encontrada", index: false, body: `<div class="wrap narrow" style="padding:80px 20px"><h1>Página no encontrada</h1><p>Page not found.</p><p><a class="btn primary" href="/">Psycholopedia</a> <a class="btn" href="/en/">English</a></p></div>` }).replace(/(href|src)="\.\/assets/g, '$1="/assets'));
