@@ -1037,5 +1037,38 @@ fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="U
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
 // 404
 fs.writeFileSync(path.join(OUT, "404.html"), page({ lang: "es", rel: "", alt: null, title: "Página no encontrada", desc: "Página no encontrada", index: false, body: `<div class="wrap narrow" style="padding:80px 20px"><h1>Página no encontrada</h1><p>Page not found.</p><p><a class="btn primary" href="/">Psycholopedia</a> <a class="btn" href="/en/">English</a></p></div>` }).replace(/(href|src)="\.\/assets/g, '$1="/assets'));
-fs.writeFileSync(path.join(OUT, ".htaccess"), `ErrorDocument 404 /404.html\nAddDefaultCharset UTF-8\n<IfModule mod_rewrite.c>\nRewriteEngine On\n# psicolopedia.com (y www) -> psycholopedia.com, 301 permanente\nRewriteCond %{HTTP_HOST} ^(www\\.)?psicolopedia\\.com$ [NC]\nRewriteRule ^ https://psycholopedia.com%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTPS} off\nRewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\nRewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]\nRewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]\n</IfModule>\n<IfModule mod_expires.c>\nExpiresActive On\nExpiresByType text/css "access plus 7 days"\nExpiresByType application/javascript "access plus 7 days"\nExpiresByType image/jpeg "access plus 30 days"\nExpiresByType text/html "access plus 0 seconds"\n</IfModule>\n<IfModule mod_headers.c>\n<FilesMatch "\\.html$">\nHeader set Cache-Control "no-cache, must-revalidate"\n</FilesMatch>\n</IfModule>\n`);
+fs.writeFileSync(path.join(OUT, ".htaccess"), `ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# psicolopedia.com (y www) -> psycholopedia.com, 301 permanente
+RewriteCond %{HTTP_HOST} ^(www\\.)?psicolopedia\\.com$ [NC]
+RewriteRule ^ https://psycholopedia.com%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/css "access plus 1 year"
+ExpiresByType application/javascript "access plus 1 year"
+ExpiresByType image/jpeg "access plus 30 days"
+ExpiresByType image/webp "access plus 30 days"
+ExpiresByType image/png "access plus 30 days"
+ExpiresByType image/svg+xml "access plus 30 days"
+ExpiresByType application/pdf "access plus 30 days"
+ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+<IfModule mod_headers.c>
+<FilesMatch "\\.html$">
+Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
+</IfModule>
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml application/xml text/xml
+</IfModule>
+`);
 console.log(`${PAGES.length} páginas indexadas · salida: ${path.relative(__dirname, OUT)}/`);
+// SEO: títulos, og, JSON-LD, tamaños de imagen, webp (tools/seo_prep.py, idempotente)
+if (!PREVIEW) { try { require("child_process").execFileSync("python3", ["-I", path.join(__dirname, "tools", "seo_prep.py"), OUT], { stdio: "inherit" }); } catch (e) { console.error("AVISO: seo_prep.py falló:", e.message); process.exitCode = 1; } }

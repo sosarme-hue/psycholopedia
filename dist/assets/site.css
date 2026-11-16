@@ -277,3 +277,10 @@ a.card:hover .cimg img{transform:scale(1.03)}
 .ltest .lo label:has(input:checked){border-color:var(--accent);background:var(--okbg)}
 .lres .lsc{font-size:18px;margin:0 0 8px}.lres .lsc b{font:600 32px var(--serif)}
 .note.crisis{background:var(--kobg);border-left:4px solid #b5523b}
+/* Glosario */
+a.gl{text-decoration-style:dotted;text-underline-offset:3px}
+.gl-list{margin:0 0 8px}
+.gl-list dt{font-weight:700;margin-top:14px}
+.gl-list dd{margin:2px 0 0;color:var(--muted,inherit)}
+.glletras a{text-decoration:none}
+/*seo-cls*/.pic:not(.portrait) img{aspect-ratio:16/9;height:auto}.pic.portrait img{height:400px}@media(max-width:600px){.pic.portrait img{height:320px}}
