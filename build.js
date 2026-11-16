@@ -74,7 +74,7 @@ const S = {
   vida: { es: "vida-cotidiana", en: "everyday-life" }, curiosidades: { es: "curiosidades", en: "curiosities" }, tests: { es: "tests", en: "tests" },
   quiz: { es: "quiz", en: "quiz" }, aprender: { es: "aprender", en: "learn" }, salud: { es: "salud-mental", en: "mental-health" },
   consulta: { es: "desde-la-consulta", en: "from-the-surgery" }, autor: { es: "quien-esta-detras", en: "about" },
-  enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, ayuda: { es: "donde-pedir-ayuda", en: "where-to-get-help" }, privacidad: { es: "privacidad", en: "privacy" },
+  enfoque: { es: "enfoque-editorial", en: "editorial-approach" }, legal: { es: "aviso-legal", en: "legal-notice" }, ayuda: { es: "donde-pedir-ayuda", en: "where-to-get-help" }, glosario: { es: "glosario", en: "glossary" }, privacidad: { es: "privacidad", en: "privacy" },
   blog: { es: "blog", en: "blog" }, momentos: { es: "momentos-dificiles", en: "hard-times" }, creditos: { es: "creditos-imagenes", en: "image-credits" },
   areas: { es: "explorar/areas", en: "explore/areas" }, escuelas: { es: "explorar/escuelas", en: "explore/schools" }, ramas: { es: "explorar/ramas", en: "explore/branches" },
   razonamiento: { es: "tests/razonamiento", en: "tests/reasoning" }, personalidad: { es: "tests/tu-forma-de-ser", en: "tests/your-personality" }, pareja: { es: "tests/conversar-en-pareja", en: "tests/couple-conversations" }, instrumentos: { es: "tests/instrumentos", en: "tests/instruments" }, libres: { es: "tests/de-libre-uso", en: "tests/free-to-use" },
@@ -131,6 +131,7 @@ function page({ lang, rel, alt, title, desc, nav = "", crumbs = [], body, script
   const L = R + base(lang);
   const t = T[lang];
   const other = t.otroLang;
+  if (!GL_NO(rel, lang)) body = glossLink(body, lang, rel, title);
   const fill = (s) => s.replace(/\{\{R\}\}/g, R).replace(/\{\{L\}\}figuras\//g, L + S.figuras[lang] + "/").replace(/\{\{L\}\}quiz\//g, L + S.quiz[lang] + "/").replace(/\{\{L\}\}/g, L);
   if (index) { const tx = strip(body.replace(/<(script|style)[\s\S]*?<\/\1>/g, " ")); const hs = (body.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g) || []).map(strip); const nm = [...new Set(tx.match(/[A-ZÁÉÍÓÚÑÜ][a-záéíóúñüöäçàèìòù'-]{3,}|[A-Z]{2,}[\w-]*\d*/g) || [])]; PAGES.push({ lang, rel, title, desc, kind, n: [...new Set([...hs, ...nm])].join(" ") }); }
   const crumbHTML = crumbs.length ? `<nav class="crumbs wrap" aria-label="breadcrumb"><a href="${L}">${t.inicio}</a>${crumbs.map(([n, u]) => ` › ${u ? `<a href="${R}${u}">${n}</a>` : n}`).join("")}</nav>` : "";
@@ -166,7 +167,7 @@ ${fill(body)}
 <footer class="foot"><div class="wrap">
   <div class="cols">
     <div><a class="brand" href="${L}"><span class="sym">ψ</span>Psycholopedia</a><p style="margin-top:10px">${t.pie}</p><div class="help">${t.ayuda} <a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"} →</a></div></div>
-    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
+    <div><h4>${t.secc}</h4>${t.menu.map(([k, n]) => `<a href="${L}${S[k][lang]}/">${n}</a>`).join("")}<a href="${L}${S.momentos[lang]}/">${lang === "es" ? "Momentos difíciles" : "Hard times"}</a><a href="${L}${S.ayuda[lang]}/">${lang === "es" ? "Dónde pedir ayuda" : "Where to get help"}</a><a href="${L}${S.glosario[lang]}/">${lang === "es" ? "Glosario" : "Glossary"}</a><a href="${L}${S.curiosidades[lang]}/">${lang === "es" ? "Curiosidades" : "Curiosities"}</a></div>
     <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
@@ -270,7 +271,7 @@ function home(lang) {
   <div class="shead"><div><span class="eyebrow">${es ? "Tres formas de entrar" : "Three ways in"}</span><h2>${es ? "Descubrir, comprender, participar" : "Discover, understand, take part"}</h2></div></div>
   <div class="doors">
     <div class="door"><span class="tag">${es ? "Descubrir" : "Discover"}</span><h3>${es ? "Historias e ideas" : "Stories and ideas"}</h3><ul><li><a href="{{L}}${S.historia[lang]}/">${es ? "Historia en 24 capítulos" : "History in 24 chapters"}</a></li><li><a href="{{L}}${S.figuras[lang]}/">${es ? "Grandes figuras" : "Key figures"}</a></li><li><a href="{{L}}${S.explorar[lang]}/#escuelas">${es ? "Escuelas y corrientes" : "Schools and movements"}</a></li><li><a href="{{L}}${S.curiosidades[lang]}/">${es ? "Experimentos y curiosidades" : "Experiments and curiosities"}</a></li></ul></div>
-    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li><li><a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"}</a></li></ul></div>
+    <div class="door"><span class="tag">${es ? "Comprender" : "Understand"}</span><h3>${es ? "Conceptos y vida diaria" : "Concepts and daily life"}</h3><ul><li><a href="{{L}}${S.glosario[lang]}/">${es ? `Glosario de ${GL.length} términos` : `Glossary of ${GL.length} terms`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#mapa">${es ? `Mapa de ${E.AREAS.length} áreas` : `Map of ${E.AREAS.length} areas`}</a></li><li><a href="{{L}}${S.explorar[lang]}/#ramas">${es ? "Ramas aplicadas" : "Applied branches"}</a></li><li><a href="{{L}}${S.vida[lang]}/">${es ? "Preguntas cotidianas" : "Everyday questions"}</a></li><li><a href="{{L}}${S.momentos[lang]}/">${es ? "Momentos difíciles de la vida" : "Life's hard times"}</a></li><li><a href="{{L}}${S.salud[lang]}/">${es ? "Salud mental" : "Mental health"}</a></li><li><a href="{{L}}${S.ayuda[lang]}/">${es ? "Dónde pedir ayuda" : "Where to get help"}</a></li></ul></div>
     <div class="door"><span class="tag">${es ? "Participar" : "Take part"}</span><h3>${es ? "Jugar y aprender" : "Play and learn"}</h3><ul><li><a href="{{L}}${S.quiz[lang]}/">Quiz</a></li><li><a href="{{L}}${sec("razonamiento", lang).slice(base(lang).length)}">${es ? "Retos de razonamiento" : "Reasoning challenges"}</a></li><li><a href="{{L}}${S.tests[lang]}/">${es ? "Actividades de reflexión" : "Reflection activities"}</a></li><li><a href="{{L}}${S.aprender[lang]}/">${es ? "Cursos" : "Courses"}</a></li></ul></div>
   </div>
 </section>
@@ -401,6 +402,7 @@ ${caps.length ? `<div class="box"><h4>${T[lang].relacionado}</h4><ul>${caps.map(
 function explorar(lang) {
   const es = lang === "es";
   const body = phead(es ? "Explorar la psicología" : "Explore psychology", es ? "El mapa de la psicología" : "The map of psychology", es ? "Áreas de conocimiento, ramas aplicadas, escuelas y grandes figuras. El catálogo es amplio; la navegación, sencilla." : "Areas of knowledge, applied branches, schools and key figures. A wide catalogue with simple navigation.") + `
+<div class="wrap"><p class="note" style="margin:0 0 24px">${es ? `¿Te encuentras con un término que no conoces? Consulta el <a href="{{L}}${S.glosario[lang]}/">glosario de psicología</a>, con ${GL.length} definiciones breves.` : `Come across a term you don't know? Check the <a href="{{L}}${S.glosario[lang]}/">psychology glossary</a>, with ${GL.length} short definitions.`}</p></div>
 <div class="wrap">
 <section id="mapa"><div class="shead"><div><span class="eyebrow">${E.AREAS.length} ${es ? "áreas" : "areas"}</span><h2>${es ? "Áreas de conocimiento" : "Areas of knowledge"}</h2></div><p>${es ? "Cada área tiene tres niveles de lectura: introducción breve, explicación desarrollada y ampliación con referencias." : "Each area has three reading levels: a short introduction, a fuller explanation and an extension with references."}</p></div>
 <div class="filters" data-filter="areas"><button class="on" data-g="*">${es ? "Todas" : "All"}</button>${Object.entries(E.GRUPOS).map(([k, v]) => `<button data-g="${k}">${v[lang]}</button>`).join("")}</div>
@@ -834,6 +836,77 @@ ${meta(lang)}</article>
 <aside class="aside"><div class="box"><h4>${es ? "Volver" : "Back"}</h4><ul><li><a href="{{L}}${clBase(lang).slice(base(lang).length)}">${es ? "Clasificación: introducción" : "Classification: introduction"}</a></li></ul></div><div class="box"><h4>${es ? "Otros grupos" : "Other groups"}</h4><ul>${otros}</ul></div></aside></div>`;
   return page({ lang, rel: clURL(g, lang), alt: clURL(g, es ? "en" : "es"), title: `${g.t[lang]}: ${es ? "clasificación CIE-11 y DSM-5-TR" : "ICD-11 and DSM-5-TR"}`, desc: (es ? "Qué son y qué incluyen los " : "What they are and what they include: ") + g.t[lang].toLowerCase() + (es ? ", según la CIE-11 y el DSM-5-TR, explicado de forma divulgativa." : ", according to ICD-11 and DSM-5-TR, in plain language."), nav: "salud", crumbs: [[es ? "Salud mental" : "Mental health", sec("salud", lang)], [es ? "Clasificación" : "Classification", clBase(lang)], [g.t[lang]]], body, kind: es ? "Clasificación" : "Classification" });
 }
+// ---------- GLOSARIO ----------
+const GL = [...require("./src/data/glosario1"), ...require("./src/data/glosario2"), ...require("./src/data/glosario3")];
+const glURL = (g, lang) => sec("glosario", lang, g.slug[lang]);
+const glBySlug = Object.fromEntries(GL.map((g) => [g.slug.es, g]));
+const glFirst = (s) => (s.match(/^.*?[.!?](?=\s|$)/) || [s])[0];
+const glName = (g, lang) => g.t[lang].replace(/ \(.*\)$/, "");
+const GLBACK = { es: {}, en: {} };
+const glRx = {};
+for (const lang of LANGS) {
+  const forms = [];
+  for (const g of GL) { if (g.no) continue; for (const f of [glName(g, lang), ...g.f[lang]]) forms.push([f, g]); }
+  forms.sort((a, b) => b[0].length - a[0].length);
+  const map = new Map();
+  const pat = forms.map(([f, g]) => { const k = /[A-ZÁÉÍÓÚÑ]/.test(f.slice(1)) ? f : f.toLowerCase(); if (!map.has(k)) map.set(k, g); const e = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); return /[A-ZÁÉÍÓÚÑ]/.test(f.slice(1)) ? e : `[${e[0]}${e[0].toUpperCase()}]${e.slice(1)}`; });
+  glRx[lang] = { re: new RegExp(`(?<![\\p{L}\\p{N}])(?:${pat.join("|")})(?![\\p{L}\\p{N}])`, "gu"), map };
+}
+const GL_SKIP = /^(h[1-6]|button|script|style|label|figcaption|summary|select|option|textarea|code)$/;
+function glossLink(body, lang, rel, title) {
+  const { re, map } = glRx[lang]; const used = new Set(); let n = 0; const MAX = 6;
+  let inA = 0, skip = 0, pDepth = 0, pSkip = 0;
+  return body.split(/(<[^>]+>)/).map((tok) => {
+    if (tok.startsWith("<")) {
+      const m = tok.match(/^<(\/?)([a-zA-Z0-9]+)/); if (!m) return tok; const close = !!m[1], tag = m[2].toLowerCase();
+      if (tag === "a") inA += close ? -1 : 1;
+      else if (GL_SKIP.test(tag)) skip += close ? -1 : 1;
+      else if (tag === "p") { if (close) { pDepth = 0; pSkip = 0; } else { pDepth = 1; pSkip = /class="[^"]*(lead|meta|lnav)/.test(tok) ? 1 : 0; } }
+      return tok;
+    }
+    if (!pDepth || pSkip || inA > 0 || skip > 0 || n >= MAX || !tok.trim()) return tok;
+    return tok.replace(re, (w) => {
+      if (n >= MAX) return w;
+      const k = /[A-ZÁÉÍÓÚÑ]/.test(w.slice(1)) ? w : w.toLowerCase(); const g = map.get(k) || map.get(w);
+      if (!g || used.has(g.slug.es)) return w;
+      if (rel === glURL(g, lang)) return w;
+      used.add(g.slug.es); n++;
+      const b = (GLBACK[lang][g.slug.es] = GLBACK[lang][g.slug.es] || []); if (!b.some((x) => x.rel === rel)) b.push({ rel, title });
+      return `<a class="gl" href="{{L}}${glURL(g, lang).slice(base(lang).length)}" title="${esc(glFirst(g.d[lang]))}">${w}</a>`;
+    });
+  }).join("");
+}
+const GL_NO = (rel, lang) => rel === base(lang) || [ "glosario", "quiz", "tests", "legal", "privacidad", "creditos", "aprender" ].some((k) => k === "aprender" ? rel === sec("aprender", lang) : rel.startsWith(sec(k, lang)));
+function glIndex(lang) {
+  const es = lang === "es";
+  const xs = [...GL].sort((a, b) => glName(a, lang).localeCompare(glName(b, lang), lang));
+  const letra = (g) => glName(g, lang)[0].toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const groups = []; for (const g of xs) { const L = letra(g); if (!groups.length || groups[groups.length - 1][0] !== L) groups.push([L, []]); groups[groups.length - 1][1].push(g); }
+  const body = phead(es ? "Glosario" : "Glossary", es ? "Glosario de psicología" : "Psychology glossary", es ? `${GL.length} términos de psicología explicados de forma breve y clara, de la abstinencia a la zona de desarrollo próximo.` : `${GL.length} psychology terms explained briefly and clearly, from addiction to the zone of proximal development.`) + `
+<div class="wrap narrow prose">
+<p class="glletras" style="display:flex;flex-wrap:wrap;gap:6px 12px;font-weight:600">${groups.map(([L]) => `<a href="#${L}">${L}</a>`).join("")}</p>
+${groups.map(([L, gs]) => `<h2 id="${L}">${L}</h2><dl class="gl-list">${gs.map((g) => `<dt><a href="{{L}}${glURL(g, lang).slice(base(lang).length)}">${g.t[lang]}</a></dt><dd>${glFirst(g.d[lang])}</dd>`).join("")}</dl>`).join("\n")}
+<p class="meta">${es ? "Definiciones divulgativas: no sustituyen la valoración de un profesional." : "Popular definitions: they do not replace assessment by a professional."}</p>
+</div>`;
+  return page({ lang, rel: sec("glosario", lang), alt: sec("glosario", es ? "en" : "es"), title: es ? "Glosario de psicología: términos y definiciones" : "Psychology glossary: terms and definitions", desc: es ? `Diccionario de psicología con ${GL.length} términos explicados: apego, sesgo cognitivo, resiliencia, ansiedad, neuroplasticidad y muchos más.` : `A psychology dictionary with ${GL.length} terms explained: attachment, cognitive bias, resilience, anxiety, neuroplasticity and more.`, crumbs: [[es ? "Glosario" : "Glossary"]], body, kind: es ? "Glosario" : "Glossary" });
+}
+function glTerm(g, lang) {
+  const es = lang === "es"; const other = es ? "en" : "es";
+  const rel = (g.r || []).map((s) => glBySlug[s]).filter(Boolean);
+  const back = (GLBACK[lang][g.slug.es] || []).slice(0, 10);
+  const ld = { "@context": "https://schema.org", "@type": "DefinedTerm", name: glName(g, lang), description: g.d[lang], inDefinedTermSet: { "@type": "DefinedTermSet", name: es ? "Glosario de psicología" : "Psychology glossary", url: `${DOMAIN}/${sec("glosario", lang)}` }, url: `${DOMAIN}/${glURL(g, lang)}` };
+  const body = phead(es ? "Glosario de psicología" : "Psychology glossary", g.t[lang], "") + `
+<div class="wrap article"><article class="prose">
+<p style="font-size:1.12em">${g.d[lang]}</p>
+${rel.length ? `<h2>${es ? "Términos relacionados" : "Related terms"}</h2><ul>${rel.map((x) => `<li><a href="{{L}}${glURL(x, lang).slice(base(lang).length)}">${x.t[lang]}</a></li>`).join("")}</ul>` : ""}
+${g.m.length ? `<h2>${es ? "Para saber más" : "Find out more"}</h2><ul>${g.m.map((m) => { const [h, t] = enlace(m, lang); return `<li><a href="{{L}}${h}">${t}</a></li>`; }).join("")}</ul>` : ""}
+${back.length ? `<h2>${es ? "Aparece en" : "Appears in"}</h2><ul>${back.map((b) => `<li><a href="{{L}}${b.rel.slice(base(lang).length)}">${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
+<p><a href="{{L}}${sec("glosario", lang).slice(base(lang).length)}">← ${es ? "Todo el glosario" : "Full glossary"}</a></p>
+<p class="meta">${es ? "Definición divulgativa: no sustituye la valoración de un profesional." : "Popular definition: it does not replace assessment by a professional."}</p>
+</article></div>
+<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>`;
+  return page({ lang, rel: glURL(g, lang), alt: glURL(g, other), title: es ? `${glName(g, lang)}: definición en psicología` : `${glName(g, lang)}: definition in psychology`, desc: glFirst(g.d[lang]), crumbs: [[es ? "Glosario" : "Glossary", sec("glosario", lang)], [glName(g, lang)]], body, kind: es ? "Glosario" : "Glossary" });
+}
 function ayudaPage(lang) {
   const es = lang === "es";
   const body = phead(es ? "Ayuda" : "Help", es ? "Dónde pedir ayuda" : "Where to get help", es ? "Teléfonos gratuitos y recursos fiables de España y Latinoamérica para cuando lo estás pasando mal, o te preocupa alguien." : "Free helplines and reliable resources for when you are struggling or worried about someone.") + `
@@ -950,6 +1023,8 @@ for (const lang of LANGS) {
   write(sec("blog", lang), blogIndex(lang));
   for (const p of POSTS) write(postURL(p, lang), post(p, lang));
   fs.writeFileSync(path.join(OUT, sec("blog", lang), "feed.xml"), feed(lang));
+  write(sec("glosario", lang), glIndex(lang));
+  for (const g of GL) write(glURL(g, lang), glTerm(g, lang));
 }
 
 // Buscador: índice por idioma (ruta relativa a la raíz del sitio)
