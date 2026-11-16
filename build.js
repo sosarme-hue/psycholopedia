@@ -119,6 +119,8 @@ const RED = [
 
 // ---------- plantilla ----------
 const PAGES = []; // para buscador y sitemap
+// Pie de autoría y licencia (CC BY-NC 4.0), en el idioma de cada página.
+const CC_LINE = {"es": "© 2026 Alejandro Rosàs · Contenido bajo licencia <a href=\"https://creativecommons.org/licenses/by-nc/4.0/deed.es\" rel=\"license noopener\" style=\"display:inline\">CC BY-NC 4.0</a>, salvo indicación en contrario", "en": "© 2026 Alejandro Rosàs · Content licensed under <a href=\"https://creativecommons.org/licenses/by-nc/4.0/deed.en\" rel=\"license noopener\" style=\"display:inline\">CC BY-NC 4.0</a>, unless otherwise noted"};
 function write(rel, html) {
   const f = path.join(OUT, rel, "index.html");
   fs.mkdirSync(path.dirname(f), { recursive: true });
@@ -171,7 +173,7 @@ ${fill(body)}
     <div><h4>${t.proyecto}</h4><a href="${L}${S.autor[lang]}/">${lang === "es" ? "Quién está detrás" : "Who is behind it"}</a><a href="${L}${S.consulta[lang]}/">${lang === "es" ? "Desde la consulta" : "From the surgery"}</a><a href="${L}${S.enfoque[lang]}/">${lang === "es" ? "Enfoque editorial" : "Editorial approach"}</a><a href="${L}${S.legal[lang]}/">${lang === "es" ? "Aviso legal" : "Legal notice"}</a><a href="${L}${S.privacidad[lang]}/">${lang === "es" ? "Privacidad" : "Privacy"}</a><a href="${L}${S.creditos[lang]}/">${lang === "es" ? "Créditos de imágenes" : "Image credits"}</a><a href="${FP.filoPsico(lang)}" rel="noopener">${lang === "es" ? "Filopedia: más de 390 psicólogos" : "Filopedia: 390+ psychologists"} ↗</a></div>
     <div><h4>${t.red}</h4>${RED.slice(0, 6).map(([n, u]) => `<a href="${u}" rel="noopener">${n}</a>`).join("")}</div>
   </div>
-  <p style="margin:22px 0 0">${lang === "es" ? `Creada por Alejandro Rosàs, médico de familia con más de 38 años de experiencia en atención primaria, especialista en Medicina Preventiva y Salud Pública (col. 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">Quién está detrás</a>` : `Created by Alejandro Rosàs, a family doctor with more than 38 years in primary care and a specialist in Preventive Medicine and Public Health (licence 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">About</a>`}</p><p style="margin:6px 0 0">© 2026 ${SITE} · ${t.tagline}</p>
+  <p style="margin:22px 0 0">${lang === "es" ? `Creada por Alejandro Rosàs, médico de familia con más de 38 años de experiencia en atención primaria, especialista en Medicina Preventiva y Salud Pública (col. 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">Quién está detrás</a>` : `Created by Alejandro Rosàs, a family doctor with more than 38 years in primary care and a specialist in Preventive Medicine and Public Health (licence 28574, Barcelona). <a style="display:inline" href="${L}${S.autor[lang]}/">About</a>`}</p><p style="margin:6px 0 0">${t.tagline}</p><p style="margin:6px 0 0">${CC_LINE[lang]}</p>
 </div></footer>
 <script src="${R}assets/app.js?v=${V_JS}" defer></script>
 ${scripts}
