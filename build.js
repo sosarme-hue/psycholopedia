@@ -50,7 +50,7 @@ const libN = (x, lang) => ({ s: x.s, n: x.n[lang], ins: x.ins[lang], max: x.max,
 const libURL = (x, lang) => sec("libres", lang, x.slug[lang]);
 fs.mkdirSync(path.join(__dirname, "src/pdf"), { recursive: true });
 fs.writeFileSync(path.join(__dirname, "src/pdf/libres.json"), JSON.stringify(LIB.map((x) => ({ slug: x.slug, es: libN(x, "es"), en: libN(x, "en"), lic: x.lic, ref: x.ref, val: LIBVAL[x.s] || "", nota: x.nota || null, autores: x.autores }))));
-const CONSULTA = require("./src/data/consulta");
+const CONSULTA = require("./src/data/consulta"); CONSULTA.push(...require("./src/data/consulta2"));
 const SALUD = [...require("./src/data/salud1"), ...require("./src/data/salud2")];
 { const ks = Object.keys(CURSOSL); const order = ["psicologia-desde-cero", ...ks.filter((k) => k !== "psicologia-desde-cero")];
   P.CURSOS.forEach((c, i) => { const k = order[i]; c.slug = { es: k, en: CURSO_EN[i] }; c.lecciones = i === 0 ? [{ ...P.LECCION1, mas: ["h:10", "x:ramas", "k:el-efecto-mozart"] }, ...CURSOSL[k]] : CURSOSL[k]; }); }
@@ -678,6 +678,7 @@ function enlace(code, lang) {
   if (k === "d") { const n = SALUD.findIndex((y) => y.slug.es === v); return [r(dosURL(n, lang)), SALUD[n].t[lang]]; }
   if (k === "f") { const x = F.FIGURAS.find((y) => y.slug === v); return [r(figURL(v, lang)), x.nombre]; }
   if (k === "r") { const n = E.RAMASD.findIndex((y) => y.slug.es === v); return [r(ramaURL(n, lang)), (es ? "Psicología: " : "Psychology: ") + E.RAMAS[n][0][lang].toLowerCase()]; }
+  if (k === "m") { const x = MO.M.find((y) => y.slug.es === v); return [r(moURL(x, lang)), x.t[lang]]; }
   if (k === "k") { const x = P.CURIOSIDADES.find((y) => y.slug.es === v); return [r(curURL(x, lang)), x.t[lang]]; }
   if (k === "h") return [r(capURL(+v, lang)), H.CAPS[+v][lang]];
   if (k === "c") { const n = P.CURSOS.findIndex((y) => y.slug.es === v); return [r(lecURL(n, 0, lang)), (es ? "Curso: " : "Course: ") + P.CURSOS[n].t[lang]]; }
