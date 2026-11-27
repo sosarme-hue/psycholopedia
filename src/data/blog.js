@@ -125,5 +125,5 @@ const BLOG = [
   },
 ];
 
-BLOG.push(...require("./blog2"), ...require("./blog3"), ...require("./blog4"), ...require("./blog5"));
+BLOG.push(...require("./blog2"), ...require("./blog3"), ...require("./blog4"), ...require("./blog5"), ...require("./blog6"));
 module.exports = { BLOG };
